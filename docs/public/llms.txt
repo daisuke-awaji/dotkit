@@ -1,0 +1,40 @@
+# dotkit
+
+> dotkit is a zero-runtime CSS framework where every UI element is drawn as a collection of dots.
+> One CSS file is the single source of truth; `dotkit/react` is a thin, stateless React binding (Server Component safe).
+> Distributed via GitHub only (not on npm). Docs: https://daisuke-awaji.github.io/dotkit/
+
+## Install
+- Tarball: `npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.1.0/dotkit-0.1.0.tgz`
+- Git semver: `npm i "github:daisuke-awaji/dotkit#semver:^0.1"`
+- CDN: `https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.1.0/dist/dotkit.css` or `https://daisuke-awaji.github.io/dotkit/dotkit.css`
+- Imports: `import "dotkit/css"` once; components from `dotkit/react`.
+
+## Core variables
+- `--dk-size` dot diameter (default 2px, transitionable), `--dk-gap` center distance (default 6px, transitionable), `--dk-color` dot color (currentColor)
+- `--dk-value` 0..1 for meter/bar, `--dk-icon-step` icon dot step (icon size = step*7), `--dk-tone` halftone gradient (black = biggest dot)
+- Theme tokens: `--dk-ink`, `--dk-paper`, `--dk-mute`, `--dk-subtle`, `--dk-radius`, `--dk-font-mono`. Dark theme: add `.dk-theme-dark` to an ancestor.
+- All rules live in `@layer dotkit.base, dotkit.components, dotkit.utilities`; unlayered user CSS always wins (no !important needed).
+
+## Classes
+- Primitives: `.dk-dots` (dot fill), density `.dk-sparse|.dk-normal|.dk-dense`, shape `.dk-square|.dk-ring`, fade `.dk-fade-r|-l|-t|-b|-radial`
+- `.dk-border` dotted outline (inherits border-radius)
+- `.dk-halftone` (+ `--to-bottom|--to-left|--radial|--invert`) decorative; never put content inside
+- `.dk-text` fills glyphs with dots (large text only)
+- `.dk-icon .dk-icon--{name}` 7x7 icons (+ `.dk-icon--square`); color = currentColor
+- `.dk-loader` with `<i>` children (max 8)
+- `.dk-btn` + `.dk-btn--solid|--outline|--ghost` + `.dk-btn--sm|--lg`
+- `.dk-badge` (+ `--solid`), `.dk-divider` (on <hr>), `.dk-field` wrapper + `.dk-input`
+- `.dk-meter` (style `--dk-value`), `.dk-chart` > `.dk-bar` (style `--dk-value`), `.dk-card`
+
+## React (dotkit/react)
+- `<Dots density shape size gap color fade as>`; `<DotBorder …>`; `<DotText …>`; `<Halftone direction gap tone invert>`
+- `<DotIcon name step square label>` (name: IconName, see `iconNames`)
+- `<Button variant="solid|outline|ghost" size="sm|md|lg" shape>`; `buttonClassName({variant,size,shape})` for links
+- `<Input leading trailing fieldClassName …inputProps>`; `<Badge variant>`; `<Divider gap size shape>`
+- `<Meter value={0..1} label size gap shape>`; `<BarChart data={[{label,value}]} max height label size gap shape>`
+- `<Card color shape as>`; `<Loader count size label>`
+- Number values for size/gap/step are px.
+
+## Icons
+arrow-right, arrow-left, arrow-up, arrow-down, chevron-right, chevron-down, check, close, plus, minus, search, menu, home, user, mail, heart, star, info, alert, play, pause, sun, moon, copy, github, external
