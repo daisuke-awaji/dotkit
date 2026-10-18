@@ -1,0 +1,38 @@
+{
+  "name": "dotkit",
+  "version": "0.1.0",
+  "description": "UI made of dots — a zero-runtime CSS framework with React bindings.",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daisuke-awaji/dotkit.git"
+  },
+  "homepage": "https://daisuke-awaji.github.io/dotkit/",
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./css": "./dist/dotkit.css",
+    "./dotkit.css": "./dist/dotkit.css",
+    "./icons.json": "./dist/icons.json",
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
+}

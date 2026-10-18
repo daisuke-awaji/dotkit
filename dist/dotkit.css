@@ -1,0 +1,336 @@
+/*! dotkit v0.1.0 | MIT | https://github.com/daisuke-awaji/dotkit */
+
+/* Registered so that dot size / gap can be transitioned (hover, focus). */
+@property --dk-size { syntax: "<length>"; inherits: true; initial-value: 2px; }
+@property --dk-gap  { syntax: "<length>"; inherits: true; initial-value: 6px; }
+
+/* Your own unlayered CSS always wins over dotkit. utilities > components > base. */
+@layer dotkit.base, dotkit.components, dotkit.utilities;
+
+/* ==========================================================
+   base — tokens & the dot generator
+   ========================================================== */
+@layer dotkit.base {
+  :root {
+    --dk-size: 2px;            /* dot diameter              */
+    --dk-gap: 6px;             /* distance between centers  */
+    --dk-color: currentColor;  /* dot color                 */
+
+    --dk-ink: #0a0a0a;
+    --dk-paper: #ffffff;
+    --dk-mute: #d4d4d4;
+    --dk-subtle: #737373;
+    --dk-radius: 8px;
+    --dk-ease: cubic-bezier(.2, .8, .2, 1);
+    --dk-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  .dk-theme-dark {
+    --dk-ink: #ededed;
+    --dk-paper: #0a0a0a;
+    --dk-mute: #3a3a3a;
+    --dk-subtle: #a1a1a1;
+    color-scheme: dark;
+  }
+
+  /* Every element that paints dots re-computes the generator locally,
+     so changing --dk-size / --dk-gap on it (or an ancestor) just works. */
+  .dk-dots, .dk-text, .dk-divider, .dk-btn, .dk-meter, .dk-meter::after, .dk-bar,
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card)::before {
+    --_dot: radial-gradient(circle at center,
+              var(--dk-color) calc(var(--dk-size) / 2),
+              transparent calc(var(--dk-size) / 2 + .6px));
+  }
+}
+
+/* ==========================================================
+   components
+   ========================================================== */
+@layer dotkit.components {
+
+  /* ---------- dotted outline (shared) ---------- */
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card) { position: relative; }
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card)::before {
+    content: "";
+    position: absolute; inset: 0;
+    padding: var(--dk-gap);
+    border-radius: inherit;
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space;           /* never clip a dot at the edge */
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* ---------- Button ---------- */
+  .dk-btn {
+    --dk-size: 1.5px; --dk-gap: 4px;
+    --_h: 40px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    height: var(--_h); padding: 0 calc(var(--_h) * .45);
+    font: 500 14px/1 var(--dk-font-mono);
+    letter-spacing: .02em;
+    color: var(--dk-ink);
+    background-color: transparent;
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space;
+    border: 0; border-radius: calc(var(--dk-radius) * .75);
+    cursor: pointer;
+    text-decoration: none;
+    transition: --dk-size .35s var(--dk-ease), --dk-gap .35s var(--dk-ease), background-color .2s;
+  }
+  .dk-btn--sm { --_h: 32px; font-size: 12px; }
+  .dk-btn--lg { --_h: 48px; font-size: 15px; }
+
+  .dk-btn--solid {
+    color: var(--dk-paper);
+    background-color: var(--dk-ink);
+    background-image: var(--_dot);
+    --dk-color: color-mix(in srgb, var(--dk-paper) 22%, transparent);
+  }
+  .dk-btn--solid:hover { --dk-size: 3px; }
+
+  .dk-btn--outline { background-color: var(--dk-paper); --dk-color: var(--dk-ink); }
+  .dk-btn--outline:hover { --dk-size: 3px; }
+
+  .dk-btn--ghost { background-image: var(--_dot); --dk-color: var(--dk-mute); --dk-size: 0px; }
+  .dk-btn--ghost:hover { --dk-size: 2.4px; }
+
+  .dk-btn:focus-visible { outline: 2px dotted var(--dk-ink); outline-offset: 3px; }
+  .dk-btn:disabled, .dk-btn[aria-disabled="true"] { opacity: .4; cursor: not-allowed; pointer-events: none; }
+
+  /* ---------- Badge ---------- */
+  .dk-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 22px; padding: 0 8px;
+    font: 500 11px/1 var(--dk-font-mono); letter-spacing: .04em; text-transform: uppercase;
+    color: var(--dk-ink);
+    border: 1px dotted currentColor; border-radius: 999px;
+  }
+  .dk-badge--solid { color: var(--dk-paper); background: var(--dk-ink); border-color: var(--dk-ink); }
+
+  /* ---------- Divider ---------- */
+  .dk-divider {
+    --dk-color: var(--dk-mute);
+    height: var(--dk-gap); border: 0; margin: 16px 0;
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space no-repeat;
+  }
+
+  /* ---------- Field (dotted input wrapper) ---------- */
+  .dk-field {
+    --dk-color: var(--dk-mute); --dk-gap: 5px; --dk-size: 2px;
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 40px; padding: 0 12px;
+    color: var(--dk-ink); background: var(--dk-paper);
+    border-radius: calc(var(--dk-radius) * .75);
+    transition: --dk-size .3s var(--dk-ease);
+  }
+  .dk-field:focus-within { --dk-color: var(--dk-ink); --dk-size: 2.4px; }
+  .dk-input {
+    all: unset; flex: 1; min-width: 0;
+    font: 400 14px/1.2 var(--dk-font-mono); color: inherit;
+  }
+  .dk-input::placeholder { color: var(--dk-subtle); }
+
+  /* ---------- Meter (value snaps to whole dots) ---------- */
+  .dk-meter {
+    --dk-value: .5; --dk-size: 6px; --dk-gap: 10px;
+    position: relative; display: block; height: var(--dk-gap);
+    --dk-color: var(--dk-mute);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: repeat-x;
+  }
+  .dk-meter::after {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+    width: calc(var(--dk-value) * 100%);
+    width: round(down, calc(var(--dk-value) * 100%), var(--dk-gap));
+    --dk-color: var(--dk-ink);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: repeat-x;
+  }
+
+  /* ---------- Bar chart (height snaps to whole dots) ---------- */
+  .dk-chart { display: flex; align-items: flex-end; gap: 6px; height: 120px; }
+  .dk-bar {
+    --dk-value: .5; --dk-size: 4px; --dk-gap: 6px;
+    flex: 1; max-width: 24px; min-width: var(--dk-gap);
+    --dk-color: var(--dk-ink);
+    height: calc(var(--dk-value) * 100%);
+    height: round(down, calc(var(--dk-value) * 100%), var(--dk-gap));
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-position: left bottom;
+  }
+
+  .dk-chart__label {
+    flex: 1; max-width: 24px; min-width: 6px; text-align: center;
+    font: 500 10px/1 var(--dk-font-mono); color: var(--dk-subtle);
+  }
+
+  /* ---------- Card ---------- */
+  .dk-card {
+    --dk-color: var(--dk-mute); --dk-gap: 6px; --dk-size: 2px;
+    display: block;
+    padding: 20px;
+    color: var(--dk-ink); background: var(--dk-paper);
+    border-radius: calc(var(--dk-radius) * 1.25);
+  }
+
+  /* ---------- Loader (dot wave) ---------- */
+  .dk-loader { --dk-size: 6px; display: inline-flex; gap: var(--dk-size); color: var(--dk-ink); }
+  .dk-loader > i {
+    width: var(--dk-size); height: var(--dk-size); border-radius: 50%;
+    background: currentColor;
+    animation: dk-wave 1.2s var(--dk-ease) infinite;
+  }
+  .dk-loader > i:nth-child(2) { animation-delay: 90ms; }
+  .dk-loader > i:nth-child(3) { animation-delay: 180ms; }
+  .dk-loader > i:nth-child(4) { animation-delay: 270ms; }
+  .dk-loader > i:nth-child(5) { animation-delay: 360ms; }
+  .dk-loader > i:nth-child(6) { animation-delay: 450ms; }
+  .dk-loader > i:nth-child(7) { animation-delay: 540ms; }
+  .dk-loader > i:nth-child(8) { animation-delay: 630ms; }
+  @keyframes dk-wave {
+    0%, 100% { opacity: .15; transform: scale(.6); }
+    40%      { opacity: 1;   transform: scale(1); }
+  }
+}
+
+/* ==========================================================
+   utilities — primitives & techniques
+   ========================================================== */
+@layer dotkit.utilities {
+
+  /* ---------- Dot field ---------- */
+  .dk-dots {
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space;
+  }
+
+  /* ---------- Density ---------- */
+  .dk-sparse { --dk-size: 2px; --dk-gap: 10px; }
+  .dk-normal { --dk-size: 2px; --dk-gap: 6px; }
+  .dk-dense  { --dk-size: 3px; --dk-gap: 4px; }
+
+  /* ---------- Shape (applies to the element and its dotted outline) ---------- */
+  .dk-square, .dk-square::before, .dk-square::after {
+    --_dot: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color) 0);
+  }
+  .dk-ring, .dk-ring::before, .dk-ring::after {
+    --_dot: radial-gradient(circle at center,
+              transparent calc(var(--dk-size) / 2 - 1px),
+              var(--dk-color) calc(var(--dk-size) / 2 - .6px),
+              var(--dk-color) calc(var(--dk-size) / 2),
+              transparent calc(var(--dk-size) / 2 + .6px));
+  }
+
+  /* ---------- Fade (density illusion via mask) ---------- */
+  .dk-fade-r      { -webkit-mask-image: linear-gradient(to right,  #000, transparent); mask-image: linear-gradient(to right,  #000, transparent); }
+  .dk-fade-l      { -webkit-mask-image: linear-gradient(to left,   #000, transparent); mask-image: linear-gradient(to left,   #000, transparent); }
+  .dk-fade-b      { -webkit-mask-image: linear-gradient(to bottom, #000, transparent); mask-image: linear-gradient(to bottom, #000, transparent); }
+  .dk-fade-t      { -webkit-mask-image: linear-gradient(to top,    #000, transparent); mask-image: linear-gradient(to top,    #000, transparent); }
+  .dk-fade-radial { -webkit-mask-image: radial-gradient(closest-side, #000, transparent); mask-image: radial-gradient(closest-side, #000, transparent); }
+
+  /* ---------- Halftone (dot SIZE follows a tone ramp) ----------
+     Blurred blobs + a tone ramp, thresholded by contrast().
+     Decorative only: put no content inside (it is filtered too). */
+  .dk-halftone {
+    --dk-gap: 8px;
+    --dk-tone: linear-gradient(90deg, #000, #8a8a8a);
+    position: relative; isolation: isolate; overflow: hidden;
+    background: #fff;
+    filter: contrast(24);
+  }
+  .dk-halftone::before, .dk-halftone::after { content: ""; position: absolute; inset: 0; }
+  .dk-halftone::before {
+    background: radial-gradient(circle at center, #000 0, #fff calc(var(--dk-gap) * .72))
+                0 0 / var(--dk-gap) var(--dk-gap);
+  }
+  .dk-halftone::after { background: var(--dk-tone); mix-blend-mode: screen; }
+  .dk-halftone--to-bottom { --dk-tone: linear-gradient(180deg, #000, #8a8a8a); }
+  .dk-halftone--to-left   { --dk-tone: linear-gradient(270deg, #000, #8a8a8a); }
+  .dk-halftone--radial    { --dk-tone: radial-gradient(closest-side, #000, #8a8a8a); }
+  .dk-halftone--invert, .dk-theme-dark .dk-halftone { filter: contrast(24) invert(1); }
+
+  /* ---------- Dot text ---------- */
+  .dk-text {
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;   /* keeps `color`, so currentColor dots stay visible */
+  }
+
+  /* ---------- Icon base (glyphs are generated: icons.css) ---------- */
+  .dk-icon {
+    --dk-icon-step: 3px;
+    display: inline-block; position: relative; flex: none;
+    width: calc(var(--dk-icon-step) * 7); height: calc(var(--dk-icon-step) * 7);
+    vertical-align: middle;
+  }
+  .dk-icon::before {
+    content: ""; position: absolute; left: 0; top: 0;
+    width: calc(var(--dk-icon-step) * .72); height: calc(var(--dk-icon-step) * .72);
+    margin: calc(var(--dk-icon-step) * .14);
+    border-radius: 50%;
+  }
+  .dk-icon--square::before { border-radius: 0; width: calc(var(--dk-icon-step) * .86); height: calc(var(--dk-icon-step) * .86); margin: calc(var(--dk-icon-step) * .07); }
+}
+
+/* ==========================================================
+   Accessibility fallbacks (outside layers on purpose)
+   ========================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .dk-btn, .dk-field { transition: none; }
+  .dk-loader > i { animation: none; opacity: .5; }
+}
+
+/* Windows High Contrast & co.: swap dots for solid system-colored equivalents. */
+@media (forced-colors: active) {
+  .dk-dots, .dk-icon, .dk-loader, .dk-meter, .dk-bar, .dk-divider { forced-color-adjust: none; }
+  .dk-meter { --dk-color: GrayText; }
+  .dk-meter::after, .dk-bar { --dk-color: CanvasText; }
+  .dk-divider { --dk-color: CanvasText; }
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card)::before { display: none; }
+  :is(.dk-border, .dk-field, .dk-card) { border: 1px solid CanvasText; }
+  .dk-btn { border: 1px solid ButtonText; }
+  .dk-text { -webkit-text-fill-color: currentColor; background: none; }
+  .dk-halftone { display: none; }
+}
+
+/* AUTO-GENERATED by scripts/build-icons.mjs — do not edit. */
+@layer dotkit.utilities {
+  .dk-icon--arrow-right::before { box-shadow: calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--arrow-left::before { box-shadow: calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--arrow-up::before { box-shadow: calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--arrow-down::before { box-shadow: calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--chevron-right::before { box-shadow: calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor; }
+  .dk-icon--chevron-down::before { box-shadow: calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor; }
+  .dk-icon--check::before { box-shadow: calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor; }
+  .dk-icon--close::before { box-shadow: calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--plus::before { box-shadow: calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--minus::before { box-shadow: calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor; }
+  .dk-icon--search::before { box-shadow: calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--menu::before { box-shadow: calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*5) 0 0 currentColor; }
+  .dk-icon--home::before { box-shadow: calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--user::before { box-shadow: calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--mail::before { box-shadow: calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--heart::before { box-shadow: calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--star::before { box-shadow: calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--info::before { box-shadow: calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--alert::before { box-shadow: calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--play::before { box-shadow: calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--pause::before { box-shadow: calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--sun::before { box-shadow: calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--moon::before { box-shadow: calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--copy::before { box-shadow: calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--github::before { box-shadow: calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+  .dk-icon--external::before { box-shadow: calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*0) 0 0 currentColor, calc(var(--dk-icon-step)*5) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*1) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*2) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*6) calc(var(--dk-icon-step)*3) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*4) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*5) 0 0 currentColor, calc(var(--dk-icon-step)*0) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*1) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*2) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*3) calc(var(--dk-icon-step)*6) 0 0 currentColor, calc(var(--dk-icon-step)*4) calc(var(--dk-icon-step)*6) 0 0 currentColor; }
+}
