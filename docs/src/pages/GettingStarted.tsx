@@ -141,6 +141,20 @@ export default function Usage() {
 
 /* brand-colored dots */
 .hero-dots { --dk-color: #0070f3; --dk-gap: 8px; }`}</CodeBlock>
+      <Card className="callout">
+        <p>
+          <b>注意：グローバルなリセット CSS。</b> <code>{"a { color: inherit }"}</code> のような要素セレクタのリセットも
+          レイヤー外に書くと dotkit に勝ってしまい、<code>&lt;a class="dk-btn dk-btn--solid"&gt;</code> の文字色が消える等の原因になります。
+          リセットは dotkit より<b>前に宣言した</b>レイヤーに入れてください（このサイトもそうしています）。
+        </p>
+      </Card>
+      <CodeBlock lang="css">{`/* load this BEFORE dotkit.css */
+@layer reset, dotkit;
+
+@layer reset {
+  a { color: inherit; }
+  button { font: inherit; }
+}`}</CodeBlock>
 
       <h2 id="verify">7. 配布物の検証</h2>
       <p>

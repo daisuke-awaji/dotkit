@@ -1,16 +1,18 @@
 /* Documentation site styles (not part of the dotkit package). */
+@layer site-reset {
 *, *::before, *::after { box-sizing: border-box; }
-html { color: var(--dk-ink); background: var(--dk-paper); }
-body {
-  margin: 0;
-  font: 400 15px/1.7 Geist, "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: inherit; }
-code, pre, kbd { font-family: var(--dk-font-mono); }
-:not(pre) > code {
-  font-size: .86em; padding: .1em .4em; border-radius: 4px;
-  background: color-mix(in srgb, var(--dk-ink) 6%, transparent);
+  html { color: var(--dk-ink); background: var(--dk-paper); }
+  body {
+    margin: 0;
+    font: 400 15px/1.7 Geist, "Hiragino Sans", "Noto Sans JP", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  code, pre, kbd { font-family: var(--dk-font-mono); }
+  :not(pre) > code {
+    font-size: .86em; padding: .1em .4em; border-radius: 4px;
+    background: color-mix(in srgb, var(--dk-ink) 6%, transparent);
+  }
 }
 h1, h2, h3 { line-height: 1.25; letter-spacing: -.02em; }
 h2 { font-size: 26px; font-weight: 600; margin: 64px 0 8px; scroll-margin-top: 24px; }
@@ -61,7 +63,7 @@ p { margin: 8px 0 16px; }
 .hero-lead { font-size: 19px; line-height: 1.6; max-width: 620px; color: var(--dk-subtle); }
 .hero-lead b { color: var(--dk-ink); font-weight: 500; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-.hero-art { position: absolute; right: 0; top: 0; width: 46%; height: 260px; z-index: -1; opacity: .9; }
+.hero-art { position: absolute; right: 0; top: 0; width: 38%; height: 220px; z-index: -1; opacity: .55; }
 
 /* ---------- grids & panels ---------- */
 .grid { display: grid; gap: 16px; }

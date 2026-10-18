@@ -1,0 +1,3 @@
+/* Declare the site's reset layer BEFORE dotkit so that dotkit components win over it.
+   (Unlayered CSS always beats layered CSS — keep global element resets in a low layer.) */
+@layer site-reset, dotkit;
