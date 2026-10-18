@@ -58,12 +58,11 @@ p { margin: 8px 0 16px; }
 }
 
 /* ---------- hero ---------- */
-.hero { position: relative; isolation: isolate; padding: 40px 0 8px; }
+.hero { padding: 40px 0 8px; }
 .hero-title { font: 800 clamp(72px, 12vw, 148px)/0.9 Geist, sans-serif; letter-spacing: -.05em; margin: 18px 0 18px; }
 .hero-lead { font-size: 19px; line-height: 1.6; max-width: 620px; color: var(--dk-subtle); }
 .hero-lead b { color: var(--dk-ink); font-weight: 500; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
-.hero-art { position: absolute; right: 0; top: 0; width: 38%; height: 220px; z-index: -1; opacity: .55; }
 
 /* ---------- grids & panels ---------- */
 .grid { display: grid; gap: 16px; }

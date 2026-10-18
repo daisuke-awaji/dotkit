@@ -6,7 +6,6 @@ import {
   Card,
   DotIcon,
   DotText,
-  Halftone,
   Input,
   Meter,
   buttonClassName,
@@ -28,7 +27,6 @@ export function Home() {
   return (
     <>
       <section className="hero">
-        <Halftone className="hero-art" direction="to-left" gap={10} />
         <span className="eyebrow">Zero-runtime CSS · React bindings · GitHub-only distribution</span>
         <h1 className="hero-title">
           <DotText gap={5} size={4}>dotkit</DotText>
