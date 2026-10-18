@@ -1,0 +1,109 @@
+name: Release
+
+# Run manually after bumping "version" in package.json on main.
+# Produces (1) a GitHub Release with the npm tarball + build provenance attestation,
+# and (2) a commit on the `dist` branch tagged vX.Y.Z so that
+#   npm i "github:<owner>/dotkit#semver:^X.Y"  and  jsDelivr gh/<owner>/dotkit@vX.Y.Z
+# resolve to pre-built files (no build step on the consumer side).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Read version
+        id: v
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" >/dev/null; then
+            echo "::error::Tag v$VERSION already exists. Bump package.json version first."; exit 1
+          fi
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run build
+
+      - name: Pack tarball
+        run: npm pack
+
+      - uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: dotkit-${{ steps.v.outputs.version }}.tgz
+
+      - name: Commit built package to the dist branch and tag it
+        env:
+          VERSION: ${{ steps.v.outputs.version }}
+        run: |
+          set -euo pipefail
+          SRC_SHA=$(git rev-parse HEAD)
+          STAGE=$(mktemp -d)
+          cp -r dist README.md LICENSE "$STAGE/"
+          # consumer-facing package.json: no scripts, no devDependencies
+          node -e '
+            const p = require("./package.json");
+            delete p.scripts; delete p.devDependencies;
+            require("fs").writeFileSync(process.argv[1] + "/package.json", JSON.stringify(p, null, 2) + "\n");
+          ' "$STAGE"
+
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin dist >/dev/null; then
+            git fetch origin dist
+            git worktree add "$RUNNER_TEMP/dist" origin/dist
+            cd "$RUNNER_TEMP/dist" && git checkout -B dist
+          else
+            git worktree add --detach "$RUNNER_TEMP/dist"
+            cd "$RUNNER_TEMP/dist" && git checkout --orphan dist
+          fi
+          git rm -rfq . 2>/dev/null || true
+          cp -r "$STAGE"/. .
+          git add -A
+          git commit -qm "release: v$VERSION (from $SRC_SHA)"
+          git tag -a "v$VERSION" -m "dotkit v$VERSION"
+          git push origin dist "v$VERSION"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.v.outputs.version }}
+          REPO: ${{ github.repository }}
+        run: |
+          MINOR=$(echo "$VERSION" | cut -d. -f1-2)
+          cat > notes.md <<NOTES
+          ## Install
+
+          \`\`\`sh
+          # tarball (recommended)
+          npm i https://github.com/$REPO/releases/download/v$VERSION/dotkit-$VERSION.tgz
+
+          # git + semver range
+          npm i "github:$REPO#semver:^$MINOR"
+          \`\`\`
+
+          \`\`\`html
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/$REPO@v$VERSION/dist/dotkit.css">
+          \`\`\`
+
+          ## Verify
+
+          \`\`\`sh
+          gh attestation verify dotkit-$VERSION.tgz -R $REPO
+          \`\`\`
+          NOTES
+          gh release create "v$VERSION" "dotkit-$VERSION.tgz" dist/dotkit.css \
+            --title "dotkit v$VERSION" --notes-file notes.md --verify-tag
