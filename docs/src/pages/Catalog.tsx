@@ -7,60 +7,16 @@ import { Feedback } from "./catalog/Feedback";
 import { Display } from "./catalog/Display";
 import { Themes } from "./catalog/Themes";
 
-type Item = [id: string, label: string, since?: string];
-const groups: { id: string; label: string; items: Item[] }[] = [
-  { id: "primitives", label: "Primitives", items: [["dots", "Dots"], ["shape", "Shape"], ["fade", "Fade"], ["duotone", "Duotone", "0.4"], ["pattern", "Pattern", "0.4"]] },
-  {
-    id: "techniques", label: "Techniques",
-    items: [
-      ["border", "Border"], ["march", "Marching border", "0.3"], ["halftone", "Halftone"], ["halftoneimg", "Image halftone", "0.2"],
-      ["halftonetext", "Halftone text", "0.4"], ["text", "Dot text"], ["icon", "Icon"], ["digits", "Dot-matrix digits", "0.3"], ["loader", "Loader"],
-    ],
-  },
-  { id: "forms", label: "Forms", items: [["button", "Button"], ["input", "Input"], ["choice", "Checkbox / Radio / Switch", "0.2"], ["range", "Range", "0.4"]] },
-  {
-    id: "data", label: "Data display",
-    items: [["meter", "Meter"], ["ring", "Ring meter", "0.4"], ["chart", "Bar chart"], ["sparkline", "Sparkline", "0.3"], ["heatmap", "Heatmap", "0.2"], ["uptime", "Uptime bar", "0.2"], ["pictogram", "Pictogram", "0.3"]],
-  },
-  { id: "navigation", label: "Navigation", items: [["tabs", "Tabs", "0.4"], ["pager", "Pagination dots", "0.4"], ["steps", "Stepper", "0.3"], ["leaders", "Dot leaders", "0.2"]] },
-  {
-    id: "feedback", label: "Feedback",
-    items: [["alert", "Alert", "0.4"], ["dialog", "Dialog", "0.4"], ["status", "Status dot", "0.3"], ["typing", "Typing indicator", "0.2"], ["skeleton", "Skeleton", "0.3"]],
-  },
-  { id: "display", label: "Display", items: [["badge", "Badge"], ["divider", "Divider"], ["card", "Card"], ["identicon", "Identicon", "0.3"], ["compose", "Composition"]] },
-  { id: "theming", label: "Themes", items: [["themes", "Theme presets", "0.3"]] },
-];
-const count = groups.reduce((n, g) => n + g.items.length, 0);
-
-function jump(e: React.MouseEvent<HTMLAnchorElement>, id: string) {
-  e.preventDefault();
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
 export function Catalog() {
   return (
     <>
       <span className="eyebrow">Reference</span>
       <h1 style={{ fontSize: 44, margin: "8px 0 12px" }}>Design Catalog</h1>
       <p className="muted">
-        dotkit で描けるすべての表現（{count} 項目）と、その書き方です。プレビューはすべて実際の dotkit で描画しています。
+        dotkit で描けるすべての表現と、その書き方です。プレビューはすべて実際の dotkit で描画しています。
         HTML（クラス）と React の両方のコードを載せています。見出しの <span className="dk-badge since">v0.x</span> は追加されたバージョンです。
         部品を組み合わせた完成例は <a href="#/templates">Templates</a> にあります。
       </p>
-      <nav className="catalog-toc" aria-label="Catalog contents">
-        {groups.map((g) => (
-          <div key={g.id} className="catalog-toc-group">
-            <a className="eyebrow" href={`#${g.id}`} onClick={(e) => jump(e, g.id)}>{g.label}</a>
-            <div className="toc">
-              {g.items.map(([id, label, since]) => (
-                <a key={id} href={`#${id}`} className={since ? "dk-badge dk-badge--solid" : "dk-badge"} onClick={(e) => jump(e, id)}>
-                  {label}
-                </a>
-              ))}
-            </div>
-          </div>
-        ))}
-      </nav>
 
       <Primitives />
       <Techniques />
