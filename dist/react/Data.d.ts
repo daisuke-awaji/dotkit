@@ -91,4 +91,21 @@ export interface DotDigitsProps extends HTMLAttributes<HTMLSpanElement> {
 }
 /** Numbers drawn on a 5×7 dot matrix (clocks, counters, scores). Color follows `currentColor`. */
 export declare function DotDigits({ value, step, square, grid, label, className, style, ...rest }: DotDigitsProps): import("react").JSX.Element;
+export interface RingMeterProps extends HTMLAttributes<HTMLDivElement> {
+    /** 0 – 1. Lights up whole dots. */
+    value: number;
+    /** Dots on the ring (1 – 60). Default: 24. */
+    count?: number;
+    /** Ring diameter. Default: 96px. */
+    diameter?: number | string;
+    /** Dot diameter. Default: 6px. */
+    size?: number | string;
+    /** Lit dot color. Default: `--dk-ink`. */
+    color?: string;
+    shape?: Shape;
+    /** Accessible name. */
+    label?: string;
+}
+/** Circular meter made of dots. Children are centered inside the ring (e.g. the value). */
+export declare function RingMeter({ value, count, diameter, size, color, shape, label, children, className, style, ...rest }: RingMeterProps): import("react").JSX.Element;
 export {};

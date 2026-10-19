@@ -1,6 +1,6 @@
 {
   "name": "dotkit",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "UI made of dots — a zero-runtime CSS framework with React bindings.",
   "license": "MIT",
   "type": "module",

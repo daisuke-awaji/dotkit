@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from "react";
+import { type DialogHTMLAttributes, type HTMLAttributes, type ReactNode } from "react";
 export interface TypingProps extends HTMLAttributes<HTMLSpanElement> {
     /** Render inside a chat-bubble background. */
     bubble?: boolean;
@@ -28,3 +28,18 @@ export interface StatusDotProps extends HTMLAttributes<HTMLSpanElement> {
 }
 /** A status dot followed by its text, e.g. <StatusDot state="ok">Operational</StatusDot>. */
 export declare function StatusDot({ state, pulse, className, ...rest }: StatusDotProps): import("react").JSX.Element;
+export type AlertState = "info" | "ok" | "warn" | "danger";
+export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
+    /** Default: `"info"`. `danger` uses square dots. */
+    state?: AlertState;
+    /** Bold first line. */
+    title?: ReactNode;
+    /** Rendered before the title (e.g. a DotIcon). */
+    icon?: ReactNode;
+}
+/** Tinted message panel with a fading dot band. Add `role="alert"` / `role="status"` yourself when it is live. */
+export declare function Alert({ state, title, icon, children, className, ...rest }: AlertProps): import("react").JSX.Element;
+export interface DialogProps extends DialogHTMLAttributes<HTMLDialogElement> {
+}
+/** Native `<dialog>` with a dotted frame and veil. Open it with `ref.current.showModal()`. */
+export declare const Dialog: import("react").ForwardRefExoticComponent<DialogProps & import("react").RefAttributes<HTMLDialogElement>>;

@@ -49,3 +49,34 @@ export interface HalftoneImageProps extends HTMLAttributes<HTMLDivElement> {
 }
 /** Renders an image as newspaper-style halftone dots (CSS only). */
 export declare function HalftoneImage({ src, alt, gap, toneFilter, invert, imgProps, children, className, style, ...rest }: HalftoneImageProps): import("react").JSX.Element;
+export interface HalftoneTextProps extends HTMLAttributes<HTMLElement> {
+    /** Element to render. Default: `span`. */
+    as?: ElementType;
+    /** Direction of the tone ramp. Default: `to-bottom`. */
+    direction?: "to-bottom" | "to-right" | "radial";
+    /** Halftone cell size. Default: 6px. */
+    gap?: number | string;
+    /** Custom tone ramp (black = biggest dot). Overrides `direction`. */
+    tone?: string;
+}
+/** Large display text printed as halftone dots. Still real, selectable text. */
+export declare function HalftoneText({ as: Tag, direction, gap, tone, className, style, ...rest }: HalftoneTextProps): import("react").JSX.Element;
+export type PatternKind = "dots" | "checker" | "stripes" | "grid" | "diagonal" | "cross" | "stipple";
+export interface PatternProps extends DotStyleProps, HTMLAttributes<HTMLElement> {
+    /** Arrangement of the dots. Default: `"dots"`. */
+    kind?: PatternKind;
+    as?: ElementType;
+}
+/** A surface filled with a dot pattern (checker, stripes, grid, diagonal, cross, stipple). */
+export declare function Pattern({ kind, as: Tag, density, shape, size, gap, color, className, style, ...rest }: PatternProps): import("react").JSX.Element;
+export interface DuotoneProps extends DotStyleProps, HTMLAttributes<HTMLElement> {
+    /** Second dot color. Default: `--dk-mute`. */
+    color2?: string;
+    /** Instead of interleaving, show one gradient from `color` to `color2` through the dots. */
+    ramp?: boolean;
+    /** Gradient angle for `ramp`. Default: 90deg. */
+    angle?: string;
+    as?: ElementType;
+}
+/** Two-color dot field: interleaved dots, or a gradient seen through the dots (`ramp`). */
+export declare function Duotone({ color2, ramp, angle, as: Tag, density, shape, size, gap, color, className, style, ...rest }: DuotoneProps): import("react").JSX.Element;

@@ -12,15 +12,15 @@
 
 ```sh
 # Release tarball (recommended)
-npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.3.0/dotkit-0.3.0.tgz
+npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.4.0/dotkit-0.4.0.tgz
 
 # or follow a semver range via git tags (pre-built `dist` branch)
-npm i "github:daisuke-awaji/dotkit#semver:^0.3"
+npm i "github:daisuke-awaji/dotkit#semver:^0.4"
 ```
 
 ```html
 <!-- or no bundler at all -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.3.0/dist/dotkit.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.4.0/dist/dotkit.css">
 ```
 
 ## Usage
@@ -46,14 +46,14 @@ export default function Page() {
 }
 ```
 
-See the [Design Catalog](https://daisuke-awaji.github.io/dotkit/#/catalog) for every primitive, technique and component with HTML and React code, and [llms.txt](https://daisuke-awaji.github.io/dotkit/llms.txt) for a compact reference aimed at coding agents.
+See the [Design Catalog](https://daisuke-awaji.github.io/dotkit/#/catalog) for every primitive, technique and component with HTML and React code, [Templates](https://daisuke-awaji.github.io/dotkit/#/templates) for complete pages (status page, AI chat), and [llms.txt](https://daisuke-awaji.github.io/dotkit/llms.txt) for a compact reference aimed at coding agents.
 
 ## Verify a release
 
 Release tarballs are built on GitHub Actions and carry a build provenance attestation:
 
 ```sh
-gh attestation verify dotkit-0.3.0.tgz -R daisuke-awaji/dotkit
+gh attestation verify dotkit-0.4.0.tgz -R daisuke-awaji/dotkit
 ```
 
 ## Development

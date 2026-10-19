@@ -13,3 +13,16 @@ export declare const Checkbox: import("react").ForwardRefExoticComponent<ChoiceP
 export declare const Radio: import("react").ForwardRefExoticComponent<ChoiceProps & import("react").RefAttributes<HTMLInputElement>>;
 /** Native checkbox with `role="switch"`. The knob is a dot that travels. */
 export declare const Switch: import("react").ForwardRefExoticComponent<ChoiceProps & import("react").RefAttributes<HTMLInputElement>>;
+export interface RangeProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "size"> {
+    /** Class name for the `.dk-range` wrapper. */
+    wrapperClassName?: string;
+    /** Dot diameter on the track. Default: 4px. */
+    dotSize?: number | string;
+    /** Dot pitch on the track. Default: 8px. */
+    gap?: number | string;
+}
+/**
+ * Native range input on a dot track. The filled part is computed from `value` (or `defaultValue`),
+ * so use it as a controlled input to keep the fill in sync while dragging.
+ */
+export declare const Range: import("react").ForwardRefExoticComponent<RangeProps & import("react").RefAttributes<HTMLInputElement>>;

@@ -20,3 +20,15 @@ export function Halftone({ direction = "to-right", gap, tone, invert, className,
 export function HalftoneImage({ src, alt, gap, toneFilter, invert, imgProps, children, className, style, ...rest }) {
     return (_jsx("div", { className: cx("dk-halftone-img", invert && "dk-halftone-img--invert", className), style: withVars({ "--dk-gap": px(gap), "--dk-tone-filter": toneFilter }, style), ...rest, children: children ?? _jsx("img", { src: src, alt: alt ?? "", ...imgProps }) }));
 }
+/** Large display text printed as halftone dots. Still real, selectable text. */
+export function HalftoneText({ as: Tag = "span", direction = "to-bottom", gap, tone, className, style, ...rest }) {
+    return (_jsx(Tag, { className: cx("dk-text-halftone", direction !== "to-bottom" && `dk-text-halftone--${direction}`, className), style: dotVars({ gap, tone }, style), ...rest }));
+}
+/** A surface filled with a dot pattern (checker, stripes, grid, diagonal, cross, stipple). */
+export function Pattern({ kind = "dots", as: Tag = "div", density, shape, size, gap, color, className, style, ...rest }) {
+    return (_jsx(Tag, { className: cx("dk-pattern", kind !== "dots" && `dk-pattern--${kind}`, densityClass(density), shapeClass(shape), className), style: dotVars({ size, gap, color }, style), ...rest }));
+}
+/** Two-color dot field: interleaved dots, or a gradient seen through the dots (`ramp`). */
+export function Duotone({ color2, ramp, angle, as: Tag = "div", density, shape, size, gap, color, className, style, ...rest }) {
+    return (_jsx(Tag, { className: cx("dk-duotone", ramp && "dk-duotone--ramp", densityClass(density), shapeClass(shape), className), style: withVars({ "--dk-color-2": color2, "--dk-angle": angle }, dotVars({ size, gap, color }, style)), ...rest }));
+}

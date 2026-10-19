@@ -1,4 +1,4 @@
-import { jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { glyphSlug } from "./icon-names.js";
 import { cx, dotVars, px, shapeClass, withVars } from "./utils.js";
 const valueOf = (d) => (typeof d === "number" ? d : d.value);
@@ -30,4 +30,10 @@ export function Pictogram({ icon, value, total = 10, step, color, label, classNa
 export function DotDigits({ value, step, square, grid, label, className, style, ...rest }) {
     const text = String(value);
     return (_jsx("span", { role: "img", "aria-label": label ?? text, className: cx("dk-digits", square && "dk-digits--square", grid && "dk-digits--grid", className), style: dotVars({ step }, style), ...rest, children: [...text].map((c, i) => (_jsx("span", { className: `dk-glyph dk-glyph--${glyphSlug[c] ?? "space"}` }, i))) }));
+}
+/** Circular meter made of dots. Children are centered inside the ring (e.g. the value). */
+export function RingMeter({ value, count = 24, diameter, size, color, shape, label, children, className, style, ...rest }) {
+    const v = Math.min(1, Math.max(0, value));
+    const n = Math.min(60, Math.max(1, Math.round(count)));
+    return (_jsxs("div", { role: "meter", "aria-valuemin": 0, "aria-valuemax": 100, "aria-valuenow": Math.round(v * 100), "aria-label": label, className: cx("dk-ring-meter", shapeClass(shape), className), style: withVars({ "--dk-count": n, "--dk-diameter": px(diameter) }, dotVars({ value: v, size, color }, style)), ...rest, children: [Array.from({ length: n }, (_, i) => (_jsx("i", {}, i))), children !== undefined && _jsx("span", { children: children })] }));
 }

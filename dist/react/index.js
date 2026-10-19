@@ -1,12 +1,12 @@
-export { Dots, DotBorder, DotText, Halftone, HalftoneImage } from "./Dots.js";
+export { Dots, DotBorder, DotText, Halftone, HalftoneImage, HalftoneText, Pattern, Duotone } from "./Dots.js";
 export { DotIcon } from "./DotIcon.js";
 export { Button, buttonClassName } from "./Button.js";
 export { Input } from "./Field.js";
 export { Badge, Divider, Meter, BarChart, Card, Loader } from "./Display.js";
 export { iconNames, glyphChars } from "./icon-names.js";
-export { Checkbox, Radio, Switch } from "./Forms.js";
-export { Heatmap, UptimeBar, Sparkline, Pictogram, DotDigits } from "./Data.js";
-export { DotLeaders, Leader, Steps } from "./Navigation.js";
-export { Typing, Skeleton, StatusDot } from "./Feedback.js";
+export { Checkbox, Radio, Switch, Range } from "./Forms.js";
+export { Heatmap, UptimeBar, Sparkline, Pictogram, DotDigits, RingMeter } from "./Data.js";
+export { DotLeaders, Leader, Steps, TabList, Tab, PaginationDots } from "./Navigation.js";
+export { Typing, Skeleton, StatusDot, Alert, Dialog } from "./Feedback.js";
 export { Identicon, identicon } from "./Identicon.js";
 export { cx, dotVars, withVars, px } from "./utils.js";

@@ -1,4 +1,4 @@
-/*! dotkit v0.3.0 | MIT | https://github.com/daisuke-awaji/dotkit */
+/*! dotkit v0.4.0 | MIT | https://github.com/daisuke-awaji/dotkit */
 
 /* Registered so that dot size / gap can be transitioned (hover, focus). */
 @property --dk-size { syntax: "<length>"; inherits: true; initial-value: 2px; }
@@ -51,8 +51,9 @@
   .dk-dots, .dk-text, .dk-divider, .dk-btn, .dk-meter, .dk-meter::after, .dk-bar,
   .dk-uptime > *, :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader)::before,
   .dk-steps > li::after, .dk-skeleton,
+  .dk-tabs::after, .dk-tabs > *::after, .dk-alert::before, .dk-pattern, .dk-duotone,
   .dk-check:checked, .dk-switch:checked,
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before {
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch, .dk-dialog)::before {
     --_dot: radial-gradient(circle at center,
               var(--dk-color) calc(var(--dk-size) / 2),
               transparent calc(var(--dk-size) / 2 + .6px));
@@ -66,7 +67,8 @@
 
   /* ---------- dotted outline (shared) ---------- */
   :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch) { position: relative; }
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before {
+  /* (.dk-dialog is positioned by the UA — fixed when modal — so it is not in the list above) */
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch, .dk-dialog)::before {
     content: "";
     position: absolute; inset: 0;
     padding: var(--dk-gap);
@@ -242,6 +244,9 @@
   }
   /* cell-based components (heatmap, uptime …) paint one element per dot */
   :is(.dk-heatmap, .dk-identicon).dk-square > *, .dk-spark.dk-square > *::before { border-radius: 1px; }
+  .dk-duotone { --_dot2: radial-gradient(circle at center, var(--dk-color-2) calc(var(--dk-size) / 2), transparent calc(var(--dk-size) / 2 + .6px)); }
+  .dk-duotone.dk-square { --_dot2: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color-2) 0); }
+  .dk-ring-meter.dk-square > i { border-radius: 1px; }
   .dk-uptime.dk-square > * {
     --_dot: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color) 0);
   }
@@ -319,7 +324,8 @@
   .dk-meter { --dk-color: GrayText; }
   .dk-meter::after, .dk-bar { --dk-color: CanvasText; }
   .dk-divider { --dk-color: CanvasText; }
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before { display: none; }
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch, .dk-dialog)::before { display: none; }
+  .dk-dialog { border: 1px solid CanvasText; }
   :is(.dk-border, .dk-field, .dk-card) { border: 1px solid CanvasText; }
   .dk-btn { border: 1px solid ButtonText; }
   .dk-text { -webkit-text-fill-color: currentColor; background: none; }
@@ -327,7 +333,7 @@
 }
 
 /* ==========================================================
-   forms — checkbox / radio / switch (native inputs, appearance: none)
+   forms — checkbox / radio / switch / range (native inputs, appearance: none)
    Keyboard, form submission and screen readers keep working natively.
    ========================================================== */
 @layer dotkit.components {
@@ -418,9 +424,57 @@
     font-size: 14px; line-height: 1.4; cursor: pointer;
   }
   .dk-choice:has(:disabled) { cursor: not-allowed; color: var(--dk-subtle); }
+
+  /* ---------- Range: dot track; the filled part comes from --dk-value on the wrapper ----------
+     <span class="dk-range" style="--dk-value: .4"><input type="range"></span> */
+  .dk-range {
+    --dk-value: .5;
+    --dk-size: 4px; --dk-gap: 8px;
+    --_t: 18px;
+    --_p: calc(var(--dk-value) * 100%);
+    --_p: round(nearest, calc(var(--dk-value) * 100%), var(--dk-gap));
+    position: relative; display: inline-flex; align-items: center;
+    min-width: 160px; height: calc(var(--_t) + 10px);
+    vertical-align: middle;
+  }
+  .dk-range::before {
+    content: ""; position: absolute;
+    left: calc(var(--_t) / 2 - var(--dk-gap) / 2); right: calc(var(--_t) / 2 - var(--dk-gap) / 2);
+    top: 50%; height: var(--dk-gap); margin-top: calc(var(--dk-gap) / -2);
+    background: linear-gradient(90deg, var(--dk-ink) var(--_p), var(--dk-mute) 0);
+    -webkit-mask: radial-gradient(circle at center, #000 calc(var(--dk-size) / 2), transparent calc(var(--dk-size) / 2 + .6px))
+                  0 0 / var(--dk-gap) var(--dk-gap) repeat-x;
+            mask: radial-gradient(circle at center, #000 calc(var(--dk-size) / 2), transparent calc(var(--dk-size) / 2 + .6px))
+                  0 0 / var(--dk-gap) var(--dk-gap) repeat-x;
+    pointer-events: none;
+  }
+  .dk-range > input {
+    -webkit-appearance: none; appearance: none;
+    position: relative; width: 100%; height: var(--_t); margin: 0;
+    background: transparent; cursor: pointer;
+  }
+  .dk-range > input::-webkit-slider-runnable-track { height: var(--_t); background: transparent; }
+  .dk-range > input::-moz-range-track { height: var(--_t); background: transparent; }
+  .dk-range > input::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: var(--_t); height: var(--_t); border-radius: 50%; border: 0;
+    background: var(--dk-ink); box-shadow: 0 0 0 3px var(--dk-paper);
+    transition: transform .2s var(--dk-ease);
+  }
+  .dk-range > input::-moz-range-thumb {
+    width: var(--_t); height: var(--_t); border-radius: 50%; border: 0;
+    background: var(--dk-ink); box-shadow: 0 0 0 3px var(--dk-paper);
+  }
+  .dk-range > input:active::-webkit-slider-thumb { transform: scale(1.15); }
+  .dk-range > input:focus-visible { outline: none; }
+  .dk-range > input:focus-visible::-webkit-slider-thumb { outline: 2px dotted var(--dk-ink); outline-offset: 3px; }
+  .dk-range > input:focus-visible::-moz-range-thumb { outline: 2px dotted var(--dk-ink); outline-offset: 3px; }
+  .dk-range:has(:disabled) { opacity: .4; }
+  .dk-range > input:disabled { cursor: not-allowed; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .dk-range > input::-webkit-slider-thumb { transition: none; }
   .dk-check, .dk-radio, .dk-switch,
   :is(.dk-check, .dk-radio, .dk-switch)::after { transition: none; }
 }
@@ -434,10 +488,11 @@
   .dk-switch::after { background: ButtonText; }
   .dk-switch:checked::after { background: HighlightText; }
   :is(.dk-check, .dk-radio, .dk-switch):disabled { opacity: 1; border-color: GrayText; }
+  .dk-range { forced-color-adjust: none; --dk-ink: CanvasText; --dk-mute: GrayText; --dk-paper: Canvas; }
 }
 
 /* ==========================================================
-   data — heatmap / uptime / sparkline / pictogram
+   data — heatmap / uptime / sparkline / pictogram / ring meter
    Convention: continuous values are `--dk-value` (0 – 1),
    discrete states are `data-state="…"`.
    ========================================================== */
@@ -534,9 +589,95 @@
     -webkit-mask: linear-gradient(90deg, #000 var(--_p), rgb(0 0 0 / .18) 0);
             mask: linear-gradient(90deg, #000 var(--_p), rgb(0 0 0 / .18) 0);
   }
+
+  /* ---------- Ring meter: N dots on a circle; whole dots light up ----------
+     Put --dk-count <i> elements inside (up to 60); any other child is centered as the label. */
+  .dk-ring-meter {
+    --dk-value: .5;
+    --dk-count: 24;
+    --dk-size: 6px;
+    --dk-diameter: 96px;
+    --dk-color: var(--dk-ink);
+    position: relative; display: inline-grid; place-items: center; flex: none;
+    width: var(--dk-diameter); height: var(--dk-diameter);
+    vertical-align: middle;
+  }
+  .dk-ring-meter > i {
+    --_i: 0;
+    --_lit: clamp(0, var(--dk-value) * var(--dk-count) - var(--_i), 1);
+    --_lit: clamp(0, round(down, var(--dk-value) * var(--dk-count) - var(--_i), 1), 1);
+    position: absolute; left: 50%; top: 50%;
+    width: var(--dk-size); height: var(--dk-size);
+    margin: calc(var(--dk-size) / -2);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--dk-color) calc(var(--_lit) * 100%), var(--dk-mute));
+    transform: rotate(calc(var(--_i) / var(--dk-count) * 1turn)) translateY(calc((var(--dk-diameter) - var(--dk-size)) / -2));
+  }
+  .dk-ring-meter > :not(i) { text-align: center; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .dk-ring-meter > i:nth-of-type(1) { --_i: 0; }
+  .dk-ring-meter > i:nth-of-type(2) { --_i: 1; }
+  .dk-ring-meter > i:nth-of-type(3) { --_i: 2; }
+  .dk-ring-meter > i:nth-of-type(4) { --_i: 3; }
+  .dk-ring-meter > i:nth-of-type(5) { --_i: 4; }
+  .dk-ring-meter > i:nth-of-type(6) { --_i: 5; }
+  .dk-ring-meter > i:nth-of-type(7) { --_i: 6; }
+  .dk-ring-meter > i:nth-of-type(8) { --_i: 7; }
+  .dk-ring-meter > i:nth-of-type(9) { --_i: 8; }
+  .dk-ring-meter > i:nth-of-type(10) { --_i: 9; }
+  .dk-ring-meter > i:nth-of-type(11) { --_i: 10; }
+  .dk-ring-meter > i:nth-of-type(12) { --_i: 11; }
+  .dk-ring-meter > i:nth-of-type(13) { --_i: 12; }
+  .dk-ring-meter > i:nth-of-type(14) { --_i: 13; }
+  .dk-ring-meter > i:nth-of-type(15) { --_i: 14; }
+  .dk-ring-meter > i:nth-of-type(16) { --_i: 15; }
+  .dk-ring-meter > i:nth-of-type(17) { --_i: 16; }
+  .dk-ring-meter > i:nth-of-type(18) { --_i: 17; }
+  .dk-ring-meter > i:nth-of-type(19) { --_i: 18; }
+  .dk-ring-meter > i:nth-of-type(20) { --_i: 19; }
+  .dk-ring-meter > i:nth-of-type(21) { --_i: 20; }
+  .dk-ring-meter > i:nth-of-type(22) { --_i: 21; }
+  .dk-ring-meter > i:nth-of-type(23) { --_i: 22; }
+  .dk-ring-meter > i:nth-of-type(24) { --_i: 23; }
+  .dk-ring-meter > i:nth-of-type(25) { --_i: 24; }
+  .dk-ring-meter > i:nth-of-type(26) { --_i: 25; }
+  .dk-ring-meter > i:nth-of-type(27) { --_i: 26; }
+  .dk-ring-meter > i:nth-of-type(28) { --_i: 27; }
+  .dk-ring-meter > i:nth-of-type(29) { --_i: 28; }
+  .dk-ring-meter > i:nth-of-type(30) { --_i: 29; }
+  .dk-ring-meter > i:nth-of-type(31) { --_i: 30; }
+  .dk-ring-meter > i:nth-of-type(32) { --_i: 31; }
+  .dk-ring-meter > i:nth-of-type(33) { --_i: 32; }
+  .dk-ring-meter > i:nth-of-type(34) { --_i: 33; }
+  .dk-ring-meter > i:nth-of-type(35) { --_i: 34; }
+  .dk-ring-meter > i:nth-of-type(36) { --_i: 35; }
+  .dk-ring-meter > i:nth-of-type(37) { --_i: 36; }
+  .dk-ring-meter > i:nth-of-type(38) { --_i: 37; }
+  .dk-ring-meter > i:nth-of-type(39) { --_i: 38; }
+  .dk-ring-meter > i:nth-of-type(40) { --_i: 39; }
+  .dk-ring-meter > i:nth-of-type(41) { --_i: 40; }
+  .dk-ring-meter > i:nth-of-type(42) { --_i: 41; }
+  .dk-ring-meter > i:nth-of-type(43) { --_i: 42; }
+  .dk-ring-meter > i:nth-of-type(44) { --_i: 43; }
+  .dk-ring-meter > i:nth-of-type(45) { --_i: 44; }
+  .dk-ring-meter > i:nth-of-type(46) { --_i: 45; }
+  .dk-ring-meter > i:nth-of-type(47) { --_i: 46; }
+  .dk-ring-meter > i:nth-of-type(48) { --_i: 47; }
+  .dk-ring-meter > i:nth-of-type(49) { --_i: 48; }
+  .dk-ring-meter > i:nth-of-type(50) { --_i: 49; }
+  .dk-ring-meter > i:nth-of-type(51) { --_i: 50; }
+  .dk-ring-meter > i:nth-of-type(52) { --_i: 51; }
+  .dk-ring-meter > i:nth-of-type(53) { --_i: 52; }
+  .dk-ring-meter > i:nth-of-type(54) { --_i: 53; }
+  .dk-ring-meter > i:nth-of-type(55) { --_i: 54; }
+  .dk-ring-meter > i:nth-of-type(56) { --_i: 55; }
+  .dk-ring-meter > i:nth-of-type(57) { --_i: 56; }
+  .dk-ring-meter > i:nth-of-type(58) { --_i: 57; }
+  .dk-ring-meter > i:nth-of-type(59) { --_i: 58; }
+  .dk-ring-meter > i:nth-of-type(60) { --_i: 59; }
 }
 
 @media (forced-colors: active) {
+  .dk-ring-meter { forced-color-adjust: none; --dk-color: CanvasText; --dk-mute: GrayText; }
   .dk-spark, .dk-pictogram { forced-color-adjust: none; --dk-color: CanvasText; color: CanvasText; }
   .dk-heatmap, .dk-uptime { forced-color-adjust: none; --dk-color: CanvasText; --dk-paper: Canvas; --dk-mute: GrayText; }
   .dk-uptime > * { --dk-color: CanvasText; }
@@ -544,7 +685,7 @@
 }
 
 /* ==========================================================
-   navigation — dot leaders / steps
+   navigation — dot leaders / steps / tabs / pagination dots
    ========================================================== */
 @layer dotkit.components {
 
@@ -620,16 +761,85 @@
     width: var(--dk-gap); height: auto;
     background-repeat: no-repeat space;
   }
+
+  /* ---------- Tabs: the selected tab is underlined with ink dots ----------
+     <div class="dk-tabs" role="tablist"><button role="tab" aria-selected="true">…</button>…</div>
+     (links work too: aria-current="page") */
+  .dk-tabs {
+    --dk-size: 2px; --dk-gap: 5px;
+    position: relative; display: flex; gap: 2px; overflow-x: auto;
+  }
+  .dk-tabs::after {
+    --dk-color: var(--dk-mute);
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: var(--dk-gap);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space no-repeat;
+    pointer-events: none;
+  }
+  .dk-tabs > * {
+    -webkit-appearance: none; appearance: none;
+    position: relative; z-index: 1; flex: none;
+    margin: 0; border: 0; background: none; cursor: pointer;
+    padding: 10px 12px calc(10px + var(--dk-gap));
+    font: 500 13px/1 var(--dk-font-mono); color: var(--dk-subtle); text-decoration: none;
+    border-radius: 6px 6px 0 0;
+  }
+  .dk-tabs > *::after {
+    --dk-color: transparent;
+    content: ""; position: absolute; left: 6px; right: 6px; bottom: 0; height: var(--dk-gap);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space no-repeat;
+    transition: --dk-size .25s var(--dk-ease);
+  }
+  .dk-tabs > :hover { color: var(--dk-ink); }
+  .dk-tabs > :hover::after { --dk-color: var(--dk-subtle); }
+  .dk-tabs > :is([aria-selected="true"], [aria-current="page"]) { color: var(--dk-ink); }
+  .dk-tabs > :is([aria-selected="true"], [aria-current="page"])::after { --dk-color: var(--dk-ink); --dk-size: 3px; }
+  .dk-tabs > :focus-visible { outline: 2px dotted var(--dk-ink); outline-offset: -2px; }
+
+  /* ---------- Pagination dots: the current page stretches into three dots ---------- */
+  .dk-pager {
+    --dk-size: 8px;
+    display: inline-flex; align-items: center; gap: 2px;
+    margin: 0; padding: 0; list-style: none;
+  }
+  .dk-pager > :is(button, a) {
+    -webkit-appearance: none; appearance: none;
+    display: inline-grid; place-items: center;
+    margin: 0; padding: 6px; border: 0; border-radius: 999px;
+    background: none; cursor: pointer;
+  }
+  .dk-pager > :is(button, a)::before {
+    content: ""; display: block;
+    width: var(--dk-size); height: var(--dk-size); border-radius: 999px;
+    background: var(--dk-mute);
+    transition: width .3s var(--dk-ease), background-color .2s;
+  }
+  .dk-pager > :is(button, a):hover::before { background: var(--dk-subtle); }
+  .dk-pager > :is([aria-current="true"], [aria-current="page"], [aria-selected="true"])::before {
+    width: calc(var(--dk-size) * 3.75);
+    background: radial-gradient(circle at center, var(--dk-ink) calc(var(--dk-size) / 2), transparent calc(var(--dk-size) / 2 + .6px))
+                0 0 / calc(var(--dk-size) * 1.25) 100% repeat-x;
+  }
+  .dk-pager > :focus-visible { outline: 2px dotted var(--dk-ink); outline-offset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dk-tabs > *::after, .dk-pager > *::before { transition: none; }
 }
 
 @media (forced-colors: active) {
+  .dk-tabs, .dk-pager { forced-color-adjust: none; --dk-mute: GrayText; --dk-ink: CanvasText; --dk-subtle: GrayText; }
+  .dk-tabs > :is([aria-selected="true"], [aria-current="page"])::after { --dk-color: Highlight; }
   .dk-steps > li { forced-color-adjust: none; --dk-mute: GrayText; --dk-ink: CanvasText; --dk-paper: Canvas; --dk-subtle: GrayText; }
   .dk-steps > li[aria-current="step"]::before { background: Highlight; }
   :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader)::before { forced-color-adjust: none; --dk-color: GrayText; }
 }
 
 /* ==========================================================
-   feedback — typing indicator / skeleton / status dot
+   feedback — typing indicator / skeleton / status dot / alert / dialog
    ========================================================== */
 @layer dotkit.components {
 
@@ -699,11 +909,62 @@
     0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--dk-color) 55%, transparent); }
     70%, 100% { box-shadow: 0 0 0 calc(var(--_d) * .9) transparent; }
   }
+
+  /* ---------- Alert: tinted panel with a fading dot band on the left ----------
+     data-state="info" (default) | "ok" | "warn" | "danger". Danger uses square dots. */
+  .dk-alert {
+    --dk-color: var(--dk-info);
+    --dk-size: 2.5px; --dk-gap: 5px;
+    position: relative; display: block;
+    padding: 14px 16px 14px 40px;
+    border-radius: var(--dk-radius);
+    font-size: 14px; line-height: 1.55;
+    color: var(--dk-ink);
+    background: color-mix(in srgb, var(--dk-color) 8%, var(--dk-paper));
+  }
+  .dk-alert::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 30px;
+    border-radius: var(--dk-radius) 0 0 var(--dk-radius);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    -webkit-mask: linear-gradient(90deg, #000 30%, transparent);
+            mask: linear-gradient(90deg, #000 30%, transparent);
+  }
+  .dk-alert[data-state="ok"] { --dk-color: var(--dk-ok); }
+  .dk-alert[data-state="warn"] { --dk-color: var(--dk-warn); }
+  .dk-alert[data-state="danger"] { --dk-color: var(--dk-danger); }
+  .dk-alert[data-state="danger"]::before { --_dot: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color) 0); }
+  .dk-alert > :first-child { margin-top: 0; }
+  .dk-alert > :last-child { margin-bottom: 0; }
+  .dk-alert__title { display: flex; align-items: center; gap: 8px; margin: 0 0 2px; font-weight: 600; }
+
+  /* ---------- Dialog: native <dialog> with a dotted frame and a dotted veil ---------- */
+  .dk-dialog {
+    --dk-color: var(--dk-mute); --dk-size: 2px; --dk-gap: 6px;
+    width: min(480px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    padding: 24px; border: 0;
+    border-radius: calc(var(--dk-radius) * 1.5);
+    color: var(--dk-ink); background: var(--dk-paper);
+    box-shadow: 0 30px 80px -30px rgb(0 0 0 / .45);
+  }
+  .dk-dialog::backdrop {
+    background:
+      radial-gradient(circle at center, rgb(0 0 0 / .6) 1.3px, transparent 1.9px) 0 0 / 6px 6px,
+      rgb(0 0 0 / .32);
+  }
+  .dk-dialog[open] { animation: dk-dialog-in .28s var(--dk-ease); }
+  .dk-dialog[open]::backdrop { animation: dk-fade-in .28s ease-out; }
+  .dk-dialog > :first-child { margin-top: 0; }
+  .dk-dialog > :last-child { margin-bottom: 0; }
+  .dk-dialog__actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+  @keyframes dk-dialog-in { from { opacity: 0; transform: translateY(8px) scale(.985); } }
+  @keyframes dk-fade-in { from { opacity: 0; } }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .dk-typing > i { animation: none; opacity: .6; }
   .dk-skeleton, .dk-status--pulse::before { animation: none; }
+  .dk-dialog[open], .dk-dialog[open]::backdrop { animation: none; }
 }
 @media (forced-colors: active) {
   .dk-typing { forced-color-adjust: none; color: CanvasText; }
@@ -711,6 +972,8 @@
   .dk-skeleton { forced-color-adjust: none; --dk-color: GrayText; }
   .dk-status::before { forced-color-adjust: none; background: CanvasText; }
   .dk-status[data-state="idle"]::before { background: none; box-shadow: inset 0 0 0 1.5px CanvasText; }
+  .dk-alert { border: 1px solid CanvasText; }
+  .dk-alert::before { forced-color-adjust: none; --dk-color: CanvasText; }
 }
 
 /* ==========================================================
@@ -771,7 +1034,7 @@
 }
 
 /* ==========================================================
-   effects — image halftone / marching border
+   effects — image halftone / halftone text / marching border / duotone / patterns
    ========================================================== */
 @layer dotkit.utilities {
 
@@ -815,6 +1078,69 @@
     }
   }
 
+  /* ---------- Halftone text: glyphs printed as halftone (dot size follows --dk-tone) ----------
+     Large display text only. Black-and-white by design (it is thresholded). */
+  .dk-text-halftone {
+    --dk-gap: 6px;
+    --dk-tone: linear-gradient(180deg, #000, #5e5e5e);
+    background:
+      var(--dk-tone),
+      radial-gradient(circle at center, #000 0, #fff calc(var(--dk-gap) * .72)) 0 0 / var(--dk-gap) var(--dk-gap);
+    background-blend-mode: screen;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: contrast(24);
+    mix-blend-mode: multiply;   /* the white between dots disappears on light paper */
+  }
+  .dk-text-halftone--to-right { --dk-tone: linear-gradient(90deg, #000, #5e5e5e); }
+  .dk-text-halftone--radial   { --dk-tone: radial-gradient(closest-side, #000, #5e5e5e); }
+  :is(.dk-theme-dark, .dk-theme-amber, .dk-theme-blueprint) .dk-text-halftone { filter: contrast(24) invert(1); mix-blend-mode: screen; }
+
+  /* ---------- Duotone: two interleaved dot colors, or one gradient seen through dots ---------- */
+  .dk-duotone {
+    background-image: var(--_dot2), var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-position: calc(var(--dk-gap) / 2) calc(var(--dk-gap) / 2), 0 0;
+  }
+  .dk-duotone--ramp {
+    background: linear-gradient(var(--dk-angle, 90deg), var(--dk-color), var(--dk-color-2));
+    -webkit-mask: var(--_dot) 0 0 / var(--dk-gap) var(--dk-gap);
+            mask: var(--_dot) 0 0 / var(--dk-gap) var(--dk-gap);
+  }
+
+  /* ---------- Patterns: arrangements of the same dot ---------- */
+  .dk-pattern { background-image: var(--_dot); background-size: var(--dk-gap) var(--dk-gap); }
+  .dk-pattern--checker {
+    background-image: var(--_dot), var(--_dot);
+    background-size: calc(var(--dk-gap) * 2) calc(var(--dk-gap) * 2);
+    background-position: 0 0, var(--dk-gap) var(--dk-gap);
+  }
+  .dk-pattern--stripes { background-size: var(--dk-gap) calc(var(--dk-gap) * 3); }
+  .dk-pattern--grid {
+    background-image: var(--_dot), var(--_dot);
+    background-size: var(--dk-gap) calc(var(--dk-gap) * 4), calc(var(--dk-gap) * 4) var(--dk-gap);
+    background-position: 0 calc(var(--dk-gap) * -1.5), calc(var(--dk-gap) * -1.5) 0;
+  }
+  .dk-pattern--diagonal {
+    background-image: var(--_dot), var(--_dot), var(--_dot), var(--_dot);
+    background-size: calc(var(--dk-gap) * 4) calc(var(--dk-gap) * 4);
+    background-position: 0 0, var(--dk-gap) var(--dk-gap), calc(var(--dk-gap) * 2) calc(var(--dk-gap) * 2), calc(var(--dk-gap) * 3) calc(var(--dk-gap) * 3);
+  }
+  .dk-pattern--cross {
+    background-image: var(--_dot), var(--_dot), var(--_dot), var(--_dot), var(--_dot);
+    background-size: calc(var(--dk-gap) * 5) calc(var(--dk-gap) * 5);
+    background-position: 0 0, var(--dk-gap) 0, calc(var(--dk-gap) * -1) 0, 0 var(--dk-gap), 0 calc(var(--dk-gap) * -1);
+  }
+  .dk-pattern--stipple {
+    background-image: var(--_dot), var(--_dot), var(--_dot), var(--_dot), var(--_dot);
+    background-size:
+      calc(var(--dk-gap) * 3) calc(var(--dk-gap) * 5), calc(var(--dk-gap) * 7) calc(var(--dk-gap) * 3),
+      calc(var(--dk-gap) * 5) calc(var(--dk-gap) * 7), calc(var(--dk-gap) * 11) calc(var(--dk-gap) * 13),
+      calc(var(--dk-gap) * 13) calc(var(--dk-gap) * 11);
+    background-position: 0 0, calc(var(--dk-gap) * 2) var(--dk-gap), var(--dk-gap) calc(var(--dk-gap) * 4),
+      calc(var(--dk-gap) * 5) calc(var(--dk-gap) * 2), calc(var(--dk-gap) * 3) calc(var(--dk-gap) * 6);
+  }
+
   .dk-halftone-img > picture > img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .dk-halftone-img--invert, :is(.dk-theme-dark, .dk-theme-amber, .dk-theme-blueprint) .dk-halftone-img { filter: contrast(24) invert(1); }
 }
@@ -824,10 +1150,16 @@
 }
 
 @media (forced-colors: active) {
+  .dk-text-halftone { -webkit-text-fill-color: currentColor; background: none; filter: none; mix-blend-mode: normal; }
+  .dk-pattern, .dk-duotone { forced-color-adjust: none; --dk-color: GrayText; --dk-color-2: GrayText; }
   /* show the plain image */
   .dk-halftone-img { filter: none; }
   .dk-halftone-img::before { display: none; }
   .dk-halftone-img > :is(img, video, canvas, svg, picture) { mix-blend-mode: normal; filter: none; }
+}
+
+@layer dotkit.components {
+  .dk-duotone { --dk-color-2: var(--dk-mute); }
 }
 
 /* ==========================================================
