@@ -1,4 +1,4 @@
-import type { ElementType, HTMLAttributes } from "react";
+import type { ElementType, HTMLAttributes, ImgHTMLAttributes } from "react";
 import { type DotStyleProps, type Fade } from "./utils.js";
 export interface DotsProps extends DotStyleProps, HTMLAttributes<HTMLElement> {
     /** Fade the field out towards a direction using a mask. */
@@ -31,3 +31,19 @@ export interface HalftoneProps extends HTMLAttributes<HTMLDivElement> {
 }
 /** Decorative halftone: tone is expressed by dot size. Do not put content inside. */
 export declare function Halftone({ direction, gap, tone, invert, className, style, ...rest }: HalftoneProps): import("react").JSX.Element;
+export interface HalftoneImageProps extends HTMLAttributes<HTMLDivElement> {
+    /** Image URL. Alternatively pass an `<img>` / `<picture>` / `<video>` / `<canvas>` as children. */
+    src?: string;
+    /** Alternative text of the image. Required when `src` is used (pass `""` if decorative). */
+    alt?: string;
+    /** Halftone cell size. Default: 6px. */
+    gap?: number | string;
+    /** CSS filter applied to the image before thresholding. Default: `grayscale(1) contrast(1.4) brightness(.75)`. */
+    toneFilter?: string;
+    /** White dots on black. Automatic inside `.dk-theme-dark`. */
+    invert?: boolean;
+    /** Extra props for the generated `<img>`. */
+    imgProps?: ImgHTMLAttributes<HTMLImageElement>;
+}
+/** Renders an image as newspaper-style halftone dots (CSS only). */
+export declare function HalftoneImage({ src, alt, gap, toneFilter, invert, imgProps, children, className, style, ...rest }: HalftoneImageProps): import("react").JSX.Element;

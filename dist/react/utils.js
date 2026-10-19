@@ -2,7 +2,16 @@
 export function cx(...parts) {
     return parts.filter(Boolean).join(" ");
 }
-const px = (v) => (typeof v === "number" ? `${v}px` : v);
+/** Number -> `${n}px`; strings pass through. */
+export const px = (v) => (typeof v === "number" ? `${v}px` : v);
+/** Merges arbitrary CSS custom properties into a style object, skipping undefined values. */
+export function withVars(vars, style) {
+    const out = {};
+    for (const [k, v] of Object.entries(vars))
+        if (v !== undefined)
+            out[k] = v;
+    return { ...out, ...style };
+}
 /** Builds the dotkit CSS variables, skipping undefined values. */
 export function dotVars(vars, style) {
     const out = {};

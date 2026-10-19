@@ -1,7 +1,11 @@
-export { Dots, DotBorder, DotText, Halftone } from "./Dots.js";
+export { Dots, DotBorder, DotText, Halftone, HalftoneImage } from "./Dots.js";
 export { DotIcon } from "./DotIcon.js";
 export { Button, buttonClassName } from "./Button.js";
 export { Input } from "./Field.js";
 export { Badge, Divider, Meter, BarChart, Card, Loader } from "./Display.js";
 export { iconNames } from "./icon-names.js";
-export { cx, dotVars } from "./utils.js";
+export { Checkbox, Radio, Switch } from "./Forms.js";
+export { Heatmap, UptimeBar } from "./Data.js";
+export { DotLeaders, Leader } from "./Navigation.js";
+export { Typing } from "./Feedback.js";
+export { cx, dotVars, withVars, px } from "./utils.js";

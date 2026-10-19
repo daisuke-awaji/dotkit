@@ -2,6 +2,10 @@ import type { CSSProperties } from "react";
 /** Joins truthy class names. */
 export declare function cx(...parts: Array<string | false | null | undefined>): string;
 type Px = number | string | undefined;
+/** Number -> `${n}px`; strings pass through. */
+export declare const px: (v: Px) => string | undefined;
+/** Merges arbitrary CSS custom properties into a style object, skipping undefined values. */
+export declare function withVars(vars: Record<`--${string}`, string | number | undefined>, style?: CSSProperties): CSSProperties;
 /** Builds the dotkit CSS variables, skipping undefined values. */
 export declare function dotVars(vars: {
     size?: Px;
