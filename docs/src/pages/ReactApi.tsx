@@ -1,4 +1,4 @@
-import { CodeBlock, PropsTable, Toc, type PropRow } from "../ui";
+import { CodeBlock, PropsTable, type PropRow } from "../ui";
 
 const dotStyle: PropRow[] = [
   ["density", `"sparse" | "normal" | "dense"`, "-", "密度プリセット。size / gap が優先されます"],
@@ -326,7 +326,6 @@ export function ReactApi() {
         <code>dotkit/react</code> のコンポーネントはすべて状態を持たず、props をクラス名と CSS 変数に変換するだけです。
         そのため Server Components でそのまま使えます。指定しなかった props は HTML 属性としてそのまま渡されます。
       </p>
-      <Toc items={sections.map((s) => [s.id, s.name.replace(/[<>]/g, "")] as [string, string])} />
       {sections.map((s) => (
         <section key={s.id}>
           <h2 id={s.id} style={{ fontFamily: "var(--dk-font-mono)", fontSize: 22 }}>
