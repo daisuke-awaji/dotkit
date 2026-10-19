@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { Card, DotIcon } from "dotkit/react";
+import { useT } from "./i18n";
 
 /* ---------- copy-to-clipboard with toast ---------- */
 const ToastCtx = createContext<(msg: string) => void>(() => {});
@@ -94,10 +95,11 @@ export function Example({
 /* ---------- props table ---------- */
 export type PropRow = [name: string, type: string, def: string, desc: string];
 export function PropsTable({ rows }: { rows: PropRow[] }) {
+  const t = useT();
   return (
     <table>
       <thead>
-        <tr><th>Prop</th><th>Type</th><th>Default</th><th>説明</th></tr>
+        <tr><th>Prop</th><th>Type</th><th>Default</th><th>{t("説明", "Description")}</th></tr>
       </thead>
       <tbody>
         {rows.map(([n, t, d, desc]) => (

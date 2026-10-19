@@ -10,6 +10,7 @@ import {
 } from "dotkit/react";
 import { Example } from "../../ui";
 import { Tile, Since, rand, contributions, week } from "./shared";
+import { useT } from "../../i18n";
 const heat = contributions(26);
 const r = rand(3);
 const uptimeA = Array.from({ length: 90 }, (_, i) => (i === 61 ? "down" : i === 23 || i === 62 ? "warn" : "ok") as "ok" | "warn" | "down");
@@ -20,15 +21,24 @@ const series2 = wave(40, 12, (i, rr) => 180 + Math.sin(i / 5) * 30 + rr() * 25 -
 const series3 = wave(40, 13, (i, rr) => (rr() < 0.12 ? 2 + rr() * 3 : rr() * 0.8));
 
 export function DataDisplay() {
+  const t = useT();
   return (
     <>
       <h2 id="data">Data display</h2>
-      <p className="muted">ドットの数・大きさ・濃さで値を表す部品。</p>
+      <p className="muted">{t(<>ドットの数・大きさ・濃さで値を表す部品。</>, <>Parts that show values through the number, size and tone of dots.</>)}</p>
 
       <h3 id="meter">Meter</h3>
       <p>
-        値は <code>round()</code> でドット単位に切り捨てられ、半端なドットが出ません。
-        React 版は <code>role="meter"</code> と <code>aria-valuenow</code> を自動で付けます。
+        {t(
+          <>
+            値は <code>round()</code> でドット単位に切り捨てられ、半端なドットが出ません。
+            React 版は <code>role="meter"</code> と <code>aria-valuenow</code> を自動で付けます。
+          </>,
+          <>
+            Values are rounded down to whole dots with <code>round()</code>, so you never get a partial dot.
+            The React version adds <code>role="meter"</code> and <code>aria-valuenow</code> automatically.
+          </>,
+        )}
       </p>
       <Example
         align="left"
@@ -47,9 +57,18 @@ export function DataDisplay() {
 
       <h3 id="ring">Ring meter <Since v="0.4" /></h3>
       <p>
-        円周上に並んだドットで進み具合を表すメーターです。<code>--dk-value</code>（0〜1）に応じて、ドットが 1 つずつ点きます（端数は切り捨て）。
-        中には <code>--dk-count</code> 個（最大 60）の <code>&lt;i&gt;</code> を置き、それ以外の要素は中央のラベルになります。
-        大きさは <code>--dk-diameter</code>、ドット径は <code>--dk-size</code> です。
+        {t(
+          <>
+            円周上に並んだドットで進み具合を表すメーターです。<code>--dk-value</code>（0〜1）に応じて、ドットが 1 つずつ点きます（端数は切り捨て）。
+            中には <code>--dk-count</code> 個（最大 60）の <code>&lt;i&gt;</code> を置き、それ以外の要素は中央のラベルになります。
+            大きさは <code>--dk-diameter</code>、ドット径は <code>--dk-size</code> です。
+          </>,
+          <>
+            A meter that shows progress with dots around a circle. Dots light up one at a time with <code>--dk-value</code> (0–1), rounding down.
+            Place <code>--dk-count</code> <code>&lt;i&gt;</code> elements inside (up to 60); any other element becomes the centered label.
+            Set the size with <code>--dk-diameter</code> and the dot diameter with <code>--dk-size</code>.
+          </>,
+        )}
       </p>
       <Example
         html={`<div class="dk-ring-meter" style="--dk-value: .62" role="meter"
@@ -67,7 +86,7 @@ export function DataDisplay() {
       </Example>
 
       <h3 id="chart">Bar chart</h3>
-      <p>バーはドットの積み重ね。高さもドット単位にスナップします。</p>
+      <p>{t(<>バーはドットの積み重ね。高さもドット単位にスナップします。</>, <>Bars are stacks of dots, and their height snaps to whole dots too.</>)}</p>
       <Example
         html={`<div class="dk-chart">
   <i class="dk-bar" style="--dk-value: .35"></i>
@@ -89,8 +108,16 @@ export function DataDisplay() {
 
       <h3 id="sparkline">Sparkline <Since v="0.3" /></h3>
       <p>
-        値ごとに 1 つのドットを、その高さに置いた小さな折れ線です。最新の値には輪が付きます。
-        <code>.dk-spark--area</code> で各点の下を薄いドットで埋めます。値は Heatmap と同じく <code>--dk-value</code>（0〜1）です。
+        {t(
+          <>
+            値ごとに 1 つのドットを、その高さに置いた小さな折れ線です。最新の値には輪が付きます。
+            <code>.dk-spark--area</code> で各点の下を薄いドットで埋めます。値は Heatmap と同じく <code>--dk-value</code>（0〜1）です。
+          </>,
+          <>
+            A tiny line chart that places one dot per value at its height. The latest value gets a ring.
+            <code>.dk-spark--area</code> fills below each point with faint dots. Values use <code>--dk-value</code> (0–1), like Heatmap.
+          </>,
+        )}
       </p>
       <Example
         align="left"
@@ -122,9 +149,18 @@ export function DataDisplay() {
 
       <h3 id="heatmap">Heatmap <Since v="0.2" /></h3>
       <p>
-        GitHub の草のような、1 セルに 1 ドットのヒートマップです。値（<code>--dk-value</code>、0〜1）がドットの大きさと濃さの両方に効きます。
-        <code>.dk-heatmap--tone</code> は濃さだけ、<code>.dk-heatmap--size</code> は大きさだけで値を表します。
-        セルは列ごとに上から下へ並ぶので、<code>--dk-rows: 7</code>（既定値）なら 1 列が 1 週間になります。
+        {t(
+          <>
+            GitHub の草のような、1 セルに 1 ドットのヒートマップです。値（<code>--dk-value</code>、0〜1）がドットの大きさと濃さの両方に効きます。
+            <code>.dk-heatmap--tone</code> は濃さだけ、<code>.dk-heatmap--size</code> は大きさだけで値を表します。
+            セルは列ごとに上から下へ並ぶので、<code>--dk-rows: 7</code>（既定値）なら 1 列が 1 週間になります。
+          </>,
+          <>
+            A heatmap with one dot per cell, like GitHub's contribution graph. The value (<code>--dk-value</code>, 0–1) drives both dot size and tone.
+            <code>.dk-heatmap--tone</code> encodes it in tone only, <code>.dk-heatmap--size</code> in size only.
+            Cells run top to bottom in each column, so with <code>--dk-rows: 7</code> (the default) each column is one week.
+          </>,
+        )}
       </p>
       <Example
         align="left"
@@ -155,9 +191,18 @@ export function DataDisplay() {
 
       <h3 id="uptime">Uptime bar <Since v="0.2" /></h3>
       <p>
-        ステータスページでおなじみの「過去 90 日の稼働状況」です。1 期間を縦 1 列のドットで表し、
-        <code>data-state</code>（<code>ok</code> / <code>warn</code> / <code>down</code> / <code>none</code>）で色と高さが変わります。
-        色だけに頼らないよう、障害の重さは列の高さ（5 / 3 / 1 ドット）でも表しています。
+        {t(
+          <>
+            ステータスページでおなじみの「過去 90 日の稼働状況」です。1 期間を縦 1 列のドットで表し、
+            <code>data-state</code>（<code>ok</code> / <code>warn</code> / <code>down</code> / <code>none</code>）で色と高さが変わります。
+            色だけに頼らないよう、障害の重さは列の高さ（5 / 3 / 1 ドット）でも表しています。
+          </>,
+          <>
+            The familiar “last 90 days” bar from status pages. Each period is one vertical column of dots, and
+            <code>data-state</code> (<code>ok</code> / <code>warn</code> / <code>down</code> / <code>none</code>) changes its color and height.
+            So that color is never the only signal, severity is also shown by column height (5 / 3 / 1 dots).
+          </>,
+        )}
       </p>
       <Example
         align="left"
@@ -185,8 +230,16 @@ export function DataDisplay() {
 
       <h3 id="pictogram">Pictogram <Since v="0.3" /></h3>
       <p>
-        アイコン 1 つを 1 単位として数を表すグラフ（アイソタイプ）です。各アイコンの <code>--dk-value</code>（0〜1）が塗る割合で、
-        端数はドットの列単位で切り替わります。残りは薄く表示します。
+        {t(
+          <>
+            アイコン 1 つを 1 単位として数を表すグラフ（アイソタイプ）です。各アイコンの <code>--dk-value</code>（0〜1）が塗る割合で、
+            端数はドットの列単位で切り替わります。残りは薄く表示します。
+          </>,
+          <>
+            A chart where one icon stands for one unit (an isotype). Each icon's <code>--dk-value</code> (0–1) is how much of it is filled,
+            with fractions switching by dot column. The remainder is shown faintly.
+          </>,
+        )}
       </p>
       <Example
         align="left"

@@ -11,12 +11,14 @@ import {
 } from "dotkit/react";
 import { Example } from "../../ui";
 import { Tile, Since, week } from "./shared";
+import { useT } from "../../i18n";
 
 export function Display() {
+  const t = useT();
   return (
     <>
       <h2 id="display">Display</h2>
-      <p className="muted">情報をまとめて見せる小物とコンテナ。</p>
+      <p className="muted">{t(<>情報をまとめて見せる小物とコンテナ。</>, <>Small parts and containers that present information.</>)}</p>
 
       <h3 id="badge">Badge</h3>
       <Example
@@ -44,7 +46,7 @@ export function Display() {
       </Example>
 
       <h3 id="card">Card</h3>
-      <p>ドット枠のコンテナ。ドット色は <code>color</code>（<code>--dk-color</code>）で変えられます。</p>
+      <p>{t(<>ドット枠のコンテナ。ドット色は <code>color</code>（<code>--dk-color</code>）で変えられます。</>, <>A container with a dotted frame. Change the dot color with <code>color</code> (<code>--dk-color</code>).</>)}</p>
       <Example
         html={`<div class="dk-card">
   <span class="dk-badge">Card</span>
@@ -72,8 +74,16 @@ export function Display() {
 
       <h3 id="identicon">Identicon <Since v="0.3" /></h3>
       <p>
-        文字列（ユーザー ID やメールアドレス）から決まる、左右対称の 5×5 ドット模様です。同じ文字列からは必ず同じ模様と色ができます。
-        アバター画像がないときの代わりに使えます。模様の計算は純粋な関数 <code>identicon(seed)</code> として公開しているので、React 以外でも使えます。
+        {t(
+          <>
+            文字列（ユーザー ID やメールアドレス）から決まる、左右対称の 5×5 ドット模様です。同じ文字列からは必ず同じ模様と色ができます。
+            アバター画像がないときの代わりに使えます。模様の計算は純粋な関数 <code>identicon(seed)</code> として公開しているので、React 以外でも使えます。
+          </>,
+          <>
+            A symmetric 5×5 dot pattern derived from a string (a user ID or email address). The same string always yields the same pattern and color.
+            Use it as a fallback when there is no avatar image. The pattern is computed by a pure function, <code>identicon(seed)</code>, so it works outside React too.
+          </>,
+        )}
       </p>
       <Example
         html={`<!-- cells come from identicon(seed).cells (25 booleans, row by row) -->
@@ -94,8 +104,8 @@ const { cells, hue } = identicon("alice@example.com");`}
         ))}
       </Example>
 
-      <h3 id="compose">Composition — 組み合わせ例</h3>
-      <p>ハーフトーンのヘッダー、ドット文字の数値、棒グラフ、メーターを 1 枚のカードに。</p>
+      <h3 id="compose">{t(<>Composition — 組み合わせ例</>, <>Composition — putting it together</>)}</h3>
+      <p>{t(<>ハーフトーンのヘッダー、ドット文字の数値、棒グラフ、メーターを 1 枚のカードに。</>, <>A halftone header, a dot-text number, a bar chart and a meter in one card.</>)}</p>
       <Example
         react={`<Card style={{ width: 340, padding: 0, overflow: "hidden" }}>
   <Halftone style={{ height: 88 }} />

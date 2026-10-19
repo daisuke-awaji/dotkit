@@ -7,19 +7,30 @@ import {
 } from "dotkit/react";
 import { Example } from "../../ui";
 import { Since, contributions } from "./shared";
+import { useT } from "../../i18n";
 const heatSmall = contributions(12, 21);
 
 export function Themes() {
+  const t = useT();
   return (
     <>
       <h2 id="theming">Themes</h2>
-      <p className="muted">配色のプリセット。トークンの組み合わせなので、自分のテーマも同じ方法で作れます。</p>
+      <p className="muted">{t(<>配色のプリセット。トークンの組み合わせなので、自分のテーマも同じ方法で作れます。</>, <>Color presets. They are just combinations of tokens, so you can build your own theme the same way.</>)}</p>
 
       <h3 id="themes">Theme presets <Since v="0.3" /></h3>
       <p>
-        配色のプリセットです。<code>.dk-theme-gameboy</code> / <code>-amber</code> / <code>-newsprint</code> / <code>-riso</code> / <code>-blueprint</code>。
-        <code>&lt;html&gt;</code> に付ければページ全体、任意の要素に付ければその中だけが切り替わります（テーマのクラスは自分の背景色と文字色も塗ります）。
-        中身はトークン（<code>--dk-ink</code> / <code>--dk-paper</code> / <code>--dk-mute</code> / <code>--dk-subtle</code> と状態の色）の組み合わせなので、同じ方法で自分のテーマも作れます。
+        {t(
+          <>
+            配色のプリセットです。<code>.dk-theme-gameboy</code> / <code>-amber</code> / <code>-newsprint</code> / <code>-riso</code> / <code>-blueprint</code>。
+            <code>&lt;html&gt;</code> に付ければページ全体、任意の要素に付ければその中だけが切り替わります（テーマのクラスは自分の背景色と文字色も塗ります）。
+            中身はトークン（<code>--dk-ink</code> / <code>--dk-paper</code> / <code>--dk-mute</code> / <code>--dk-subtle</code> と状態の色）の組み合わせなので、同じ方法で自分のテーマも作れます。
+          </>,
+          <>
+            Color presets: <code>.dk-theme-gameboy</code> / <code>-amber</code> / <code>-newsprint</code> / <code>-riso</code> / <code>-blueprint</code>.
+            Put one on <code>&lt;html&gt;</code> to switch the whole page, or on any element to switch just its contents (a theme class also paints its own background and text color).
+            Each is a combination of tokens (<code>--dk-ink</code> / <code>--dk-paper</code> / <code>--dk-mute</code> / <code>--dk-subtle</code> and the status colors), so you can make your own theme the same way.
+          </>,
+        )}
       </p>
       <Example
         align="left"

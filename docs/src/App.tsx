@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { Badge, Dots, DotIcon, type IconName } from "dotkit/react";
+import { Badge, Dots, DotIcon, buttonClassName, type IconName } from "dotkit/react";
 import { ToastProvider } from "./ui";
+import { useLang, type Lang } from "./i18n";
 import { Home } from "./pages/Home";
 import { GettingStarted } from "./pages/GettingStarted";
 import { Catalog } from "./pages/Catalog";
@@ -25,6 +26,7 @@ const current = () => (location.hash.replace(/^#/, "") || "/").split("?")[0];
 
 export function App() {
   const [path, setPath] = useState(current);
+  const { lang, setLang } = useLang();
   const [dark, setDark] = useState(() => document.documentElement.classList.contains("dk-theme-dark"));
 
   useEffect(() => {
@@ -50,9 +52,25 @@ export function App() {
     <ToastProvider>
       <div className="layout">
         <aside className="sidebar">
-          <a className="logo" href="#/">
-            <b>dotkit</b>
-          </a>
+          <div className="side-head">
+            <a className="logo" href="#/">
+              <b>dotkit</b>
+            </a>
+            <div className="lang-switch" role="group" aria-label={lang === "ja" ? "表示言語" : "Language"}>
+              {(["ja", "en"] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  lang={l}
+                  className={buttonClassName({ variant: lang === l ? "solid" : "ghost", size: "sm" })}
+                  aria-pressed={lang === l}
+                  aria-label={l === "ja" ? "日本語" : "English"}
+                  onClick={() => setLang(l)}
+                >
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
           <nav className="nav" aria-label="Main">
             {(["Guide", "Reference"] as const).map((g) => (
               <div key={g} style={{ display: "contents" }}>
@@ -70,7 +88,11 @@ export function App() {
             <button
               className="dk-btn dk-btn--outline dk-btn--sm"
               onClick={() => setDark((d) => !d)}
-              aria-label={dark ? "ライトテーマに切り替え" : "ダークテーマに切り替え"}
+              aria-label={
+                lang === "ja"
+                  ? dark ? "ライトテーマに切り替え" : "ダークテーマに切り替え"
+                  : dark ? "Switch to light theme" : "Switch to dark theme"
+              }
             >
               <DotIcon name={dark ? "sun" : "moon"} step={2} />
             </button>

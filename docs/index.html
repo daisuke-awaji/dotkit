@@ -1,19 +1,36 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>dotkit — UI made of dots</title>
-    <meta name="description" content="UI のすべてをドットで表現する、ゼロランタイムの CSS フレームワーク。React バインディング同梱。" />
+    <meta name="description" content="dotkit is a zero-runtime CSS framework that draws every piece of UI with dots. React bindings included. Docs in English and Japanese." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="dotkit" />
     <meta property="og:title" content="dotkit — UI made of dots" />
-    <meta property="og:description" content="Zero-runtime CSS framework with React bindings. Distributed via GitHub only." />
+    <meta property="og:description" content="A zero-runtime CSS framework that draws every piece of UI with dots. One CSS file, two knobs, React bindings included." />
     <meta property="og:url" content="https://daisuke-awaji.github.io/dotkit/" />
+    <meta property="og:image" content="https://daisuke-awaji.github.io/dotkit/og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="2400" />
+    <meta property="og:image:height" content="1260" />
+    <meta property="og:image:alt" content="dotkit — UI made of dots. A dotted wordmark, a halftone sphere and a status card drawn with dots." />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ja_JP" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="dotkit — UI made of dots" />
+    <meta name="twitter:description" content="A zero-runtime CSS framework that draws every piece of UI with dots." />
+    <meta name="twitter:image" content="https://daisuke-awaji.github.io/dotkit/og.png" />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cg fill='%230a0a0a'%3E%3Ccircle cx='3' cy='3' r='2'/%3E%3Ccircle cx='8' cy='3' r='2'/%3E%3Ccircle cx='13' cy='3' r='2'/%3E%3Ccircle cx='3' cy='8' r='2'/%3E%3Ccircle cx='8' cy='8' r='2'/%3E%3Ccircle cx='3' cy='13' r='2'/%3E%3C/g%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Doto:wght@600;800&family=Geist:wght@400;500;600;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <script>
       try { if (localStorage.getItem("dk-theme") === "dark") document.documentElement.classList.add("dk-theme-dark"); } catch {}
+      try {
+        var q = new URLSearchParams(location.search).get("lang"), s = localStorage.getItem("dk-lang");
+        document.documentElement.lang = q === "ja" || q === "en" ? q : s === "ja" || s === "en" ? s : /^ja\b/i.test(navigator.language) ? "ja" : "en";
+      } catch {}
     </script>
   </head>
   <body>

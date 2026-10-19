@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useT } from "../../i18n";
 
 export function Tile({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -11,7 +12,8 @@ export function Tile({ label, children }: { label: string; children: ReactNode }
 
 /** "New in vX.Y" marker next to a catalog heading. */
 export function Since({ v }: { v: string }) {
-  return <span className="dk-badge since" title={`Added in v${v}`}>v{v}</span>;
+  const t = useT();
+  return <span className="dk-badge since" title={t(`v${v} で追加`, `Added in v${v}`)}>v{v}</span>;
 }
 
 /** Deterministic pseudo-random numbers so previews don't change between renders. */
