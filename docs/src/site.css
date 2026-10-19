@@ -129,7 +129,6 @@ td code { white-space: nowrap; }
 .icon-cell:focus-visible { outline: 2px dotted var(--dk-ink); }
 
 /* ---------- misc ---------- */
-.toc { display: flex; flex-wrap: wrap; gap: 6px; margin: 16px 0 8px; }
 .callout { padding: 16px 18px; border-radius: 10px; margin: 16px 0; font-size: 14px; }
 .callout p { margin: 0; }
 .toast {

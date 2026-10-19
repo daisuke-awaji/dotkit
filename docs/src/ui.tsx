@@ -112,24 +112,3 @@ export function PropsTable({ rows }: { rows: PropRow[] }) {
     </table>
   );
 }
-
-export function Toc({ items }: { items: [id: string, label: string][] }) {
-  return (
-    <nav className="toc" aria-label="On this page">
-      {items.map(([id, label]) => (
-        <a
-          key={id}
-          href={`#${id}`}
-          className="dk-badge"
-          style={{ textDecoration: "none" }}
-          onClick={(e) => {
-            e.preventDefault();
-            document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-          }}
-        >
-          {label}
-        </a>
-      ))}
-    </nav>
-  );
-}

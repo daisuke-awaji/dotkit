@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Card } from "dotkit/react";
-import { Code, CodeBlock, Toc } from "../ui";
+import { Code, CodeBlock } from "../ui";
 import pkg from "../../../package.json";
 
 const V = pkg.version;
@@ -34,17 +34,6 @@ export function GettingStarted() {
       <span className="eyebrow">Guide</span>
       <h1 style={{ fontSize: 44, margin: "8px 0 12px" }}>Getting Started</h1>
       <p className="muted">dotkit は npm レジストリには公開していません。GitHub だけで導入できます。</p>
-      <Toc
-        items={[
-          ["install", "Install"],
-          ["html", "HTML"],
-          ["react", "React"],
-          ["tokens", "Tokens"],
-          ["dark", "Dark mode"],
-          ["override", "Override"],
-          ["verify", "Verify"],
-        ]}
-      />
 
       <h2 id="install">1. Install</h2>
       <Card style={{ padding: 0, overflow: "hidden" }} className="example">
