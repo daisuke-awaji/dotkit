@@ -175,3 +175,42 @@ export function DotDigits({ value, step, square, grid, label, className, style, 
     </span>
   );
 }
+
+export interface RingMeterProps extends HTMLAttributes<HTMLDivElement> {
+  /** 0 – 1. Lights up whole dots. */
+  value: number;
+  /** Dots on the ring (1 – 60). Default: 24. */
+  count?: number;
+  /** Ring diameter. Default: 96px. */
+  diameter?: number | string;
+  /** Dot diameter. Default: 6px. */
+  size?: number | string;
+  /** Lit dot color. Default: `--dk-ink`. */
+  color?: string;
+  shape?: Shape;
+  /** Accessible name. */
+  label?: string;
+}
+
+/** Circular meter made of dots. Children are centered inside the ring (e.g. the value). */
+export function RingMeter({ value, count = 24, diameter, size, color, shape, label, children, className, style, ...rest }: RingMeterProps) {
+  const v = Math.min(1, Math.max(0, value));
+  const n = Math.min(60, Math.max(1, Math.round(count)));
+  return (
+    <div
+      role="meter"
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(v * 100)}
+      aria-label={label}
+      className={cx("dk-ring-meter", shapeClass(shape), className)}
+      style={withVars({ "--dk-count": n, "--dk-diameter": px(diameter) }, dotVars({ value: v, size, color }, style))}
+      {...rest}
+    >
+      {Array.from({ length: n }, (_, i) => (
+        <i key={i} />
+      ))}
+      {children !== undefined && <span>{children}</span>}
+    </div>
+  );
+}

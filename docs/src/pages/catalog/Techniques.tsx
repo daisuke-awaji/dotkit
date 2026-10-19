@@ -6,6 +6,7 @@ import {
   DotText,
   Halftone,
   HalftoneImage,
+  HalftoneText,
   Loader,
   Meter,
 } from "dotkit/react";
@@ -113,6 +114,25 @@ export function Techniques() {
       <p className="muted" style={{ fontSize: 14 }}>
         <code>alt</code> は中の <code>&lt;img&gt;</code> にそのまま付けてください。ハイコントラストモードでは網点をやめて元の画像を表示します。
       </p>
+
+      <h3 id="halftonetext">Halftone text — 見出しを網点で刷る <Since v="0.4" /></h3>
+      <p>
+        <code>.dk-text-halftone</code> は文字の中を網点で埋め、ドットの大きさを上から下へ（<code>--to-right</code> / <code>--radial</code> も可）変えていきます。
+        Dot text（<code>.dk-text</code>）が同じ大きさのドットで塗るのに対し、こちらは印刷物のような濃淡が出ます。
+        しきい値処理をするため白黒専用で、ダークテーマでは反転します。文字はそのまま選択・読み上げできます。
+      </p>
+      <Example
+        align="left"
+        previewStyle={{ display: "grid", gap: 8 }}
+        html={`<h1 class="dk-text-halftone" style="font: 800 96px/1 Geist">PRINT</h1>
+<h1 class="dk-text-halftone dk-text-halftone--to-right" style="--dk-gap: 5px">Halftone</h1>`}
+        react={`<HalftoneText as="h1" style={{ font: "800 96px/1 Geist" }}>PRINT</HalftoneText>
+<HalftoneText direction="to-right" gap={5}>Halftone</HalftoneText>
+<HalftoneText direction="radial" gap={8}>●</HalftoneText>`}
+      >
+        <HalftoneText style={{ font: "800 112px/1 Geist, sans-serif", letterSpacing: "-.04em" }}>PRINT</HalftoneText>
+        <HalftoneText direction="to-right" gap={5} style={{ font: "800 72px/1 Geist, sans-serif", letterSpacing: "-.03em" }}>Halftone</HalftoneText>
+      </Example>
 
       <h3 id="text">Dot text — 文字をドットで塗る</h3>
       <p>

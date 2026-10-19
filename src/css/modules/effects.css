@@ -1,5 +1,5 @@
 /* ==========================================================
-   effects — image halftone / marching border
+   effects — image halftone / halftone text / marching border / duotone / patterns
    ========================================================== */
 @layer dotkit.utilities {
 
@@ -43,6 +43,69 @@
     }
   }
 
+  /* ---------- Halftone text: glyphs printed as halftone (dot size follows --dk-tone) ----------
+     Large display text only. Black-and-white by design (it is thresholded). */
+  .dk-text-halftone {
+    --dk-gap: 6px;
+    --dk-tone: linear-gradient(180deg, #000, #5e5e5e);
+    background:
+      var(--dk-tone),
+      radial-gradient(circle at center, #000 0, #fff calc(var(--dk-gap) * .72)) 0 0 / var(--dk-gap) var(--dk-gap);
+    background-blend-mode: screen;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: contrast(24);
+    mix-blend-mode: multiply;   /* the white between dots disappears on light paper */
+  }
+  .dk-text-halftone--to-right { --dk-tone: linear-gradient(90deg, #000, #5e5e5e); }
+  .dk-text-halftone--radial   { --dk-tone: radial-gradient(closest-side, #000, #5e5e5e); }
+  :is(.dk-theme-dark, .dk-theme-amber, .dk-theme-blueprint) .dk-text-halftone { filter: contrast(24) invert(1); mix-blend-mode: screen; }
+
+  /* ---------- Duotone: two interleaved dot colors, or one gradient seen through dots ---------- */
+  .dk-duotone {
+    background-image: var(--_dot2), var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-position: calc(var(--dk-gap) / 2) calc(var(--dk-gap) / 2), 0 0;
+  }
+  .dk-duotone--ramp {
+    background: linear-gradient(var(--dk-angle, 90deg), var(--dk-color), var(--dk-color-2));
+    -webkit-mask: var(--_dot) 0 0 / var(--dk-gap) var(--dk-gap);
+            mask: var(--_dot) 0 0 / var(--dk-gap) var(--dk-gap);
+  }
+
+  /* ---------- Patterns: arrangements of the same dot ---------- */
+  .dk-pattern { background-image: var(--_dot); background-size: var(--dk-gap) var(--dk-gap); }
+  .dk-pattern--checker {
+    background-image: var(--_dot), var(--_dot);
+    background-size: calc(var(--dk-gap) * 2) calc(var(--dk-gap) * 2);
+    background-position: 0 0, var(--dk-gap) var(--dk-gap);
+  }
+  .dk-pattern--stripes { background-size: var(--dk-gap) calc(var(--dk-gap) * 3); }
+  .dk-pattern--grid {
+    background-image: var(--_dot), var(--_dot);
+    background-size: var(--dk-gap) calc(var(--dk-gap) * 4), calc(var(--dk-gap) * 4) var(--dk-gap);
+    background-position: 0 calc(var(--dk-gap) * -1.5), calc(var(--dk-gap) * -1.5) 0;
+  }
+  .dk-pattern--diagonal {
+    background-image: var(--_dot), var(--_dot), var(--_dot), var(--_dot);
+    background-size: calc(var(--dk-gap) * 4) calc(var(--dk-gap) * 4);
+    background-position: 0 0, var(--dk-gap) var(--dk-gap), calc(var(--dk-gap) * 2) calc(var(--dk-gap) * 2), calc(var(--dk-gap) * 3) calc(var(--dk-gap) * 3);
+  }
+  .dk-pattern--cross {
+    background-image: var(--_dot), var(--_dot), var(--_dot), var(--_dot), var(--_dot);
+    background-size: calc(var(--dk-gap) * 5) calc(var(--dk-gap) * 5);
+    background-position: 0 0, var(--dk-gap) 0, calc(var(--dk-gap) * -1) 0, 0 var(--dk-gap), 0 calc(var(--dk-gap) * -1);
+  }
+  .dk-pattern--stipple {
+    background-image: var(--_dot), var(--_dot), var(--_dot), var(--_dot), var(--_dot);
+    background-size:
+      calc(var(--dk-gap) * 3) calc(var(--dk-gap) * 5), calc(var(--dk-gap) * 7) calc(var(--dk-gap) * 3),
+      calc(var(--dk-gap) * 5) calc(var(--dk-gap) * 7), calc(var(--dk-gap) * 11) calc(var(--dk-gap) * 13),
+      calc(var(--dk-gap) * 13) calc(var(--dk-gap) * 11);
+    background-position: 0 0, calc(var(--dk-gap) * 2) var(--dk-gap), var(--dk-gap) calc(var(--dk-gap) * 4),
+      calc(var(--dk-gap) * 5) calc(var(--dk-gap) * 2), calc(var(--dk-gap) * 3) calc(var(--dk-gap) * 6);
+  }
+
   .dk-halftone-img > picture > img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .dk-halftone-img--invert, :is(.dk-theme-dark, .dk-theme-amber, .dk-theme-blueprint) .dk-halftone-img { filter: contrast(24) invert(1); }
 }
@@ -52,8 +115,14 @@
 }
 
 @media (forced-colors: active) {
+  .dk-text-halftone { -webkit-text-fill-color: currentColor; background: none; filter: none; mix-blend-mode: normal; }
+  .dk-pattern, .dk-duotone { forced-color-adjust: none; --dk-color: GrayText; --dk-color-2: GrayText; }
   /* show the plain image */
   .dk-halftone-img { filter: none; }
   .dk-halftone-img::before { display: none; }
   .dk-halftone-img > :is(img, video, canvas, svg, picture) { mix-blend-mode: normal; filter: none; }
+}
+
+@layer dotkit.components {
+  .dk-duotone { --dk-color-2: var(--dk-mute); }
 }

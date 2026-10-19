@@ -1,5 +1,5 @@
 /* ==========================================================
-   forms — checkbox / radio / switch (native inputs, appearance: none)
+   forms — checkbox / radio / switch / range (native inputs, appearance: none)
    Keyboard, form submission and screen readers keep working natively.
    ========================================================== */
 @layer dotkit.components {
@@ -90,9 +90,57 @@
     font-size: 14px; line-height: 1.4; cursor: pointer;
   }
   .dk-choice:has(:disabled) { cursor: not-allowed; color: var(--dk-subtle); }
+
+  /* ---------- Range: dot track; the filled part comes from --dk-value on the wrapper ----------
+     <span class="dk-range" style="--dk-value: .4"><input type="range"></span> */
+  .dk-range {
+    --dk-value: .5;
+    --dk-size: 4px; --dk-gap: 8px;
+    --_t: 18px;
+    --_p: calc(var(--dk-value) * 100%);
+    --_p: round(nearest, calc(var(--dk-value) * 100%), var(--dk-gap));
+    position: relative; display: inline-flex; align-items: center;
+    min-width: 160px; height: calc(var(--_t) + 10px);
+    vertical-align: middle;
+  }
+  .dk-range::before {
+    content: ""; position: absolute;
+    left: calc(var(--_t) / 2 - var(--dk-gap) / 2); right: calc(var(--_t) / 2 - var(--dk-gap) / 2);
+    top: 50%; height: var(--dk-gap); margin-top: calc(var(--dk-gap) / -2);
+    background: linear-gradient(90deg, var(--dk-ink) var(--_p), var(--dk-mute) 0);
+    -webkit-mask: radial-gradient(circle at center, #000 calc(var(--dk-size) / 2), transparent calc(var(--dk-size) / 2 + .6px))
+                  0 0 / var(--dk-gap) var(--dk-gap) repeat-x;
+            mask: radial-gradient(circle at center, #000 calc(var(--dk-size) / 2), transparent calc(var(--dk-size) / 2 + .6px))
+                  0 0 / var(--dk-gap) var(--dk-gap) repeat-x;
+    pointer-events: none;
+  }
+  .dk-range > input {
+    -webkit-appearance: none; appearance: none;
+    position: relative; width: 100%; height: var(--_t); margin: 0;
+    background: transparent; cursor: pointer;
+  }
+  .dk-range > input::-webkit-slider-runnable-track { height: var(--_t); background: transparent; }
+  .dk-range > input::-moz-range-track { height: var(--_t); background: transparent; }
+  .dk-range > input::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: var(--_t); height: var(--_t); border-radius: 50%; border: 0;
+    background: var(--dk-ink); box-shadow: 0 0 0 3px var(--dk-paper);
+    transition: transform .2s var(--dk-ease);
+  }
+  .dk-range > input::-moz-range-thumb {
+    width: var(--_t); height: var(--_t); border-radius: 50%; border: 0;
+    background: var(--dk-ink); box-shadow: 0 0 0 3px var(--dk-paper);
+  }
+  .dk-range > input:active::-webkit-slider-thumb { transform: scale(1.15); }
+  .dk-range > input:focus-visible { outline: none; }
+  .dk-range > input:focus-visible::-webkit-slider-thumb { outline: 2px dotted var(--dk-ink); outline-offset: 3px; }
+  .dk-range > input:focus-visible::-moz-range-thumb { outline: 2px dotted var(--dk-ink); outline-offset: 3px; }
+  .dk-range:has(:disabled) { opacity: .4; }
+  .dk-range > input:disabled { cursor: not-allowed; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .dk-range > input::-webkit-slider-thumb { transition: none; }
   .dk-check, .dk-radio, .dk-switch,
   :is(.dk-check, .dk-radio, .dk-switch)::after { transition: none; }
 }
@@ -106,4 +154,5 @@
   .dk-switch::after { background: ButtonText; }
   .dk-switch:checked::after { background: HighlightText; }
   :is(.dk-check, .dk-radio, .dk-switch):disabled { opacity: 1; border-color: GrayText; }
+  .dk-range { forced-color-adjust: none; --dk-ink: CanvasText; --dk-mute: GrayText; --dk-paper: Canvas; }
 }

@@ -1,8 +1,10 @@
 import {
   BarChart,
+  DotDigits,
   Heatmap,
   Meter,
   Pictogram,
+  RingMeter,
   Sparkline,
   UptimeBar,
 } from "dotkit/react";
@@ -41,6 +43,27 @@ export function DataDisplay() {
         <Meter value={0.62} label="Storage" />
         <Meter value={0.3} shape="square" size={4} gap={6} label="CPU" />
         <Meter value={0.85} shape="ring" size={10} gap={14} label="Memory" />
+      </Example>
+
+      <h3 id="ring">Ring meter <Since v="0.4" /></h3>
+      <p>
+        円周上に並んだドットで進み具合を表すメーターです。<code>--dk-value</code>（0〜1）に応じて、ドットが 1 つずつ点きます（端数は切り捨て）。
+        中には <code>--dk-count</code> 個（最大 60）の <code>&lt;i&gt;</code> を置き、それ以外の要素は中央のラベルになります。
+        大きさは <code>--dk-diameter</code>、ドット径は <code>--dk-size</code> です。
+      </p>
+      <Example
+        html={`<div class="dk-ring-meter" style="--dk-value: .62" role="meter"
+     aria-valuenow="62" aria-valuemin="0" aria-valuemax="100" aria-label="Context window">
+  <i></i><i></i><i></i> <!-- … 24 <i> in total -->
+  <span>62%</span>
+</div>`}
+        react={`<RingMeter value={0.62} label="Context window">62%</RingMeter>
+<RingMeter value={0.35} count={60} size={3} diameter={120} color="var(--dk-info)" />
+<RingMeter value={0.9} count={12} size={10} shape="square" />`}
+      >
+        <RingMeter value={0.62} label="Context window"><b style={{ fontSize: 20 }}>62%</b><br /><span className="muted" style={{ fontSize: 11 }}>context</span></RingMeter>
+        <RingMeter value={0.35} count={60} size={3} diameter={120} color="var(--dk-info)" label="Seconds"><DotDigits value="21" step={3} /></RingMeter>
+        <RingMeter value={0.9} count={12} size={10} diameter={88} shape="square" color="var(--dk-ok)" label="Health" />
       </Example>
 
       <h3 id="chart">Bar chart</h3>

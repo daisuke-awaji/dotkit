@@ -1,5 +1,5 @@
 /* ==========================================================
-   navigation — dot leaders / steps
+   navigation — dot leaders / steps / tabs / pagination dots
    ========================================================== */
 @layer dotkit.components {
 
@@ -75,9 +75,78 @@
     width: var(--dk-gap); height: auto;
     background-repeat: no-repeat space;
   }
+
+  /* ---------- Tabs: the selected tab is underlined with ink dots ----------
+     <div class="dk-tabs" role="tablist"><button role="tab" aria-selected="true">…</button>…</div>
+     (links work too: aria-current="page") */
+  .dk-tabs {
+    --dk-size: 2px; --dk-gap: 5px;
+    position: relative; display: flex; gap: 2px; overflow-x: auto;
+  }
+  .dk-tabs::after {
+    --dk-color: var(--dk-mute);
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: var(--dk-gap);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space no-repeat;
+    pointer-events: none;
+  }
+  .dk-tabs > * {
+    -webkit-appearance: none; appearance: none;
+    position: relative; z-index: 1; flex: none;
+    margin: 0; border: 0; background: none; cursor: pointer;
+    padding: 10px 12px calc(10px + var(--dk-gap));
+    font: 500 13px/1 var(--dk-font-mono); color: var(--dk-subtle); text-decoration: none;
+    border-radius: 6px 6px 0 0;
+  }
+  .dk-tabs > *::after {
+    --dk-color: transparent;
+    content: ""; position: absolute; left: 6px; right: 6px; bottom: 0; height: var(--dk-gap);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space no-repeat;
+    transition: --dk-size .25s var(--dk-ease);
+  }
+  .dk-tabs > :hover { color: var(--dk-ink); }
+  .dk-tabs > :hover::after { --dk-color: var(--dk-subtle); }
+  .dk-tabs > :is([aria-selected="true"], [aria-current="page"]) { color: var(--dk-ink); }
+  .dk-tabs > :is([aria-selected="true"], [aria-current="page"])::after { --dk-color: var(--dk-ink); --dk-size: 3px; }
+  .dk-tabs > :focus-visible { outline: 2px dotted var(--dk-ink); outline-offset: -2px; }
+
+  /* ---------- Pagination dots: the current page stretches into three dots ---------- */
+  .dk-pager {
+    --dk-size: 8px;
+    display: inline-flex; align-items: center; gap: 2px;
+    margin: 0; padding: 0; list-style: none;
+  }
+  .dk-pager > :is(button, a) {
+    -webkit-appearance: none; appearance: none;
+    display: inline-grid; place-items: center;
+    margin: 0; padding: 6px; border: 0; border-radius: 999px;
+    background: none; cursor: pointer;
+  }
+  .dk-pager > :is(button, a)::before {
+    content: ""; display: block;
+    width: var(--dk-size); height: var(--dk-size); border-radius: 999px;
+    background: var(--dk-mute);
+    transition: width .3s var(--dk-ease), background-color .2s;
+  }
+  .dk-pager > :is(button, a):hover::before { background: var(--dk-subtle); }
+  .dk-pager > :is([aria-current="true"], [aria-current="page"], [aria-selected="true"])::before {
+    width: calc(var(--dk-size) * 3.75);
+    background: radial-gradient(circle at center, var(--dk-ink) calc(var(--dk-size) / 2), transparent calc(var(--dk-size) / 2 + .6px))
+                0 0 / calc(var(--dk-size) * 1.25) 100% repeat-x;
+  }
+  .dk-pager > :focus-visible { outline: 2px dotted var(--dk-ink); outline-offset: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dk-tabs > *::after, .dk-pager > *::before { transition: none; }
 }
 
 @media (forced-colors: active) {
+  .dk-tabs, .dk-pager { forced-color-adjust: none; --dk-mute: GrayText; --dk-ink: CanvasText; --dk-subtle: GrayText; }
+  .dk-tabs > :is([aria-selected="true"], [aria-current="page"])::after { --dk-color: Highlight; }
   .dk-steps > li { forced-color-adjust: none; --dk-mute: GrayText; --dk-ink: CanvasText; --dk-paper: Canvas; --dk-subtle: GrayText; }
   .dk-steps > li[aria-current="step"]::before { background: Highlight; }
   :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader)::before { forced-color-adjust: none; --dk-color: GrayText; }

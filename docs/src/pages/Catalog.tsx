@@ -9,21 +9,24 @@ import { Themes } from "./catalog/Themes";
 
 type Item = [id: string, label: string, since?: string];
 const groups: { id: string; label: string; items: Item[] }[] = [
-  { id: "primitives", label: "Primitives", items: [["dots", "Dots"], ["shape", "Shape"], ["fade", "Fade"]] },
+  { id: "primitives", label: "Primitives", items: [["dots", "Dots"], ["shape", "Shape"], ["fade", "Fade"], ["duotone", "Duotone", "0.4"], ["pattern", "Pattern", "0.4"]] },
   {
     id: "techniques", label: "Techniques",
     items: [
       ["border", "Border"], ["march", "Marching border", "0.3"], ["halftone", "Halftone"], ["halftoneimg", "Image halftone", "0.2"],
-      ["text", "Dot text"], ["icon", "Icon"], ["digits", "Dot-matrix digits", "0.3"], ["loader", "Loader"],
+      ["halftonetext", "Halftone text", "0.4"], ["text", "Dot text"], ["icon", "Icon"], ["digits", "Dot-matrix digits", "0.3"], ["loader", "Loader"],
     ],
   },
-  { id: "forms", label: "Forms", items: [["button", "Button"], ["input", "Input"], ["choice", "Checkbox / Radio / Switch", "0.2"]] },
+  { id: "forms", label: "Forms", items: [["button", "Button"], ["input", "Input"], ["choice", "Checkbox / Radio / Switch", "0.2"], ["range", "Range", "0.4"]] },
   {
     id: "data", label: "Data display",
-    items: [["meter", "Meter"], ["chart", "Bar chart"], ["sparkline", "Sparkline", "0.3"], ["heatmap", "Heatmap", "0.2"], ["uptime", "Uptime bar", "0.2"], ["pictogram", "Pictogram", "0.3"]],
+    items: [["meter", "Meter"], ["ring", "Ring meter", "0.4"], ["chart", "Bar chart"], ["sparkline", "Sparkline", "0.3"], ["heatmap", "Heatmap", "0.2"], ["uptime", "Uptime bar", "0.2"], ["pictogram", "Pictogram", "0.3"]],
   },
-  { id: "navigation", label: "Navigation", items: [["leaders", "Dot leaders", "0.2"], ["steps", "Stepper", "0.3"]] },
-  { id: "feedback", label: "Feedback", items: [["typing", "Typing indicator", "0.2"], ["status", "Status dot", "0.3"], ["skeleton", "Skeleton", "0.3"]] },
+  { id: "navigation", label: "Navigation", items: [["tabs", "Tabs", "0.4"], ["pager", "Pagination dots", "0.4"], ["steps", "Stepper", "0.3"], ["leaders", "Dot leaders", "0.2"]] },
+  {
+    id: "feedback", label: "Feedback",
+    items: [["alert", "Alert", "0.4"], ["dialog", "Dialog", "0.4"], ["status", "Status dot", "0.3"], ["typing", "Typing indicator", "0.2"], ["skeleton", "Skeleton", "0.3"]],
+  },
   { id: "display", label: "Display", items: [["badge", "Badge"], ["divider", "Divider"], ["card", "Card"], ["identicon", "Identicon", "0.3"], ["compose", "Composition"]] },
   { id: "theming", label: "Themes", items: [["themes", "Theme presets", "0.3"]] },
 ];
@@ -42,6 +45,7 @@ export function Catalog() {
       <p className="muted">
         dotkit で描けるすべての表現（{count} 項目）と、その書き方です。プレビューはすべて実際の dotkit で描画しています。
         HTML（クラス）と React の両方のコードを載せています。見出しの <span className="dk-badge since">v0.x</span> は追加されたバージョンです。
+        部品を組み合わせた完成例は <a href="#/templates">Templates</a> にあります。
       </p>
       <nav className="catalog-toc" aria-label="Catalog contents">
         {groups.map((g) => (

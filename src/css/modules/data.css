@@ -1,5 +1,5 @@
 /* ==========================================================
-   data — heatmap / uptime / sparkline / pictogram
+   data — heatmap / uptime / sparkline / pictogram / ring meter
    Convention: continuous values are `--dk-value` (0 – 1),
    discrete states are `data-state="…"`.
    ========================================================== */
@@ -96,9 +96,95 @@
     -webkit-mask: linear-gradient(90deg, #000 var(--_p), rgb(0 0 0 / .18) 0);
             mask: linear-gradient(90deg, #000 var(--_p), rgb(0 0 0 / .18) 0);
   }
+
+  /* ---------- Ring meter: N dots on a circle; whole dots light up ----------
+     Put --dk-count <i> elements inside (up to 60); any other child is centered as the label. */
+  .dk-ring-meter {
+    --dk-value: .5;
+    --dk-count: 24;
+    --dk-size: 6px;
+    --dk-diameter: 96px;
+    --dk-color: var(--dk-ink);
+    position: relative; display: inline-grid; place-items: center; flex: none;
+    width: var(--dk-diameter); height: var(--dk-diameter);
+    vertical-align: middle;
+  }
+  .dk-ring-meter > i {
+    --_i: 0;
+    --_lit: clamp(0, var(--dk-value) * var(--dk-count) - var(--_i), 1);
+    --_lit: clamp(0, round(down, var(--dk-value) * var(--dk-count) - var(--_i), 1), 1);
+    position: absolute; left: 50%; top: 50%;
+    width: var(--dk-size); height: var(--dk-size);
+    margin: calc(var(--dk-size) / -2);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--dk-color) calc(var(--_lit) * 100%), var(--dk-mute));
+    transform: rotate(calc(var(--_i) / var(--dk-count) * 1turn)) translateY(calc((var(--dk-diameter) - var(--dk-size)) / -2));
+  }
+  .dk-ring-meter > :not(i) { text-align: center; font-variant-numeric: tabular-nums; line-height: 1.1; }
+  .dk-ring-meter > i:nth-of-type(1) { --_i: 0; }
+  .dk-ring-meter > i:nth-of-type(2) { --_i: 1; }
+  .dk-ring-meter > i:nth-of-type(3) { --_i: 2; }
+  .dk-ring-meter > i:nth-of-type(4) { --_i: 3; }
+  .dk-ring-meter > i:nth-of-type(5) { --_i: 4; }
+  .dk-ring-meter > i:nth-of-type(6) { --_i: 5; }
+  .dk-ring-meter > i:nth-of-type(7) { --_i: 6; }
+  .dk-ring-meter > i:nth-of-type(8) { --_i: 7; }
+  .dk-ring-meter > i:nth-of-type(9) { --_i: 8; }
+  .dk-ring-meter > i:nth-of-type(10) { --_i: 9; }
+  .dk-ring-meter > i:nth-of-type(11) { --_i: 10; }
+  .dk-ring-meter > i:nth-of-type(12) { --_i: 11; }
+  .dk-ring-meter > i:nth-of-type(13) { --_i: 12; }
+  .dk-ring-meter > i:nth-of-type(14) { --_i: 13; }
+  .dk-ring-meter > i:nth-of-type(15) { --_i: 14; }
+  .dk-ring-meter > i:nth-of-type(16) { --_i: 15; }
+  .dk-ring-meter > i:nth-of-type(17) { --_i: 16; }
+  .dk-ring-meter > i:nth-of-type(18) { --_i: 17; }
+  .dk-ring-meter > i:nth-of-type(19) { --_i: 18; }
+  .dk-ring-meter > i:nth-of-type(20) { --_i: 19; }
+  .dk-ring-meter > i:nth-of-type(21) { --_i: 20; }
+  .dk-ring-meter > i:nth-of-type(22) { --_i: 21; }
+  .dk-ring-meter > i:nth-of-type(23) { --_i: 22; }
+  .dk-ring-meter > i:nth-of-type(24) { --_i: 23; }
+  .dk-ring-meter > i:nth-of-type(25) { --_i: 24; }
+  .dk-ring-meter > i:nth-of-type(26) { --_i: 25; }
+  .dk-ring-meter > i:nth-of-type(27) { --_i: 26; }
+  .dk-ring-meter > i:nth-of-type(28) { --_i: 27; }
+  .dk-ring-meter > i:nth-of-type(29) { --_i: 28; }
+  .dk-ring-meter > i:nth-of-type(30) { --_i: 29; }
+  .dk-ring-meter > i:nth-of-type(31) { --_i: 30; }
+  .dk-ring-meter > i:nth-of-type(32) { --_i: 31; }
+  .dk-ring-meter > i:nth-of-type(33) { --_i: 32; }
+  .dk-ring-meter > i:nth-of-type(34) { --_i: 33; }
+  .dk-ring-meter > i:nth-of-type(35) { --_i: 34; }
+  .dk-ring-meter > i:nth-of-type(36) { --_i: 35; }
+  .dk-ring-meter > i:nth-of-type(37) { --_i: 36; }
+  .dk-ring-meter > i:nth-of-type(38) { --_i: 37; }
+  .dk-ring-meter > i:nth-of-type(39) { --_i: 38; }
+  .dk-ring-meter > i:nth-of-type(40) { --_i: 39; }
+  .dk-ring-meter > i:nth-of-type(41) { --_i: 40; }
+  .dk-ring-meter > i:nth-of-type(42) { --_i: 41; }
+  .dk-ring-meter > i:nth-of-type(43) { --_i: 42; }
+  .dk-ring-meter > i:nth-of-type(44) { --_i: 43; }
+  .dk-ring-meter > i:nth-of-type(45) { --_i: 44; }
+  .dk-ring-meter > i:nth-of-type(46) { --_i: 45; }
+  .dk-ring-meter > i:nth-of-type(47) { --_i: 46; }
+  .dk-ring-meter > i:nth-of-type(48) { --_i: 47; }
+  .dk-ring-meter > i:nth-of-type(49) { --_i: 48; }
+  .dk-ring-meter > i:nth-of-type(50) { --_i: 49; }
+  .dk-ring-meter > i:nth-of-type(51) { --_i: 50; }
+  .dk-ring-meter > i:nth-of-type(52) { --_i: 51; }
+  .dk-ring-meter > i:nth-of-type(53) { --_i: 52; }
+  .dk-ring-meter > i:nth-of-type(54) { --_i: 53; }
+  .dk-ring-meter > i:nth-of-type(55) { --_i: 54; }
+  .dk-ring-meter > i:nth-of-type(56) { --_i: 55; }
+  .dk-ring-meter > i:nth-of-type(57) { --_i: 56; }
+  .dk-ring-meter > i:nth-of-type(58) { --_i: 57; }
+  .dk-ring-meter > i:nth-of-type(59) { --_i: 58; }
+  .dk-ring-meter > i:nth-of-type(60) { --_i: 59; }
 }
 
 @media (forced-colors: active) {
+  .dk-ring-meter { forced-color-adjust: none; --dk-color: CanvasText; --dk-mute: GrayText; }
   .dk-spark, .dk-pictogram { forced-color-adjust: none; --dk-color: CanvasText; color: CanvasText; }
   .dk-heatmap, .dk-uptime { forced-color-adjust: none; --dk-color: CanvasText; --dk-paper: Canvas; --dk-mute: GrayText; }
   .dk-uptime > * { --dk-color: CanvasText; }

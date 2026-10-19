@@ -1,5 +1,5 @@
 /* ==========================================================
-   feedback — typing indicator / skeleton / status dot
+   feedback — typing indicator / skeleton / status dot / alert / dialog
    ========================================================== */
 @layer dotkit.components {
 
@@ -69,11 +69,62 @@
     0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--dk-color) 55%, transparent); }
     70%, 100% { box-shadow: 0 0 0 calc(var(--_d) * .9) transparent; }
   }
+
+  /* ---------- Alert: tinted panel with a fading dot band on the left ----------
+     data-state="info" (default) | "ok" | "warn" | "danger". Danger uses square dots. */
+  .dk-alert {
+    --dk-color: var(--dk-info);
+    --dk-size: 2.5px; --dk-gap: 5px;
+    position: relative; display: block;
+    padding: 14px 16px 14px 40px;
+    border-radius: var(--dk-radius);
+    font-size: 14px; line-height: 1.55;
+    color: var(--dk-ink);
+    background: color-mix(in srgb, var(--dk-color) 8%, var(--dk-paper));
+  }
+  .dk-alert::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 30px;
+    border-radius: var(--dk-radius) 0 0 var(--dk-radius);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    -webkit-mask: linear-gradient(90deg, #000 30%, transparent);
+            mask: linear-gradient(90deg, #000 30%, transparent);
+  }
+  .dk-alert[data-state="ok"] { --dk-color: var(--dk-ok); }
+  .dk-alert[data-state="warn"] { --dk-color: var(--dk-warn); }
+  .dk-alert[data-state="danger"] { --dk-color: var(--dk-danger); }
+  .dk-alert[data-state="danger"]::before { --_dot: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color) 0); }
+  .dk-alert > :first-child { margin-top: 0; }
+  .dk-alert > :last-child { margin-bottom: 0; }
+  .dk-alert__title { display: flex; align-items: center; gap: 8px; margin: 0 0 2px; font-weight: 600; }
+
+  /* ---------- Dialog: native <dialog> with a dotted frame and a dotted veil ---------- */
+  .dk-dialog {
+    --dk-color: var(--dk-mute); --dk-size: 2px; --dk-gap: 6px;
+    width: min(480px, calc(100vw - 32px)); max-height: calc(100vh - 32px);
+    padding: 24px; border: 0;
+    border-radius: calc(var(--dk-radius) * 1.5);
+    color: var(--dk-ink); background: var(--dk-paper);
+    box-shadow: 0 30px 80px -30px rgb(0 0 0 / .45);
+  }
+  .dk-dialog::backdrop {
+    background:
+      radial-gradient(circle at center, rgb(0 0 0 / .6) 1.3px, transparent 1.9px) 0 0 / 6px 6px,
+      rgb(0 0 0 / .32);
+  }
+  .dk-dialog[open] { animation: dk-dialog-in .28s var(--dk-ease); }
+  .dk-dialog[open]::backdrop { animation: dk-fade-in .28s ease-out; }
+  .dk-dialog > :first-child { margin-top: 0; }
+  .dk-dialog > :last-child { margin-bottom: 0; }
+  .dk-dialog__actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+  @keyframes dk-dialog-in { from { opacity: 0; transform: translateY(8px) scale(.985); } }
+  @keyframes dk-fade-in { from { opacity: 0; } }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .dk-typing > i { animation: none; opacity: .6; }
   .dk-skeleton, .dk-status--pulse::before { animation: none; }
+  .dk-dialog[open], .dk-dialog[open]::backdrop { animation: none; }
 }
 @media (forced-colors: active) {
   .dk-typing { forced-color-adjust: none; color: CanvasText; }
@@ -81,4 +132,6 @@
   .dk-skeleton { forced-color-adjust: none; --dk-color: GrayText; }
   .dk-status::before { forced-color-adjust: none; background: CanvasText; }
   .dk-status[data-state="idle"]::before { background: none; box-shadow: inset 0 0 0 1.5px CanvasText; }
+  .dk-alert { border: 1px solid CanvasText; }
+  .dk-alert::before { forced-color-adjust: none; --dk-color: CanvasText; }
 }

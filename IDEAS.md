@@ -190,3 +190,4 @@ v0.1 時点の 16 項目: Dots / Shape / Fade / Border / Halftone / Dot text / I
 |---|---|
 | v0.2.0 | A1 Heatmap, B1 Checkbox / Radio, B2 Switch, F1 Image halftone, A6 Uptime bar, D5 Typing indicator, C9 Dot leaders |
 | v0.3.0 | A5 Dot-matrix digits（共通基盤: グリフ生成の一般化）, A7 Sparkline（+ A8 の簡易版 `--area`）, A10 Pictogram, C4 Stepper, D1 Skeleton, D2 Status dot, F9 Marching border, G2 Identicon, H1 Theme presets |
+| v0.4.0 | A3 Ring meter, B3 Range, C1 Tabs, C2 Pagination dots, D3 Dialog, D6 Alert, E2 Halftone headline, F6 Duotone, F7 Pattern library, I2 Status page, I6 AI chat UI |

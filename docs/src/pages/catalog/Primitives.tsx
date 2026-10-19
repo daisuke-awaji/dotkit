@@ -1,8 +1,10 @@
 import {
   Dots,
+  Duotone,
+  Pattern,
 } from "dotkit/react";
 import { Example } from "../../ui";
-import { Tile } from "./shared";
+import { Tile, Since } from "./shared";
 
 export function Primitives() {
   return (
@@ -63,6 +65,41 @@ export function Primitives() {
         <Tile label=".dk-fade-r"><Dots density="dense" fade="r" className="tile-stage" /></Tile>
         <Tile label=".dk-fade-b"><Dots density="dense" fade="b" className="tile-stage" /></Tile>
         <Tile label=".dk-fade-radial"><Dots density="dense" fade="radial" className="tile-stage" /></Tile>
+      </Example>
+
+      <h3 id="duotone">Duotone — 2 色のドット <Since v="0.4" /></h3>
+      <p>
+        <code>.dk-duotone</code> は <code>--dk-color</code> と <code>--dk-color-2</code> の 2 色のドットを、半ピッチずらして交互に並べます。
+        <code>.dk-duotone--ramp</code> は 1 枚のグラデーション（<code>--dk-angle</code> の向き）をドットの穴から覗かせる表現で、色が場所によって移り変わります。
+      </p>
+      <Example
+        html={`<div class="dk-duotone" style="--dk-color: #2649d0; --dk-color-2: #ff48b0; --dk-size: 4px; --dk-gap: 10px"></div>
+<div class="dk-duotone dk-duotone--ramp" style="--dk-color: #ff48b0; --dk-color-2: #2649d0; --dk-angle: 135deg"></div>`}
+        react={`<Duotone color="#2649d0" color2="#ff48b0" size={4} gap={10} />
+<Duotone ramp color="#ff48b0" color2="#2649d0" angle="135deg" size={4} gap={8} />`}
+      >
+        <Tile label=".dk-duotone"><Duotone color="#2649d0" color2="#ff48b0" size={4} gap={10} className="tile-stage" /></Tile>
+        <Tile label="square + mute"><Duotone shape="square" size={3} gap={8} className="tile-stage" /></Tile>
+        <Tile label="--ramp 135deg"><Duotone ramp color="#ff48b0" color2="#2649d0" angle="135deg" size={4} gap={8} className="tile-stage" /></Tile>
+        <Tile label="--ramp ok → info"><Duotone ramp color="var(--dk-ok)" color2="var(--dk-info)" density="dense" className="tile-stage" /></Tile>
+      </Example>
+
+      <h3 id="pattern">Pattern — ドットの並べ方 <Since v="0.4" /></h3>
+      <p>
+        同じドットの並べ方を変えた柄です。<code>.dk-pattern</code> に <code>--checker</code>（市松）/ <code>--stripes</code>（横縞）/ <code>--grid</code>（方眼）/
+        <code>--diagonal</code>（斜線）/ <code>--cross</code>（十字）/ <code>--stipple</code>（不規則な点描）を組み合わせます。大きさと色はいつもの 3 つの変数です。
+      </p>
+      <Example
+        html={`<div class="dk-pattern dk-pattern--checker"></div>
+<div class="dk-pattern dk-pattern--grid" style="--dk-gap: 5px"></div>
+<div class="dk-pattern dk-pattern--stipple" style="--dk-size: 2.5px"></div>`}
+        react={`<Pattern kind="checker" />
+<Pattern kind="grid" gap={5} />
+<Pattern kind="stipple" size={2.5} />`}
+      >
+        {(["checker", "stripes", "grid", "diagonal", "cross", "stipple"] as const).map((k) => (
+          <Tile key={k} label={`--${k}`}><Pattern kind={k} size={k === "stipple" ? 3 : 2.5} gap={k === "grid" ? 5 : 7} className="tile-stage" /></Tile>
+        ))}
       </Example>
     </>
   );

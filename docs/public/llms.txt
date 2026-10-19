@@ -5,9 +5,9 @@
 > Distributed via GitHub only (not on npm). Docs: https://daisuke-awaji.github.io/dotkit/
 
 ## Install
-- Tarball: `npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.3.0/dotkit-0.3.0.tgz`
-- Git semver: `npm i "github:daisuke-awaji/dotkit#semver:^0.3"`
-- CDN: `https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.3.0/dist/dotkit.css` or `https://daisuke-awaji.github.io/dotkit/dotkit.css`
+- Tarball: `npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.4.0/dotkit-0.4.0.tgz`
+- Git semver: `npm i "github:daisuke-awaji/dotkit#semver:^0.4"`
+- CDN: `https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.4.0/dist/dotkit.css` or `https://daisuke-awaji.github.io/dotkit/dotkit.css`
 - Imports: `import "dotkit/css"` once; components from `dotkit/react`.
 
 ## Core variables
@@ -41,6 +41,12 @@
 - `.dk-march` on any dotted outline (.dk-border/.dk-card/.dk-field/.dk-btn--outline): dots travel clockwise
 - `.dk-identicon` > 25 `<i>` (`data-on` = filled); generate with `identicon(seed)` from dotkit/react
 - Theme presets: `.dk-theme-gameboy|amber|newsprint|riso|blueprint` (scopeable, like `.dk-theme-dark`)
+- v0.4: `.dk-ring-meter` (style `--dk-value`, `--dk-count` = number of `<i>` children up to 60, `--dk-diameter`; other children = centered label)
+- `.dk-range` wrapper (style `--dk-value` 0..1, update it on input) > `input[type=range]`
+- `.dk-tabs` (role=tablist) > buttons with `aria-selected` (or links with `aria-current="page"`); `.dk-pager` > buttons, current has `aria-current="true"`
+- `.dk-alert[data-state=info|ok|warn|danger]` (+ `.dk-alert__title`); `dialog.dk-dialog` (+ `.dk-dialog__actions`), open with showModal()
+- `.dk-text-halftone` (+ `--to-right|--radial`, `--dk-tone`) large display text only, B/W
+- `.dk-duotone` (`--dk-color`, `--dk-color-2`; + `--ramp` with `--dk-angle`); `.dk-pattern` + `--checker|--stripes|--grid|--diagonal|--cross|--stipple`
 
 ## React (dotkit/react)
 - `<Dots density shape size gap color fade as>`; `<DotBorder …>`; `<DotText …>`; `<Halftone direction gap tone invert>`
@@ -55,6 +61,10 @@
 - v0.3: `<DotDigits value step square grid label>`; `<Sparkline data min max height size color area shape label>`; `<Pictogram icon value total step color label>`;
   `<Steps items={(node | {label,description})[]} current vertical>`; `<StatusDot state pulse>text</StatusDot>`; `<Skeleton lines circle width height>`;
   `<Identicon value cell color label>` + pure `identicon(seed) -> {cells: boolean[25], hue}`; `march` prop on `<DotBorder>` / `<Card>`; `glyphChars`
+- v0.4: `<RingMeter value count diameter size color shape label>{center}</RingMeter>`; `<Range value min max step dotSize gap wrapperClassName>` (controlled; style -> wrapper);
+  `<TabList><Tab selected onClick /></TabList>` (state is yours); `<PaginationDots count current onSelect itemLabel size>`; `<Alert state title icon>`; `<Dialog ref>` (ref.current.showModal());
+  `<HalftoneText as direction gap tone>`; `<Pattern kind density shape size gap color as>`; `<Duotone color color2 ramp angle …>`
+- Templates (complete pages): https://daisuke-awaji.github.io/dotkit/#/templates
 - Helpers: `cx`, `dotVars({size,gap,color,value,step,tone}, style)`, `withVars({"--dk-x": v}, style)`, `px(n)`, `buttonClassName`, `iconNames`
 - Number values for size/gap/step are px.
 

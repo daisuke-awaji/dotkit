@@ -4,6 +4,7 @@ import { ToastProvider } from "./ui";
 import { Home } from "./pages/Home";
 import { GettingStarted } from "./pages/GettingStarted";
 import { Catalog } from "./pages/Catalog";
+import { Templates } from "./pages/Templates";
 import { Icons } from "./pages/Icons";
 import { ReactApi } from "./pages/ReactApi";
 import { Accessibility } from "./pages/Accessibility";
@@ -14,6 +15,7 @@ const routes: Route[] = [
   { path: "/", label: "Overview", icon: "home", render: () => <Home />, group: "Guide" },
   { path: "/getting-started", label: "Getting Started", icon: "arrow-right", render: () => <GettingStarted />, group: "Guide" },
   { path: "/catalog", label: "Design Catalog", icon: "star", render: () => <Catalog />, group: "Reference" },
+  { path: "/templates", label: "Templates", icon: "play", render: () => <Templates />, group: "Reference" },
   { path: "/icons", label: "Icons", icon: "heart", render: () => <Icons />, group: "Reference" },
   { path: "/react", label: "React API", icon: "menu", render: () => <ReactApi />, group: "Reference" },
   { path: "/accessibility", label: "Accessibility & Support", icon: "info", render: () => <Accessibility />, group: "Reference" },

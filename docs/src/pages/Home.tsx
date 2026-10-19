@@ -44,6 +44,9 @@ export function Home() {
           <a className={buttonClassName({ variant: "outline", size: "lg" })} href="#/catalog">
             Design Catalog
           </a>
+          <a className={buttonClassName({ variant: "outline", size: "lg" })} href="#/templates">
+            Templates
+          </a>
           <a className={buttonClassName({ variant: "ghost", size: "lg" })} href="https://github.com/daisuke-awaji/dotkit">
             <DotIcon name="github" step={2} /> GitHub
           </a>
