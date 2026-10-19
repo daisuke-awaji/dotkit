@@ -121,6 +121,8 @@ export default function Usage() {
           <tr><td><code>--dk-tone</code></td><td><code>linear-gradient(…)</code></td><td>ハーフトーンの階調（黒 = 最大のドット）</td></tr>
           <tr><td><code>--dk-tone-filter</code></td><td><code>grayscale(1) contrast(1.4) brightness(.75)</code></td><td>Image halftone で画像にかける filter</td></tr>
           <tr><td><code>--dk-control</code></td><td><code>18px</code></td><td>Checkbox / Radio / Switch の高さ</td></tr>
+          <tr><td><code>--dk-count</code> / <code>--dk-diameter</code></td><td><code>24</code> / <code>96px</code></td><td>Ring meter のドット数と直径</td></tr>
+          <tr><td><code>--dk-color-2</code> / <code>--dk-angle</code></td><td><code>var(--dk-mute)</code> / <code>90deg</code></td><td>Duotone の 2 色目と、ramp のグラデーションの向き</td></tr>
           <tr><td><code>--dk-cell</code> / <code>--dk-rows</code></td><td><code>12px</code> / <code>7</code></td><td>Heatmap / Identicon のセルの大きさと、Heatmap の 1 列のセル数（<code>--dk-rows</code> は Uptime bar の高さにも使用）</td></tr>
           <tr><td><code>--dk-ink</code> / <code>--dk-paper</code></td><td><code>#0a0a0a</code> / <code>#fff</code></td><td>前景 / 背景</td></tr>
           <tr><td><code>--dk-mute</code> / <code>--dk-subtle</code></td><td><code>#d4d4d4</code> / <code>#737373</code></td><td>控えめなドット / 補助テキスト</td></tr>

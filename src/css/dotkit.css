@@ -54,8 +54,9 @@
   .dk-dots, .dk-text, .dk-divider, .dk-btn, .dk-meter, .dk-meter::after, .dk-bar,
   .dk-uptime > *, :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader)::before,
   .dk-steps > li::after, .dk-skeleton,
+  .dk-tabs::after, .dk-tabs > *::after, .dk-alert::before, .dk-pattern, .dk-duotone,
   .dk-check:checked, .dk-switch:checked,
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before {
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch, .dk-dialog)::before {
     --_dot: radial-gradient(circle at center,
               var(--dk-color) calc(var(--dk-size) / 2),
               transparent calc(var(--dk-size) / 2 + .6px));
@@ -69,7 +70,8 @@
 
   /* ---------- dotted outline (shared) ---------- */
   :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch) { position: relative; }
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before {
+  /* (.dk-dialog is positioned by the UA — fixed when modal — so it is not in the list above) */
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch, .dk-dialog)::before {
     content: "";
     position: absolute; inset: 0;
     padding: var(--dk-gap);
@@ -245,6 +247,9 @@
   }
   /* cell-based components (heatmap, uptime …) paint one element per dot */
   :is(.dk-heatmap, .dk-identicon).dk-square > *, .dk-spark.dk-square > *::before { border-radius: 1px; }
+  .dk-duotone { --_dot2: radial-gradient(circle at center, var(--dk-color-2) calc(var(--dk-size) / 2), transparent calc(var(--dk-size) / 2 + .6px)); }
+  .dk-duotone.dk-square { --_dot2: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color-2) 0); }
+  .dk-ring-meter.dk-square > i { border-radius: 1px; }
   .dk-uptime.dk-square > * {
     --_dot: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color) 0);
   }
@@ -322,7 +327,8 @@
   .dk-meter { --dk-color: GrayText; }
   .dk-meter::after, .dk-bar { --dk-color: CanvasText; }
   .dk-divider { --dk-color: CanvasText; }
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before { display: none; }
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch, .dk-dialog)::before { display: none; }
+  .dk-dialog { border: 1px solid CanvasText; }
   :is(.dk-border, .dk-field, .dk-card) { border: 1px solid CanvasText; }
   .dk-btn { border: 1px solid ButtonText; }
   .dk-text { -webkit-text-fill-color: currentColor; background: none; }

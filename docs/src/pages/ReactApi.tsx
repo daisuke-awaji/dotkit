@@ -224,6 +224,87 @@ const sections: { id: string; name: string; desc: string; rows: PropRow[]; exten
     rows: [["march", "boolean", "false", "枠のドットを流す。動きを減らす設定では止まる"]],
   },
   {
+    id: "ring", name: "<RingMeter>", extends: "HTMLAttributes<div>", since: "0.4",
+    desc: "円周上のドットで値を表すメーター。role=\"meter\" と aria-value* を付けます。children は中央に表示します。",
+    rows: [
+      ["value", "number", "-", "必須。0–1。ドット単位で切り捨て"],
+      ["count", "number", "24", "ドット数（1–60）"],
+      ["diameter", "number | string", "96px", "リングの直径"],
+      ["size / color / shape", "…", "6px / var(--dk-ink) / round", "ドットの見た目"],
+      ["label", "string", "-", "アクセシブルな名前"],
+    ],
+  },
+  {
+    id: "range", name: "<Range>", extends: "InputHTMLAttributes", since: "0.4",
+    desc: "ドットの目盛りに載せた range input。ref は input、style は外側の .dk-range に渡ります。塗りは value（または defaultValue）から計算するので、制御コンポーネントで使ってください。",
+    rows: [
+      ["value / defaultValue / min / max / step", "…", "- / - / 0 / 100 / -", "通常の input と同じ"],
+      ["dotSize", "number | string", "4px", "目盛りのドット径"],
+      ["gap", "number | string", "8px", "目盛りの間隔"],
+      ["wrapperClassName", "string", "-", ".dk-range に付けるクラス"],
+    ],
+  },
+  {
+    id: "tabs", name: "<TabList> / <Tab>", extends: "HTMLAttributes / ButtonHTMLAttributes", since: "0.4",
+    desc: "見た目だけのタブ。選択状態とパネルは利用側で管理します。TabList は role=\"tablist\"、Tab は role=\"tab\" とロービング tabIndex を付けます。",
+    rows: [["Tab.selected", "boolean", "false", "aria-selected と tabIndex（0 / -1）"]],
+  },
+  {
+    id: "pager", name: "<PaginationDots>", extends: "HTMLAttributes<nav>", since: "0.4",
+    desc: "カルーセルの位置表示。現在のドットが 3 つのドットに伸びます。",
+    rows: [
+      ["count", "number", "-", "必須。ページ数"],
+      ["current", "number", "-", "必須。現在の位置（0 始まり）"],
+      ["onSelect", "(index: number) => void", "-", "押されたときに呼ばれる。省略すると表示のみ"],
+      ["itemLabel", "(index: number) => string", "Slide n", "各ドットの名前"],
+      ["size", "number | string", "8px", "ドット径"],
+    ],
+  },
+  {
+    id: "alert", name: "<Alert>", extends: "HTMLAttributes<div>", since: "0.4",
+    desc: "お知らせ欄。live region にする場合は role=\"alert\" / role=\"status\" を自分で付けます。",
+    rows: [
+      ["state", `"info" | "ok" | "warn" | "danger"`, `"info"`, "色。danger は四角いドット"],
+      ["title", "ReactNode", "-", "太字の 1 行目"],
+      ["icon", "ReactNode", "-", "タイトルの前に置く要素"],
+    ],
+  },
+  {
+    id: "dialog", name: "<Dialog>", extends: "DialogHTMLAttributes", since: "0.4",
+    desc: "ネイティブの <dialog>。ref で showModal() / close() を呼びます。閉じるボタンには <form method=\"dialog\" className=\"dk-dialog__actions\"> が使えます。",
+    rows: [["（独自の props なし）", "—", "-", "dialog 要素の属性をそのまま渡します"]],
+  },
+  {
+    id: "halftonetext", name: "<HalftoneText>", extends: "HTMLAttributes", since: "0.4",
+    desc: "大きな見出し用の網点文字。文字は選択・読み上げできます。",
+    rows: [
+      ["as", "ElementType", `"span"`, "描画する要素（h1 など）"],
+      ["direction", `"to-bottom" | "to-right" | "radial"`, `"to-bottom"`, "網点が小さくなる向き"],
+      ["gap", "number | string", "6px", "網の細かさ"],
+      ["tone", "string", "-", "任意のグラデーション（黒 = 最大）"],
+    ],
+  },
+  {
+    id: "pattern", name: "<Pattern>", extends: "HTMLAttributes", since: "0.4",
+    desc: "ドットの並べ方を変えた柄。",
+    rows: [
+      ["kind", `"dots" | "checker" | "stripes" | "grid" | "diagonal" | "cross" | "stipple"`, `"dots"`, "柄"],
+      ...dotStyle,
+      ["as", "ElementType", `"div"`, "描画する要素"],
+    ],
+  },
+  {
+    id: "duotone", name: "<Duotone>", extends: "HTMLAttributes", since: "0.4",
+    desc: "2 色のドット面。",
+    rows: [
+      ["color2", "string", "var(--dk-mute)", "2 色目（--dk-color-2）"],
+      ["ramp", "boolean", "false", "交互ではなく、color → color2 のグラデーションをドット越しに見せる"],
+      ["angle", "string", "90deg", "ramp の向き（--dk-angle）"],
+      ...dotStyle,
+      ["as", "ElementType", `"div"`, "描画する要素"],
+    ],
+  },
+  {
     id: "misc", name: "<Badge> / <Divider> / <Loader>", extends: "HTMLAttributes",
     desc: "小物。",
     rows: [

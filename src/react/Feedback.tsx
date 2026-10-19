@@ -1,4 +1,4 @@
-import type { HTMLAttributes } from "react";
+import { forwardRef, type DialogHTMLAttributes, type HTMLAttributes, type ReactNode } from "react";
 import { cx, dotVars } from "./utils.js";
 
 export interface TypingProps extends HTMLAttributes<HTMLSpanElement> {
@@ -62,3 +62,36 @@ export interface StatusDotProps extends HTMLAttributes<HTMLSpanElement> {
 export function StatusDot({ state = "ok", pulse, className, ...rest }: StatusDotProps) {
   return <span data-state={state} className={cx("dk-status", pulse && "dk-status--pulse", className)} {...rest} />;
 }
+
+export type AlertState = "info" | "ok" | "warn" | "danger";
+
+export interface AlertProps extends Omit<HTMLAttributes<HTMLDivElement>, "title"> {
+  /** Default: `"info"`. `danger` uses square dots. */
+  state?: AlertState;
+  /** Bold first line. */
+  title?: ReactNode;
+  /** Rendered before the title (e.g. a DotIcon). */
+  icon?: ReactNode;
+}
+
+/** Tinted message panel with a fading dot band. Add `role="alert"` / `role="status"` yourself when it is live. */
+export function Alert({ state = "info", title, icon, children, className, ...rest }: AlertProps) {
+  return (
+    <div data-state={state} className={cx("dk-alert", className)} {...rest}>
+      {(title !== undefined || icon !== undefined) && (
+        <p className="dk-alert__title">
+          {icon}
+          {title}
+        </p>
+      )}
+      {children}
+    </div>
+  );
+}
+
+export interface DialogProps extends DialogHTMLAttributes<HTMLDialogElement> {}
+
+/** Native `<dialog>` with a dotted frame and veil. Open it with `ref.current.showModal()`. */
+export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(function Dialog({ className, ...rest }, ref) {
+  return <dialog ref={ref} className={cx("dk-dialog", className)} {...rest} />;
+});

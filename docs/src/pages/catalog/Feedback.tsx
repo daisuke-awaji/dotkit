@@ -1,5 +1,8 @@
 import {
+  Alert,
+  Button,
   Card,
+  Dialog,
   DotIcon,
   Skeleton,
   StatusDot,
@@ -7,6 +10,24 @@ import {
 } from "dotkit/react";
 import { Example } from "../../ui";
 import { Since } from "./shared";
+import { useRef } from "react";
+
+function DialogDemo() {
+  const ref = useRef<HTMLDialogElement>(null);
+  return (
+    <>
+      <Button onClick={() => ref.current?.showModal()}>Delete project</Button>
+      <Dialog ref={ref} aria-labelledby="demo-dialog-title">
+        <h2 id="demo-dialog-title" style={{ margin: "0 0 8px", fontSize: 20 }}>Delete project?</h2>
+        <p className="muted" style={{ margin: 0, fontSize: 14 }}>This permanently deletes <b>dotkit-docs</b> and its 42 deployments. This cannot be undone.</p>
+        <form method="dialog" className="dk-dialog__actions">
+          <Button variant="outline" value="cancel">Cancel</Button>
+          <Button value="ok">Delete</Button>
+        </form>
+      </Dialog>
+    </>
+  );
+}
 
 export function Feedback() {
   return (
@@ -14,30 +35,63 @@ export function Feedback() {
       <h2 id="feedback">Feedback</h2>
       <p className="muted">状態や進み具合を伝える部品。</p>
 
-      <h3 id="typing">Typing indicator <Since v="0.2" /></h3>
+      <h3 id="alert">Alert <Since v="0.4" /></h3>
       <p>
-        チャットの「入力中…」です。3 つのドットが順に跳ねます。<code>.dk-typing--bubble</code> を付けると吹き出しの背景が付きます。
-        <code>role="status"</code> と名前を付けてください（React 版は自動で付きます）。「動きを減らす」設定のときは止まります。
+        薄く色を敷いたお知らせ欄です。左端に、右へ消えていくドットの帯が付きます。<code>data-state</code> は
+        <code>info</code>（既定）/ <code>ok</code> / <code>warn</code> / <code>danger</code> で、<code>danger</code> だけ四角いドットになります。
+        すぐに知らせる必要があるものには <code>role="alert"</code>、控えめなものには <code>role="status"</code> を付けてください。
       </p>
       <Example
-        html={`<span class="dk-typing" role="status" aria-label="Assistant is typing">
-  <i></i><i></i><i></i>
-</span>
-
-<span class="dk-typing dk-typing--bubble" role="status" aria-label="Assistant is typing">
-  <i></i><i></i><i></i>
-</span>`}
-        react={`<Typing label="Assistant is typing" />
-<Typing bubble label="Assistant is typing" />
-<Typing size={4} />`}
+        align="left"
+        previewStyle={{ display: "grid", gap: 12 }}
+        html={`<div class="dk-alert" role="status">
+  <p class="dk-alert__title">New version available</p>
+  dotkit v0.4.0 adds tabs, dialogs and patterns.
+</div>
+<div class="dk-alert" data-state="danger" role="alert">
+  <p class="dk-alert__title">Deploy failed</p>
+  Build exited with code 1.
+</div>`}
+        react={`<Alert title="New version available" role="status">dotkit v0.4.0 adds tabs, dialogs and patterns.</Alert>
+<Alert state="ok" title="Deployed" icon={<DotIcon name="check" step={2} />}>Production is live.</Alert>
+<Alert state="warn" title="Degraded performance">p95 latency is above 800ms.</Alert>
+<Alert state="danger" title="Deploy failed" role="alert">Build exited with code 1.</Alert>`}
       >
-        <Typing label="Assistant is typing" />
-        <Typing bubble label="Assistant is typing" />
-        <Typing size={4} />
-        <div className="chat-row">
-          <span className="avatar"><DotIcon name="star" step={2} /></span>
-          <Typing bubble label="Assistant is typing" />
-        </div>
+        <Alert title="New version available" icon={<DotIcon name="info" step={2} />}>dotkit v0.4.0 adds tabs, dialogs and patterns.</Alert>
+        <Alert state="ok" title="Deployed" icon={<DotIcon name="check" step={2} />}>Production is live at dotkit.dev.</Alert>
+        <Alert state="warn" title="Degraded performance" icon={<DotIcon name="alert" step={2} />}>p95 latency is above 800ms in ap-northeast-1.</Alert>
+        <Alert state="danger" title="Deploy failed" icon={<DotIcon name="close" step={2} />}>Build exited with code 1. See the logs for details.</Alert>
+      </Example>
+
+      <h3 id="dialog">Dialog <Since v="0.4" /></h3>
+      <p>
+        ネイティブの <code>&lt;dialog&gt;</code> にドットの枠を付け、背景をドットの幕で覆います。開閉・フォーカスの閉じ込め・Esc での終了はブラウザの機能をそのまま使います。
+        <code>showModal()</code> で開き、<code>&lt;form method="dialog"&gt;</code> のボタンで閉じられます。下にボタンを並べるときは <code>.dk-dialog__actions</code> が使えます。
+      </p>
+      <Example
+        html={`<button class="dk-btn dk-btn--solid" onclick="document.getElementById('d').showModal()">Delete project</button>
+
+<dialog id="d" class="dk-dialog" aria-labelledby="d-title">
+  <h2 id="d-title">Delete project?</h2>
+  <p>This cannot be undone.</p>
+  <form method="dialog" class="dk-dialog__actions">
+    <button class="dk-btn dk-btn--outline" value="cancel">Cancel</button>
+    <button class="dk-btn dk-btn--solid" value="ok">Delete</button>
+  </form>
+</dialog>`}
+        react={`const ref = useRef<HTMLDialogElement>(null);
+
+<Button onClick={() => ref.current?.showModal()}>Delete project</Button>
+<Dialog ref={ref} aria-labelledby="d-title">
+  <h2 id="d-title">Delete project?</h2>
+  <p>This cannot be undone.</p>
+  <form method="dialog" className="dk-dialog__actions">
+    <Button variant="outline" value="cancel">Cancel</Button>
+    <Button value="ok">Delete</Button>
+  </form>
+</Dialog>`}
+      >
+        <DialogDemo />
       </Example>
 
       <h3 id="status">Status dot <Since v="0.3" /></h3>
@@ -66,6 +120,32 @@ export function Feedback() {
         <StatusDot state="idle">Paused</StatusDot>
         <StatusDot state="info" pulse>Deploying</StatusDot>
         <StatusDot pulse>Live</StatusDot>
+      </Example>
+
+      <h3 id="typing">Typing indicator <Since v="0.2" /></h3>
+      <p>
+        チャットの「入力中…」です。3 つのドットが順に跳ねます。<code>.dk-typing--bubble</code> を付けると吹き出しの背景が付きます。
+        <code>role="status"</code> と名前を付けてください（React 版は自動で付きます）。「動きを減らす」設定のときは止まります。
+      </p>
+      <Example
+        html={`<span class="dk-typing" role="status" aria-label="Assistant is typing">
+  <i></i><i></i><i></i>
+</span>
+
+<span class="dk-typing dk-typing--bubble" role="status" aria-label="Assistant is typing">
+  <i></i><i></i><i></i>
+</span>`}
+        react={`<Typing label="Assistant is typing" />
+<Typing bubble label="Assistant is typing" />
+<Typing size={4} />`}
+      >
+        <Typing label="Assistant is typing" />
+        <Typing bubble label="Assistant is typing" />
+        <Typing size={4} />
+        <div className="chat-row">
+          <span className="avatar"><DotIcon name="star" step={2} /></span>
+          <Typing bubble label="Assistant is typing" />
+        </div>
       </Example>
 
       <h3 id="skeleton">Skeleton <Since v="0.3" /></h3>

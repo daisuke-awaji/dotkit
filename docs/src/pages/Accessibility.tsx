@@ -9,6 +9,9 @@ const motion: [what: string, how: string, reduced: string][] = [
   ["Marching border", "枠のドットが時計回りに流れる（繰り返し）", "止まる（枠は表示したまま）"],
   ["Skeleton", "明るさの帯が横に流れる（繰り返し）", "止まる"],
   ["Status dot（pulse）", "ドットから波紋が広がる（繰り返し）", "止まる"],
+  ["Tabs / Pagination dots", "選択時に下線のドットが膨らむ、現在のドットが伸びる（0.25〜0.3 秒）", "遷移なしで切り替わる"],
+  ["Dialog", "開くときに少し浮き上がる・背景が現れる（0.28 秒）", "アニメーションなしで開く"],
+  ["Range", "ドラッグ中につまみが少し大きくなる", "遷移なし"],
 ];
 
 /** Behaviour under `forced-colors: active`. */
@@ -25,6 +28,11 @@ const forced: [what: string, how: string][] = [
   ["Status dot", "ドットを CanvasText にする（down の四角、idle の輪で状態を区別）"],
   ["Skeleton", "ドットを GrayText にする"],
   ["Identicon", "模様を CanvasText、背景を Canvas にし、1px の枠線を付ける"],
+  ["Ring meter / Range", "点いたドットを CanvasText、消えたドットを GrayText にする"],
+  ["Tabs / Pagination dots", "選択中の下線を Highlight、ほかを GrayText にする"],
+  ["Alert / Dialog", "1px の実線の枠を付ける（Alert の帯は CanvasText のドット）"],
+  ["Halftone text", "網点をやめ、文字を実色で表示"],
+  ["Pattern / Duotone", "ドットを GrayText にする"],
 ];
 
 export function Accessibility() {
@@ -41,7 +49,7 @@ export function Accessibility() {
           <tr><td><code>forced-colors: active</code><br /><span className="muted">Windows ハイコントラスト等</span></td><td>ドットを実線・実色・システムカラーに置き換えます（下の表）。</td></tr>
           <tr><td><code>prefers-reduced-motion: reduce</code></td><td>繰り返すアニメーションと、ドットの遷移を止めます（下の表）。</td></tr>
           <tr><td>キーボード操作</td><td><code>:focus-visible</code> でドット状（dotted）のアウトラインを表示。Checkbox / Radio / Switch はネイティブの input なので、Tab・Space・矢印キーの操作はブラウザ標準のままです。</td></tr>
-          <tr><td>スクリーンリーダー</td><td>React 版は Meter に <code>role="meter"</code> + <code>aria-value*</code>、BarChart / Heatmap / UptimeBar に <code>role="img"</code> + <code>label</code>（Sparkline / Pictogram / DotDigits も同様）、Loader / Typing に <code>role="status"</code>、Switch に <code>role="switch"</code>、Halftone と label なしの DotIcon に <code>aria-hidden</code> を付けます。</td></tr>
+          <tr><td>スクリーンリーダー</td><td>React 版は Meter / RingMeter に <code>role="meter"</code> + <code>aria-value*</code>、BarChart / Heatmap / UptimeBar に <code>role="img"</code> + <code>label</code>（Sparkline / Pictogram / DotDigits も同様）、Loader / Typing に <code>role="status"</code>、Switch に <code>role="switch"</code>、TabList / Tab に <code>role="tablist"</code> / <code>role="tab"</code> + <code>aria-selected</code>、Halftone と label なしの DotIcon に <code>aria-hidden</code> を付けます。Dialog はネイティブの <code>&lt;dialog&gt;</code> なので、フォーカスの閉じ込めと Esc での終了はブラウザが行います。</td></tr>
           <tr><td>色だけに頼らない</td><td>Uptime bar は状態を色に加えて列の高さ（5 / 3 / 1 ドット）でも表します。Heatmap は値を大きさと濃さの 2 つで表します。Status dot は down を四角、idle を輪の形にし、説明文を必ず添えます。</td></tr>
         </tbody>
       </table>
@@ -66,6 +74,8 @@ export function Accessibility() {
         <li><b>画像の代替テキスト。</b>Image halftone の <code>alt</code> は中の <code>&lt;img&gt;</code> に付けます。</li>
         <li><b>グラフには要約を付ける。</b>Heatmap / Uptime bar / Bar chart は 1 枚の画像として読み上げられます。<code>label</code>（<code>aria-label</code>）に「直近 90 日の稼働率 99.92%」のような要約を入れてください。</li>
         <li><b>ドット色のコントラスト。</b><code>--dk-mute</code> の枠は装飾扱いです。入力欄の境界など意味のある枠は、フォーカス時に <code>--dk-ink</code> へ切り替わります。Checkbox / Radio / Switch の枠は <code>--dk-subtle</code>（白地で 4.7:1）です。</li>
+        <li><b>タブのキーボード操作。</b>TabList / Tab は見た目と ARIA 属性だけを担当します。矢印キーでの移動とパネルの切り替えは利用側で実装してください（Design Catalog の Tabs に例があります）。</li>
+        <li><b>Range の塗り。</b>CSS から input の値は読めないため、<code>--dk-value</code> を更新しないと塗りが追従しません。React では制御コンポーネントとして使ってください。</li>
         <li><b>端数サイズ。</b>Hi-DPI 以外では 2.6px のような端数のドットがにじむことがあります。整数か 0.5 刻みを推奨します。</li>
       </ul>
 
@@ -76,12 +86,14 @@ export function Accessibility() {
         <tbody>
           <tr><td><code>@layer</code></td><td>詳細度の管理</td><td>—（必須）</td></tr>
           <tr><td><code>@property</code></td><td><code>--dk-size</code> / <code>--dk-gap</code> の遷移</td><td>hover 時に遷移せず切り替わる</td></tr>
-          <tr><td><code>round()</code></td><td>Meter / Bar / Uptime のドット単位スナップ</td><td>スナップなしの幅 / 高さにフォールバック</td></tr>
+          <tr><td><code>round()</code></td><td>Meter / Bar / Uptime / Range / Ring meter のドット単位スナップ</td><td>スナップなしの幅 / 高さにフォールバック（Ring meter は端数のドットが中間の濃さになる）</td></tr>
           <tr><td><code>mask-composite</code></td><td>ドット枠</td><td>—（必須）</td></tr>
           <tr><td><code>background-clip: text</code></td><td>ドット文字</td><td>—（必須）</td></tr>
           <tr><td><code>color-mix()</code></td><td>Solid ボタンのドット色、Heatmap の濃淡</td><td>ドットが見えなくなる（部品自体は機能する）</td></tr>
           <tr><td><code>:has()</code></td><td>Dot leaders の行の判定、無効なラベルの色</td><td>リンク行（<code>.dk-leader</code>）の点線が出ない</td></tr>
-          <tr><td><code>appearance: none</code> + 疑似要素</td><td>Checkbox / Radio / Switch</td><td>—（必須）</td></tr>
+          <tr><td><code>appearance: none</code> + 疑似要素</td><td>Checkbox / Radio / Switch / Range</td><td>—（必須）</td></tr>
+          <tr><td><code>&lt;dialog&gt;</code> / <code>::backdrop</code></td><td>Dialog</td><td>—（必須）</td></tr>
+          <tr><td><code>background-blend-mode</code> + <code>filter</code></td><td>Halftone text</td><td>—（必須）</td></tr>
         </tbody>
       </table>
       <Card className="callout">

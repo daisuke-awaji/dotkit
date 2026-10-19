@@ -48,6 +48,7 @@
 - Home — コンセプトとハイライト
 - Getting Started — 導入方法（tarball / git semver / CDN）、HTML と React の最小例、テーマ
 - Catalog — 全プリミティブ・テクニック・コンポーネントのライブプレビュー + HTML / React コード、size / gap のプレイグラウンド
+- Templates — 部品を組み合わせた完成ページ（Status page / AI chat UI）。1 ファイルで完結するコード付き
 - Icons — アイコン一覧（クリックでコピー）
 - React API — props 一覧
 - Accessibility & Support — フォールバック方針とブラウザ対応
@@ -62,7 +63,7 @@ v0.2〜v0.4 は Design Catalog の拡充（候補と優先度は [IDEAS.md](IDEA
 | **v0.1** | `dotkit.css`、アイコン生成、`dotkit/react`、ドキュメントサイト、Pages / Release ワークフロー |
 | **v0.2** | Checkbox / Radio / Switch、Image halftone、Heatmap、Uptime bar、Typing indicator、Dot leaders。ステータス色トークン、値の渡し方の規約（`--dk-value` / `data-state`）、CSS のモジュール分割 |
 | **v0.3** | Dot-matrix digits（グリフ生成の一般化）、Sparkline、Pictogram、Stepper、Skeleton、Status dot、Marching border、Identicon、テーマプリセット |
-| v0.4 | Ring meter、Range、Tabs、Pagination dots、Dialog、Alert、Halftone headline、Duotone、Pattern library、テンプレート（Status page / AI chat UI） |
+| **v0.4** | Ring meter、Range、Tabs、Pagination dots、Dialog、Alert、Halftone headline、Duotone、Pattern library、テンプレート（Status page / AI chat UI） |
 | v0.5 | Tailwind v4 用ユーティリティ（`dotkit/tailwind`）、アイコン追加、Dot map・Dot-matrix font などの大物（IDEAS.md） |
 | v0.6 | shadcn 形式 registry を Pages で配信、操作系コンポーネント（Ark UI ベース） |
 | v0.7 | Vue / Svelte ラッパー、json-render カタログ（`dotkit/json-render`） |

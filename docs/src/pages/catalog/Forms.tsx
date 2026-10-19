@@ -4,11 +4,36 @@ import {
   DotIcon,
   Input,
   Radio,
+  Range,
   Switch,
   buttonClassName,
 } from "dotkit/react";
 import { Example } from "../../ui";
 import { Since } from "./shared";
+import { useState } from "react";
+
+function RangeDemo() {
+  const [v, setV] = useState(40);
+  const [t, setT] = useState(0.7);
+  return (
+    <>
+      <label className="dk-choice" style={{ gap: 16 }}>
+        <span style={{ width: 92 }}>Volume</span>
+        <Range min={0} max={100} value={v} onChange={(e) => setV(+e.target.value)} style={{ width: 260 }} />
+        <span className="mono" style={{ width: 32 }}>{v}</span>
+      </label>
+      <label className="dk-choice" style={{ gap: 16 }}>
+        <span style={{ width: 92 }}>Temperature</span>
+        <Range min={0} max={2} step={0.1} value={t} onChange={(e) => setT(+e.target.value)} dotSize={3} gap={6} style={{ width: 260 }} />
+        <span className="mono" style={{ width: 32 }}>{t.toFixed(1)}</span>
+      </label>
+      <label className="dk-choice" style={{ gap: 16 }}>
+        <span style={{ width: 92 }}>Disabled</span>
+        <Range min={0} max={100} defaultValue={25} disabled style={{ width: 260 }} />
+      </label>
+    </>
+  );
+}
 
 export function Forms() {
   return (
@@ -107,6 +132,30 @@ export function Forms() {
           <Switch controlSize={26} defaultChecked>Large</Switch>
           <Checkbox controlSize={24} defaultChecked>Large checkbox</Checkbox>
         </div>
+      </Example>
+
+      <h3 id="range">Range <Since v="0.4" /></h3>
+      <p>
+        ネイティブの <code>&lt;input type="range"&gt;</code> をドットの目盛りの上に載せた部品です。つまみは 1 つの大きなドットで、選んだ値までのドットが濃くなります。
+        CSS からは input の値を読めないので、塗りの位置は外側の <code>.dk-range</code> に <code>--dk-value</code>（0〜1）で渡します。
+        React 版は <code>value</code>（または <code>defaultValue</code>）から自動で計算するので、制御コンポーネントとして使ってください。
+      </p>
+      <Example
+        align="left"
+        previewStyle={{ display: "grid", gap: 20, justifyItems: "start" }}
+        html={`<label class="dk-choice">
+  Volume
+  <span class="dk-range" style="--dk-value: .4">
+    <input type="range" min="0" max="100" value="40"
+           oninput="this.parentNode.style.setProperty('--dk-value', this.value / 100)">
+  </span>
+</label>`}
+        react={`const [v, setV] = useState(40);
+
+<Range min={0} max={100} value={v} onChange={(e) => setV(+e.target.value)} aria-label="Volume" />
+<Range min={0} max={2} step={0.1} value={t} onChange={…} dotSize={3} gap={6} style={{ width: 240 }} />`}
+      >
+        <RangeDemo />
       </Example>
     </>
   );

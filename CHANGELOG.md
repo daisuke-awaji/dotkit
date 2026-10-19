@@ -2,6 +2,22 @@
 
 All notable changes to dotkit. Versions follow [semver](https://semver.org/) (0.x: minor = new features, may include small breaking changes).
 
+## v0.4.0
+
+The third wave of the Design Catalog expansion, plus the first templates.
+
+### Added
+- **Ring meter** — `.dk-ring-meter` (up to 60 `<i>` dots, `--dk-count`, `--dk-diameter`). React: `<RingMeter>`.
+- **Range** — `.dk-range` wrapper around a native range input; fill from `--dk-value`. React: `<Range>` (controlled).
+- **Tabs** — `.dk-tabs` driven by `aria-selected` / `aria-current="page"`. React: `<TabList>`, `<Tab>`.
+- **Pagination dots** — `.dk-pager`; the current dot stretches into three. React: `<PaginationDots>`.
+- **Alert** — `.dk-alert[data-state]` with a fading dot band (`danger` uses square dots). React: `<Alert>`.
+- **Dialog** — `dialog.dk-dialog` with a dotted frame and veil, `.dk-dialog__actions`. React: `<Dialog>`.
+- **Halftone text** — `.dk-text-halftone` (+ `--to-right`, `--radial`). React: `<HalftoneText>`.
+- **Duotone** — `.dk-duotone` (+ `--ramp`), `--dk-color-2`, `--dk-angle`. React: `<Duotone>`.
+- **Patterns** — `.dk-pattern` + `--checker`, `--stripes`, `--grid`, `--diagonal`, `--cross`, `--stipple`. React: `<Pattern>`.
+- Docs: **Templates** page with a status page and an AI chat UI (single-file, copy-paste ready).
+
 ## v0.3.0
 
 The second wave of the Design Catalog expansion.

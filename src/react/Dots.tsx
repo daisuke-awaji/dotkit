@@ -107,3 +107,65 @@ export function HalftoneImage({ src, alt, gap, toneFilter, invert, imgProps, chi
     </div>
   );
 }
+
+export interface HalftoneTextProps extends HTMLAttributes<HTMLElement> {
+  /** Element to render. Default: `span`. */
+  as?: ElementType;
+  /** Direction of the tone ramp. Default: `to-bottom`. */
+  direction?: "to-bottom" | "to-right" | "radial";
+  /** Halftone cell size. Default: 6px. */
+  gap?: number | string;
+  /** Custom tone ramp (black = biggest dot). Overrides `direction`. */
+  tone?: string;
+}
+
+/** Large display text printed as halftone dots. Still real, selectable text. */
+export function HalftoneText({ as: Tag = "span", direction = "to-bottom", gap, tone, className, style, ...rest }: HalftoneTextProps) {
+  return (
+    <Tag
+      className={cx("dk-text-halftone", direction !== "to-bottom" && `dk-text-halftone--${direction}`, className)}
+      style={dotVars({ gap, tone }, style)}
+      {...rest}
+    />
+  );
+}
+
+export type PatternKind = "dots" | "checker" | "stripes" | "grid" | "diagonal" | "cross" | "stipple";
+
+export interface PatternProps extends DotStyleProps, HTMLAttributes<HTMLElement> {
+  /** Arrangement of the dots. Default: `"dots"`. */
+  kind?: PatternKind;
+  as?: ElementType;
+}
+
+/** A surface filled with a dot pattern (checker, stripes, grid, diagonal, cross, stipple). */
+export function Pattern({ kind = "dots", as: Tag = "div", density, shape, size, gap, color, className, style, ...rest }: PatternProps) {
+  return (
+    <Tag
+      className={cx("dk-pattern", kind !== "dots" && `dk-pattern--${kind}`, densityClass(density), shapeClass(shape), className)}
+      style={dotVars({ size, gap, color }, style)}
+      {...rest}
+    />
+  );
+}
+
+export interface DuotoneProps extends DotStyleProps, HTMLAttributes<HTMLElement> {
+  /** Second dot color. Default: `--dk-mute`. */
+  color2?: string;
+  /** Instead of interleaving, show one gradient from `color` to `color2` through the dots. */
+  ramp?: boolean;
+  /** Gradient angle for `ramp`. Default: 90deg. */
+  angle?: string;
+  as?: ElementType;
+}
+
+/** Two-color dot field: interleaved dots, or a gradient seen through the dots (`ramp`). */
+export function Duotone({ color2, ramp, angle, as: Tag = "div", density, shape, size, gap, color, className, style, ...rest }: DuotoneProps) {
+  return (
+    <Tag
+      className={cx("dk-duotone", ramp && "dk-duotone--ramp", densityClass(density), shapeClass(shape), className)}
+      style={withVars({ "--dk-color-2": color2, "--dk-angle": angle }, dotVars({ size, gap, color }, style))}
+      {...rest}
+    />
+  );
+}
