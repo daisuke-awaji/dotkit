@@ -76,14 +76,14 @@ export function Icons() {
         <code>icons/icons.json</code> に 7 行 × 7 文字（<code>#</code> = ドット）を追加し、<code>npm run icons</code> を実行します。
         数字や記号は <code>icons/glyphs.json</code>（5 列 × 7 行）に同じ形式で追加します。生成スクリプトは大きさが合わないビットマップをエラーにします。
       </p>
-      <CodeBlock lang="json">{`"bolt": [
-  "....##.",
-  "...##..",
-  "..##...",
-  ".#####.",
-  "...##..",
-  "..##...",
-  ".##...."
+      <CodeBlock lang="json">{`"key": [
+  ".......",
+  ".##....",
+  "#..#...",
+  "#..####",
+  "#..#.##",
+  ".##....",
+  "......."
 ]`}</CodeBlock>
     </>
   );
