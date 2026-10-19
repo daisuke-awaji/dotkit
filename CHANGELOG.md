@@ -2,6 +2,14 @@
 
 All notable changes to dotkit. Versions follow [semver](https://semver.org/) (0.x: minor = new features, may include small breaking changes).
 
+## Unreleased
+
+### Added
+- **37 new icons** (63 in total): `chevron-left`, `chevron-up`, `more`, `more-vertical`, `grid`, `list`, `filter`, `chat`, `bell`, `calendar`, `clock`, `bookmark`, `flag`, `help`, `lock`, `unlock`, `eye`, `settings`, `edit`, `trash`, `link`, `download`, `upload`, `refresh`, `send`, `folder`, `file`, `image`, `camera`, `mic`, `volume`, `stop`, `cloud`, `bolt`, `globe`, `location`, `cart`.
+
+### Changed
+- `iconNames` is now grouped by meaning (navigation, actions, objects, media, …) instead of in the order icons were added.
+
 ## v0.4.0
 
 The third wave of the Design Catalog expansion, plus the first templates.
