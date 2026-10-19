@@ -1,0 +1,37 @@
+/* ==========================================================
+   feedback — typing indicator
+   ========================================================== */
+@layer dotkit.components {
+
+  /* ---------- Typing indicator: the chat "…" ---------- */
+  .dk-typing {
+    --dk-size: 6px;
+    display: inline-flex; align-items: center; gap: calc(var(--dk-size) * .6);
+    height: calc(var(--dk-size) * 3);
+    color: var(--dk-subtle);
+  }
+  .dk-typing > i {
+    width: var(--dk-size); height: var(--dk-size); border-radius: 50%;
+    background: currentColor;
+    animation: dk-typing 1.2s var(--dk-ease) infinite;
+  }
+  .dk-typing > i:nth-child(2) { animation-delay: .15s; }
+  .dk-typing > i:nth-child(3) { animation-delay: .3s; }
+  .dk-typing--bubble {
+    padding: calc(var(--dk-size) * 1.4) calc(var(--dk-size) * 2.2);
+    height: auto; border-radius: 999px;
+    background: color-mix(in srgb, var(--dk-ink) 6%, var(--dk-paper));
+  }
+  @keyframes dk-typing {
+    0%, 60%, 100% { transform: none; opacity: .35; }
+    30%           { transform: translateY(-55%); opacity: 1; }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dk-typing > i { animation: none; opacity: .6; }
+}
+@media (forced-colors: active) {
+  .dk-typing { forced-color-adjust: none; color: CanvasText; }
+  .dk-typing--bubble { background: Canvas; outline: 1px solid CanvasText; }
+}

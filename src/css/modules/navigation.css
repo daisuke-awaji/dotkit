@@ -1,0 +1,35 @@
+/* ==========================================================
+   navigation — dot leaders
+   ========================================================== */
+@layer dotkit.components {
+
+  /* ---------- Dot leaders: "Chapter 1 ........ 12" ----------
+     Rows are the direct children of .dk-leaders, or any element with .dk-leader
+     (use the latter for <li><a class="dk-leader">…</a></li>). */
+  .dk-leaders {
+    --dk-color: var(--dk-mute); --dk-size: 2px; --dk-gap: 6px;
+    display: grid; gap: 6px;
+    margin: 0; padding: 0; list-style: none;
+  }
+  :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader) {
+    display: flex; align-items: baseline; gap: .6em;
+    color: inherit; text-decoration: none;
+  }
+  :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader)::before {
+    content: ""; order: 1;
+    flex: 1 1 auto; min-width: calc(var(--dk-gap) * 3);
+    height: var(--dk-gap);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space no-repeat;
+  }
+  :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader) > :last-child:not(:first-child) {
+    order: 2; font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  a.dk-leader:hover, .dk-leaders > a:hover { --dk-color: var(--dk-ink); }
+  a.dk-leader:focus-visible, .dk-leaders > a:focus-visible { outline: 2px dotted var(--dk-ink); outline-offset: 2px; }
+}
+
+@media (forced-colors: active) {
+  :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader)::before { forced-color-adjust: none; --dk-color: GrayText; }
+}

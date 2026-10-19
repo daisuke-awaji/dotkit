@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Card } from "dotkit/react";
 import { Code, CodeBlock, Toc } from "../ui";
+import pkg from "../../../package.json";
 
-const V = "0.1.0";
+const V = pkg.version;
 const REPO = "daisuke-awaji/dotkit";
 
 const installs: [string, string, string][] = [
@@ -114,22 +115,38 @@ export default function Usage() {
           <tr><td><code>--dk-size</code></td><td><code>2px</code></td><td>ドットの直径（<code>@property</code> 登録済み・遷移可能）</td></tr>
           <tr><td><code>--dk-gap</code></td><td><code>6px</code></td><td>ドット中心間の距離（遷移可能）</td></tr>
           <tr><td><code>--dk-color</code></td><td><code>currentColor</code></td><td>ドットの色</td></tr>
-          <tr><td><code>--dk-value</code></td><td><code>.5</code></td><td>Meter / Bar の値（0–1）。ドット単位に切り捨て</td></tr>
+          <tr><td><code>--dk-value</code></td><td><code>.5</code></td><td>Meter / Bar / Heatmap のセルなど、連続した値（0–1）</td></tr>
           <tr><td><code>--dk-icon-step</code></td><td><code>3px</code></td><td>アイコンのドット間隔。アイコン寸法 = step × 7</td></tr>
           <tr><td><code>--dk-tone</code></td><td><code>linear-gradient(…)</code></td><td>ハーフトーンの階調（黒 = 最大のドット）</td></tr>
+          <tr><td><code>--dk-tone-filter</code></td><td><code>grayscale(1) contrast(1.4) brightness(.75)</code></td><td>Image halftone で画像にかける filter</td></tr>
+          <tr><td><code>--dk-control</code></td><td><code>18px</code></td><td>Checkbox / Radio / Switch の高さ</td></tr>
+          <tr><td><code>--dk-cell</code> / <code>--dk-rows</code></td><td><code>12px</code> / <code>7</code></td><td>Heatmap のセル間隔と 1 列のセル数（<code>--dk-rows</code> は Uptime bar の高さにも使用）</td></tr>
           <tr><td><code>--dk-ink</code> / <code>--dk-paper</code></td><td><code>#0a0a0a</code> / <code>#fff</code></td><td>前景 / 背景</td></tr>
           <tr><td><code>--dk-mute</code> / <code>--dk-subtle</code></td><td><code>#d4d4d4</code> / <code>#737373</code></td><td>控えめなドット / 補助テキスト</td></tr>
+          <tr><td><code>--dk-ok</code> / <code>--dk-warn</code> / <code>--dk-danger</code> / <code>--dk-info</code></td><td><code>#16a34a</code> / <code>#d97706</code> / <code>#dc2626</code> / <code>#2563eb</code></td><td>状態を表す色（Uptime bar など）。ダークテーマでは明るい色に切り替わります</td></tr>
           <tr><td><code>--dk-radius</code></td><td><code>8px</code></td><td>角丸の基準値</td></tr>
           <tr><td><code>--dk-font-mono</code></td><td><code>"Geist Mono", ui-monospace…</code></td><td>ボタン・バッジ等の書体</td></tr>
         </tbody>
       </table>
+      <p>
+        値の渡し方は 2 通りに統一しています。連続した値（割合・強さ）は <code>--dk-value</code>（0〜1）を <code>style</code> で、
+        決まった状態（ok / warn / down など）は <code>data-state</code> 属性で渡します。
+      </p>
+      <CodeBlock lang="html">{`<div class="dk-meter" style="--dk-value: .62"></div>
+<div class="dk-uptime"><i data-state="ok"></i><i data-state="down"></i></div>`}</CodeBlock>
 
       <h2 id="dark">5. Dark mode</h2>
       <p>
         祖先に <code>.dk-theme-dark</code> を付けるとトークンが反転します（ハーフトーンも自動で白ドットになります）。
         このサイト左下のボタンで試せます。
       </p>
-      <CodeBlock lang="html">{`<html class="dk-theme-dark"> … </html>`}</CodeBlock>
+      <CodeBlock lang="html">{`<html class="dk-theme-dark"> … </html>
+
+<!-- or just one part of the page -->
+<section class="dk-theme-dark"> … </section>`}</CodeBlock>
+      <p className="muted" style={{ fontSize: 14 }}>
+        テーマのクラスを付けた要素は、自分自身の文字色（<code>--dk-ink</code>）と背景色（<code>--dk-paper</code>）も塗ります。そのため、ページの一部だけに付けても使えます。
+      </p>
 
       <h2 id="override">6. 上書きとカスタマイズ</h2>
       <p>

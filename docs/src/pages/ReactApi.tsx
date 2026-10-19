@@ -8,7 +8,7 @@ const dotStyle: PropRow[] = [
   ["color", "string", "currentColor", "ドット色（--dk-color）"],
 ];
 
-const sections: { id: string; name: string; desc: string; rows: PropRow[]; extends: string }[] = [
+const sections: { id: string; name: string; desc: string; rows: PropRow[]; extends: string; since?: string }[] = [
   {
     id: "dots", name: "<Dots>", extends: "HTMLAttributes",
     desc: "ドット面。背景・装飾・面の表現に。",
@@ -84,6 +84,71 @@ const sections: { id: string; name: string; desc: string; rows: PropRow[]; exten
     ],
   },
   {
+    id: "halftoneimg", name: "<HalftoneImage>", extends: "HTMLAttributes<div>", since: "0.2",
+    desc: "画像を網点（ドットの大きさ）で表示します。src を渡すと <img> を生成し、children を渡すとそれ（<picture> / <video> など）を包みます。",
+    rows: [
+      ["src", "string", "-", "画像の URL"],
+      ["alt", "string", `""`, "代替テキスト（生成する <img> に付与）"],
+      ["gap", "number | string", "6px", "網の細かさ"],
+      ["toneFilter", "string", "grayscale(1) contrast(1.4) brightness(.75)", "しきい値処理の前に画像へかける filter"],
+      ["invert", "boolean", "false", "白ドット / 黒地。.dk-theme-dark 内では自動"],
+      ["imgProps", "ImgHTMLAttributes", "-", "生成する <img> に渡す props（loading など）"],
+    ],
+  },
+  {
+    id: "choice", name: "<Checkbox> / <Radio> / <Switch>", extends: "InputHTMLAttributes", since: "0.2",
+    desc: "ネイティブの input をドットで描き直した部品。ref は input に転送されます。Switch は role=\"switch\" 付きのチェックボックスです。",
+    rows: [
+      ["children", "ReactNode", "-", "ラベル。渡すと <label class=\"dk-choice\"> で包みます"],
+      ["controlSize", "number | string", "18px", "部品の高さ（--dk-control）"],
+      ["labelClassName", "string", "-", "<label> に付けるクラス"],
+    ],
+  },
+  {
+    id: "heatmap", name: "<Heatmap>", extends: "HTMLAttributes<div>", since: "0.2",
+    desc: "1 セル 1 ドットのヒートマップ。role=\"img\"。セルは列ごとに上から並びます。",
+    rows: [
+      ["data", "Array<number | { value: number; label?: string }>", "-", "必須。label はセルのツールチップ"],
+      ["max", "number", "max(data)", "最大のドットに対応する値"],
+      ["rows", "number", "7", "1 列のセル数"],
+      ["cell", "number | string", "12px", "セルの間隔"],
+      ["color", "string", "var(--dk-ink)", "ドットの色"],
+      ["encode", `"both" | "tone" | "size"`, `"both"`, "値で変えるもの（大きさと濃さ / 濃さ / 大きさ）"],
+      ["shape", `"round" | "square" | "ring"`, `"round"`, "ドット形状"],
+      ["label", "string", "-", "全体の要約（スクリーンリーダー向け）"],
+    ],
+  },
+  {
+    id: "uptime", name: "<UptimeBar>", extends: "HTMLAttributes<div>", since: "0.2",
+    desc: "稼働状況バー。期間ごとに縦 1 列のドットで、状態によって色と高さが変わります。role=\"img\"。",
+    rows: [
+      ["data", `Array<UptimeState | { state: UptimeState; label?: string }>`, "-", `必須。UptimeState = "ok" | "warn" | "down" | "none"`],
+      ["rows", "number", "5", "列の高さ（ドット数）"],
+      ["size / gap / shape", "…", "4px / 6px / round", "ドットの見た目"],
+      ["label", "string", "-", "全体の要約（例: 99.92% uptime over 90 days）"],
+    ],
+  },
+  {
+    id: "leaders", name: "<DotLeaders> / <Leader>", extends: "HTMLAttributes", since: "0.2",
+    desc: "「項目 ……… 値」をドットでつなぐリスト。",
+    rows: [
+      ["DotLeaders.as", "ElementType", `"ul"`, "描画する要素（ol / nav など）"],
+      ["DotLeaders.color / size / gap", "…", "var(--dk-mute) / 2px / 6px", "点線の見た目"],
+      ["Leader.label / value", "ReactNode", "-", "必須。左の項目と右の値"],
+      ["Leader.href", "string", "-", "行をリンクにします（<a class=\"dk-leader\">）"],
+      ["Leader.as", "ElementType", `"li"`, "行の要素"],
+    ],
+  },
+  {
+    id: "typing", name: "<Typing>", extends: "HTMLAttributes<span>", since: "0.2",
+    desc: "チャットの入力中表示。role=\"status\"。",
+    rows: [
+      ["bubble", "boolean", "false", "吹き出しの背景を付ける"],
+      ["size", "number | string", "6px", "ドット径"],
+      ["label", "string", `"Typing"`, "role=\"status\" の名前"],
+    ],
+  },
+  {
     id: "misc", name: "<Badge> / <Divider> / <Loader>", extends: "HTMLAttributes",
     desc: "小物。",
     rows: [
@@ -108,17 +173,21 @@ export function ReactApi() {
       <Toc items={sections.map((s) => [s.id, s.name.replace(/[<>]/g, "")] as [string, string])} />
       {sections.map((s) => (
         <section key={s.id}>
-          <h2 id={s.id} style={{ fontFamily: "var(--dk-font-mono)", fontSize: 22 }}>{s.name}</h2>
+          <h2 id={s.id} style={{ fontFamily: "var(--dk-font-mono)", fontSize: 22 }}>
+            {s.name}
+            {s.since && <span className="dk-badge since" title={`Added in v${s.since}`}>v{s.since}</span>}
+          </h2>
           <p>{s.desc} <span className="muted">extends <code>{s.extends}</code></span></p>
           <PropsTable rows={s.rows} />
         </section>
       ))}
 
       <h2 id="helpers" style={{ fontFamily: "var(--dk-font-mono)", fontSize: 22 }}>Helpers</h2>
-      <CodeBlock lang="ts">{`import { buttonClassName, cx, dotVars, iconNames } from "dotkit/react";
+      <CodeBlock lang="ts">{`import { buttonClassName, cx, dotVars, withVars, px, iconNames } from "dotkit/react";
 
 buttonClassName({ variant: "outline", size: "sm" });   // "dk-btn dk-btn--outline dk-btn--sm"
 dotVars({ size: 3, gap: 8 }, { padding: 12 });        // { "--dk-size": "3px", "--dk-gap": "8px", padding: 12 }
+withVars({ "--dk-cell": px(10), "--dk-rows": 5 });     // { "--dk-cell": "10px", "--dk-rows": 5 }  (undefined values are skipped)
 iconNames;                                            // readonly ["arrow-right", …]  (type IconName)`}</CodeBlock>
     </>
   );

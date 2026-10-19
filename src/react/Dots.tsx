@@ -1,5 +1,5 @@
-import type { ElementType, HTMLAttributes } from "react";
-import { cx, densityClass, dotVars, fadeClass, shapeClass, type DotStyleProps, type Fade } from "./utils.js";
+import type { ElementType, HTMLAttributes, ImgHTMLAttributes } from "react";
+import { cx, densityClass, dotVars, fadeClass, px, shapeClass, withVars, type DotStyleProps, type Fade } from "./utils.js";
 
 export interface DotsProps extends DotStyleProps, HTMLAttributes<HTMLElement> {
   /** Fade the field out towards a direction using a mask. */
@@ -75,5 +75,33 @@ export function Halftone({ direction = "to-right", gap, tone, invert, className,
       style={dotVars({ gap, tone }, style)}
       {...rest}
     />
+  );
+}
+
+export interface HalftoneImageProps extends HTMLAttributes<HTMLDivElement> {
+  /** Image URL. Alternatively pass an `<img>` / `<picture>` / `<video>` / `<canvas>` as children. */
+  src?: string;
+  /** Alternative text of the image. Required when `src` is used (pass `""` if decorative). */
+  alt?: string;
+  /** Halftone cell size. Default: 6px. */
+  gap?: number | string;
+  /** CSS filter applied to the image before thresholding. Default: `grayscale(1) contrast(1.4) brightness(.75)`. */
+  toneFilter?: string;
+  /** White dots on black. Automatic inside `.dk-theme-dark`. */
+  invert?: boolean;
+  /** Extra props for the generated `<img>`. */
+  imgProps?: ImgHTMLAttributes<HTMLImageElement>;
+}
+
+/** Renders an image as newspaper-style halftone dots (CSS only). */
+export function HalftoneImage({ src, alt, gap, toneFilter, invert, imgProps, children, className, style, ...rest }: HalftoneImageProps) {
+  return (
+    <div
+      className={cx("dk-halftone-img", invert && "dk-halftone-img--invert", className)}
+      style={withVars({ "--dk-gap": px(gap), "--dk-tone-filter": toneFilter }, style)}
+      {...rest}
+    >
+      {children ?? <img src={src} alt={alt ?? ""} {...imgProps} />}
+    </div>
   );
 }

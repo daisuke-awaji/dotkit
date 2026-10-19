@@ -12,15 +12,15 @@
 
 ```sh
 # Release tarball (recommended)
-npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.1.0/dotkit-0.1.0.tgz
+npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.2.0/dotkit-0.2.0.tgz
 
 # or follow a semver range via git tags (pre-built `dist` branch)
-npm i "github:daisuke-awaji/dotkit#semver:^0.1"
+npm i "github:daisuke-awaji/dotkit#semver:^0.2"
 ```
 
 ```html
 <!-- or no bundler at all -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.1.0/dist/dotkit.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.2.0/dist/dotkit.css">
 ```
 
 ## Usage
@@ -53,7 +53,7 @@ See the [Design Catalog](https://daisuke-awaji.github.io/dotkit/#/catalog) for e
 Release tarballs are built on GitHub Actions and carry a build provenance attestation:
 
 ```sh
-gh attestation verify dotkit-0.1.0.tgz -R daisuke-awaji/dotkit
+gh attestation verify dotkit-0.2.0.tgz -R daisuke-awaji/dotkit
 ```
 
 ## Development
@@ -67,13 +67,14 @@ npm run icons        # regenerate icon CSS + types from icons/icons.json
 
 | Path | |
 |---|---|
-| `src/css/dotkit.css` | the framework (tokens, primitives, components, a11y fallbacks) |
+| `src/css/dotkit.css` | core: tokens, the dot generator, primitives, base components, a11y fallbacks |
+| `src/css/modules/*.css` | feature modules (forms, data, navigation, feedback, effects) — concatenated into `dist/dotkit.css` |
 | `icons/icons.json` | 7×7 icon bitmaps — single source for CSS and TS types |
 | `src/react/` | React bindings |
 | `docs/` | documentation site (built with dotkit itself) |
 | `PLAN.md` | project plan & roadmap (Japanese) |
 
-Releases: bump `version` in `package.json`, then run the **Release** workflow.
+Releases: bump `version` in `package.json`, then run the **Release** workflow. See [CHANGELOG.md](CHANGELOG.md).
 
 ## License
 

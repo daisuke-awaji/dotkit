@@ -5,15 +5,17 @@
 > Distributed via GitHub only (not on npm). Docs: https://daisuke-awaji.github.io/dotkit/
 
 ## Install
-- Tarball: `npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.1.0/dotkit-0.1.0.tgz`
-- Git semver: `npm i "github:daisuke-awaji/dotkit#semver:^0.1"`
-- CDN: `https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.1.0/dist/dotkit.css` or `https://daisuke-awaji.github.io/dotkit/dotkit.css`
+- Tarball: `npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.2.0/dotkit-0.2.0.tgz`
+- Git semver: `npm i "github:daisuke-awaji/dotkit#semver:^0.2"`
+- CDN: `https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.2.0/dist/dotkit.css` or `https://daisuke-awaji.github.io/dotkit/dotkit.css`
 - Imports: `import "dotkit/css"` once; components from `dotkit/react`.
 
 ## Core variables
 - `--dk-size` dot diameter (default 2px, transitionable), `--dk-gap` center distance (default 6px, transitionable), `--dk-color` dot color (currentColor)
 - `--dk-value` 0..1 for meter/bar, `--dk-icon-step` icon dot step (icon size = step*7), `--dk-tone` halftone gradient (black = biggest dot)
-- Theme tokens: `--dk-ink`, `--dk-paper`, `--dk-mute`, `--dk-subtle`, `--dk-radius`, `--dk-font-mono`. Dark theme: add `.dk-theme-dark` to an ancestor.
+- Theme tokens: `--dk-ink`, `--dk-paper`, `--dk-mute`, `--dk-subtle`, `--dk-radius`, `--dk-font-mono`; status colors `--dk-ok`, `--dk-warn`, `--dk-danger`, `--dk-info`. Dark theme: add `.dk-theme-dark` to any ancestor (a theme class also paints its own color/background, so it can be scoped).
+- Component knobs: `--dk-control` (checkbox/radio/switch height, 18px), `--dk-cell` / `--dk-rows` (heatmap cell pitch 12px / cells per column 7; uptime height in dots 5), `--dk-tone-filter` (image halftone pre-filter).
+- Value convention: continuous values -> `style="--dk-value: 0..1"`; discrete states -> `data-state="ok|warn|down|none"`.
 - All rules live in `@layer dotkit.base, dotkit.components, dotkit.utilities`; unlayered user CSS always wins (no !important needed).
 
 ## Classes
@@ -26,6 +28,12 @@
 - `.dk-btn` + `.dk-btn--solid|--outline|--ghost` + `.dk-btn--sm|--lg`
 - `.dk-badge` (+ `--solid`), `.dk-divider` (on <hr>), `.dk-field` wrapper + `.dk-input`
 - `.dk-meter` (style `--dk-value`), `.dk-chart` > `.dk-bar` (style `--dk-value`), `.dk-card`
+- Forms (v0.2): native inputs with `.dk-check` (checkbox, supports :indeterminate), `.dk-radio`, `.dk-switch` (checkbox + role="switch"); wrap with `<label class="dk-choice">` for label layout
+- `.dk-halftone-img` > img|picture|video|canvas — renders the image as halftone dots (+ `--invert`); put alt on the img
+- `.dk-heatmap` > `<i style="--dk-value:..">` one dot per cell, column-major (+ `--tone` | `--size`, `.dk-square`, `.dk-ring`)
+- `.dk-uptime` > `<i data-state="ok|warn|down|none">` one dot column per period (height: ok 5 / warn 3 / down 1 dots)
+- `.dk-leaders` dot leaders: each child row = first child … last child (e.g. `<li><span>Item</span><span>¥480</span></li>`); for links use `<li><a class="dk-leader">…</a></li>`
+- `.dk-typing` (+ `--bubble`) with 3 `<i>` children, role="status"
 
 ## React (dotkit/react)
 - `<Dots density shape size gap color fade as>`; `<DotBorder …>`; `<DotText …>`; `<Halftone direction gap tone invert>`
@@ -34,6 +42,10 @@
 - `<Input leading trailing fieldClassName …inputProps>`; `<Badge variant>`; `<Divider gap size shape>`
 - `<Meter value={0..1} label size gap shape>`; `<BarChart data={[{label,value}]} max height label size gap shape>`
 - `<Card color shape as>`; `<Loader count size label>`
+- v0.2: `<Checkbox|Radio|Switch controlSize labelClassName …inputProps>{label}</…>` (ref -> input); `<HalftoneImage src alt gap toneFilter invert imgProps>` (or children);
+  `<Heatmap data={number[] | {value,label}[]} max rows cell color encode="both|tone|size" shape label>`; `<UptimeBar data={("ok"|"warn"|"down"|"none" | {state,label})[]} rows size gap shape label>`;
+  `<DotLeaders as color size gap><Leader label value href as /></DotLeaders>`; `<Typing bubble size label>`
+- Helpers: `cx`, `dotVars({size,gap,color,value,step,tone}, style)`, `withVars({"--dk-x": v}, style)`, `px(n)`, `buttonClassName`, `iconNames`
 - Number values for size/gap/step are px.
 
 ## Icons
