@@ -90,11 +90,13 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   /** Dot color of the outline. Default: `--dk-mute`. */
   color?: string;
   shape?: Shape;
+  /** Make the outline's dots travel clockwise (stops under `prefers-reduced-motion`). */
+  march?: boolean;
 }
 
 /** Container with a dotted outline. */
-export function Card({ as: Tag = "div", color, shape, className, style, ...rest }: CardProps) {
-  return <Tag className={cx("dk-card", shapeClass(shape), className)} style={dotVars({ color }, style)} {...rest} />;
+export function Card({ as: Tag = "div", color, shape, march, className, style, ...rest }: CardProps) {
+  return <Tag className={cx("dk-card", shapeClass(shape), march && "dk-march", className)} style={dotVars({ color }, style)} {...rest} />;
 }
 
 export interface LoaderProps extends HTMLAttributes<HTMLSpanElement> {

@@ -1,10 +1,13 @@
 import {
+  Card,
   DotBorder,
+  DotDigits,
   DotIcon,
   DotText,
   Halftone,
   HalftoneImage,
   Loader,
+  Meter,
 } from "dotkit/react";
 import { Example } from "../../ui";
 import { Tile, Since, sample } from "./shared";
@@ -31,6 +34,31 @@ export function Techniques() {
         <DotBorder style={{ padding: "20px 28px", borderRadius: 10 }}>Default</DotBorder>
         <DotBorder shape="square" gap={8} size={3} style={{ padding: "20px 28px" }}>Square</DotBorder>
         <DotBorder gap={10} size={4} color="#0070f3" style={{ padding: "20px 28px", borderRadius: 999 }}>Brand</DotBorder>
+      </Example>
+
+      <h3 id="march">Marching border — 枠のドットが回る <Since v="0.3" /></h3>
+      <p>
+        <code>.dk-march</code> を付けると、ドット枠のドットが時計回りに流れます。ファイルのドロップ先や、処理中・選択中の枠に使えます。
+        <code>.dk-border</code> / <code>.dk-card</code> / <code>.dk-field</code> / <code>.dk-btn--outline</code> のように、ドット枠を持つ要素に付けてください。
+        「動きを減らす」設定のときは止まります。
+      </p>
+      <Example
+        html={`<div class="dk-border dk-march" style="padding: 28px; border-radius: 4px">
+  Drop files here
+</div>
+
+<div class="dk-card dk-march" style="--dk-color: var(--dk-info)">Uploading…</div>`}
+        react={`<DotBorder march style={{ padding: 28, borderRadius: 4 }}>Drop files here</DotBorder>
+<Card march color="var(--dk-info)">Uploading…</Card>`}
+      >
+        <DotBorder march gap={8} size={3} style={{ padding: "36px 40px", borderRadius: 4, textAlign: "center" }}>
+          <DotIcon name="arrow-down" step={3} />
+          <div style={{ marginTop: 10, fontSize: 14 }}>Drop files here</div>
+        </DotBorder>
+        <Card march color="var(--dk-info)" style={{ width: 220, borderRadius: 4 }}>
+          <span className="eyebrow">Uploading</span>
+          <div style={{ marginTop: 10 }}><Meter value={0.48} label="Upload progress" /></div>
+        </Card>
       </Example>
 
       <h3 id="halftone">Halftone — 大きさで階調を表す</h3>
@@ -120,6 +148,32 @@ export function Techniques() {
         <DotIcon name="heart" step={5} style={{ color: "#e00" }} />
         <DotIcon name="star" step={5} square label="Favorite" />
         <DotIcon name="github" step={6} />
+      </Example>
+
+      <h3 id="digits">Dot-matrix digits — 5×7 の数字 <Since v="0.3" /></h3>
+      <p>
+        時計・カウンター・スコア向けの、5×7 ドットの数字です。<code>0</code>〜<code>9</code> と <code>: . , - + % /</code> と空白が使えます。
+        アイコンと同じく <code>icons/glyphs.json</code> が元データで、CSS と型を自動生成しています。
+        大きさは <code>--dk-icon-step</code>、色は <code>currentColor</code> です。<code>.dk-digits--grid</code> で消えているドットも薄く表示し、電光掲示板のような見た目にできます。
+      </p>
+      <Example
+        html={`<span class="dk-digits" role="img" aria-label="12:48">
+  <span class="dk-glyph dk-glyph--1"></span>
+  <span class="dk-glyph dk-glyph--2"></span>
+  <span class="dk-glyph dk-glyph--colon"></span>
+  <span class="dk-glyph dk-glyph--4"></span>
+  <span class="dk-glyph dk-glyph--8"></span>
+</span>
+
+<!-- LED look, square dots -->
+<span class="dk-digits dk-digits--grid dk-digits--square" style="--dk-icon-step: 5px; color: var(--dk-danger)">…</span>`}
+        react={`<DotDigits value="12:48" />
+<DotDigits value="-3.5%" step={4} />
+<DotDigits value={2048} step={5} grid square style={{ color: "var(--dk-danger)" }} />`}
+      >
+        <DotDigits value="12:48" step={6} />
+        <DotDigits value="-3.5%" step={4} style={{ color: "var(--dk-ok)" }} />
+        <DotDigits value="2048" step={5} grid square style={{ color: "var(--dk-danger)" }} />
       </Example>
 
       <h3 id="loader">Loader — ドットの波</h3>

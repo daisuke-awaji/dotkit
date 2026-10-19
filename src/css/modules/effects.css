@@ -1,5 +1,5 @@
 /* ==========================================================
-   effects — image halftone
+   effects — image halftone / marching border
    ========================================================== */
 @layer dotkit.utilities {
 
@@ -24,8 +24,31 @@
     mix-blend-mode: screen;
     filter: var(--dk-tone-filter);
   }
+  /* ---------- Marching border: the outline's dots travel clockwise ----------
+     Add to anything with a dotted outline: .dk-border, .dk-card, .dk-field, .dk-btn--outline. */
+  .dk-march::before {
+    padding: 0;
+    -webkit-mask: none; mask: none;
+    background-image: var(--_dot), var(--_dot), var(--_dot), var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-position: 0 0, 0 100%, 0 0, 100% 0;
+    animation: dk-march .9s linear infinite;
+  }
+  @keyframes dk-march {
+    to {
+      background-position:
+        var(--dk-gap) 0, calc(var(--dk-gap) * -1) 100%,
+        0 calc(var(--dk-gap) * -1), 100% var(--dk-gap);
+    }
+  }
+
   .dk-halftone-img > picture > img { display: block; width: 100%; height: 100%; object-fit: cover; }
-  .dk-halftone-img--invert, .dk-theme-dark .dk-halftone-img { filter: contrast(24) invert(1); }
+  .dk-halftone-img--invert, :is(.dk-theme-dark, .dk-theme-amber, .dk-theme-blueprint) .dk-halftone-img { filter: contrast(24) invert(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dk-march::before { animation: none; }
 }
 
 @media (forced-colors: active) {

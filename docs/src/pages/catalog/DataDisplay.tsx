@@ -2,6 +2,8 @@ import {
   BarChart,
   Heatmap,
   Meter,
+  Pictogram,
+  Sparkline,
   UptimeBar,
 } from "dotkit/react";
 import { Example } from "../../ui";
@@ -10,6 +12,10 @@ const heat = contributions(26);
 const r = rand(3);
 const uptimeA = Array.from({ length: 90 }, (_, i) => (i === 61 ? "down" : i === 23 || i === 62 ? "warn" : "ok") as "ok" | "warn" | "down");
 const uptimeB = Array.from({ length: 90 }, (_, i) => (i < 6 ? "none" : r() < 0.04 ? "down" : r() < 0.08 ? "warn" : "ok") as "ok" | "warn" | "down" | "none");
+const wave = (n: number, seed: number, f: (i: number, r: () => number) => number) => { const rr = rand(seed); return Array.from({ length: n }, (_, i) => f(i, rr)); };
+const series1 = wave(40, 11, (i, rr) => 20 + i * 1.2 + Math.sin(i / 3) * 6 + rr() * 6);
+const series2 = wave(40, 12, (i, rr) => 180 + Math.sin(i / 5) * 30 + rr() * 25 - (i > 30 ? 20 : 0));
+const series3 = wave(40, 13, (i, rr) => (rr() < 0.12 ? 2 + rr() * 3 : rr() * 0.8));
 
 export function DataDisplay() {
   return (
@@ -55,6 +61,39 @@ export function DataDisplay() {
         </div>
         <div style={{ width: 260 }}>
           <BarChart label="Weekly requests (square)" shape="square" size={5} gap={6} data={week.map((value) => ({ value }))} />
+        </div>
+      </Example>
+
+      <h3 id="sparkline">Sparkline <Since v="0.3" /></h3>
+      <p>
+        値ごとに 1 つのドットを、その高さに置いた小さな折れ線です。最新の値には輪が付きます。
+        <code>.dk-spark--area</code> で各点の下を薄いドットで埋めます。値は Heatmap と同じく <code>--dk-value</code>（0〜1）です。
+      </p>
+      <Example
+        align="left"
+        previewStyle={{ gap: 40 }}
+        html={`<div class="dk-spark" role="img" aria-label="Requests, last 30 days">
+  <i style="--dk-value: .2"></i>
+  <i style="--dk-value: .35"></i>
+  <i style="--dk-value: .3"></i>
+  <!-- … -->
+</div>
+
+<div class="dk-spark dk-spark--area" style="--dk-color: var(--dk-info); height: 56px">…</div>`}
+        react={`<Sparkline data={requests} label="Requests, last 30 days" />
+<Sparkline data={latency} area color="var(--dk-info)" height={56} />`}
+      >
+        <div className="spark-card">
+          <span className="eyebrow">Requests</span>
+          <div className="spark-row"><b>12.4k</b><Sparkline data={series1} label="Requests, last 40 days" style={{ width: 180 }} /></div>
+        </div>
+        <div className="spark-card">
+          <span className="eyebrow">p95 latency</span>
+          <div className="spark-row"><b>182ms</b><Sparkline data={series2} area color="var(--dk-info)" height={56} label="p95 latency, last 40 days" style={{ width: 200 }} /></div>
+        </div>
+        <div className="spark-card">
+          <span className="eyebrow">Errors</span>
+          <div className="spark-row"><b>0.3%</b><Sparkline data={series3} shape="square" size={3} color="var(--dk-danger)" label="Error rate" style={{ width: 160 }} /></div>
         </div>
       </Example>
 
@@ -118,6 +157,32 @@ export function DataDisplay() {
           <div className="uptime-head" style={{ marginTop: 20 }}><b>Dashboard</b><span className="muted mono">99.41% uptime</span></div>
           <UptimeBar data={uptimeB} label="Dashboard: 99.41% uptime over the last 90 days" />
           <div className="uptime-foot mono"><span>90 days ago</span><span>Today</span></div>
+        </div>
+      </Example>
+
+      <h3 id="pictogram">Pictogram <Since v="0.3" /></h3>
+      <p>
+        アイコン 1 つを 1 単位として数を表すグラフ（アイソタイプ）です。各アイコンの <code>--dk-value</code>（0〜1）が塗る割合で、
+        端数はドットの列単位で切り替わります。残りは薄く表示します。
+      </p>
+      <Example
+        align="left"
+        previewStyle={{ display: "grid", gap: 24 }}
+        html={`<div class="dk-pictogram" role="img" aria-label="7.4 of 10 users">
+  <span class="dk-icon dk-icon--user"></span>              <!-- full -->
+  <span class="dk-icon dk-icon--user" style="--dk-value: .4"></span>
+  <span class="dk-icon dk-icon--user" style="--dk-value: 0"></span>
+</div>`}
+        react={`<Pictogram icon="user" value={7.4} total={10} label="7.4 of 10 users" />
+<Pictogram icon="heart" value={3.5} total={5} step={4} color="var(--dk-danger)" />`}
+      >
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 10 }}>74% of users finished onboarding</div>
+          <Pictogram icon="user" value={7.4} total={10} step={4} label="7.4 of 10 users finished onboarding" />
+        </div>
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 10 }}>Rating 3.5 / 5</div>
+          <Pictogram icon="heart" value={3.5} total={5} step={4} color="var(--dk-danger)" label="Rating 3.5 out of 5" />
         </div>
       </Example>
     </>

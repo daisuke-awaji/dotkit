@@ -1,5 +1,5 @@
 /* ==========================================================
-   navigation — dot leaders
+   navigation — dot leaders / steps
    ========================================================== */
 @layer dotkit.components {
 
@@ -28,8 +28,57 @@
   }
   a.dk-leader:hover, .dk-leaders > a:hover { --dk-color: var(--dk-ink); }
   a.dk-leader:focus-visible, .dk-leaders > a:focus-visible { outline: 2px dotted var(--dk-ink); outline-offset: 2px; }
+
+  /* ---------- Steps: markers joined by dot lines ----------
+     Mark the current step with aria-current="step"; earlier steps become "done" automatically
+     (or set data-state="done" explicitly). */
+  .dk-steps {
+    --dk-size: 2px; --dk-gap: 6px;
+    --_m: 12px;
+    display: flex; margin: 0; padding: 0; list-style: none;
+    font-size: 13px; line-height: 1.4;
+  }
+  .dk-steps > li {
+    --dk-color: var(--dk-mute);
+    position: relative; flex: 1 1 0; min-width: 0;
+    padding: calc(var(--_m) + 10px) 12px 0 0;
+    color: var(--dk-subtle);
+  }
+  .dk-steps > li::before {
+    content: ""; position: absolute; top: 0; left: 0;
+    width: var(--_m); height: var(--_m); border-radius: 50%;
+    background: var(--dk-paper);
+    box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--dk-subtle) 70%, var(--dk-paper));
+  }
+  .dk-steps > li::after {
+    content: ""; position: absolute;
+    top: calc((var(--_m) - var(--dk-gap)) / 2); left: calc(var(--_m) + 6px); right: 6px;
+    height: var(--dk-gap);
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: space no-repeat;
+  }
+  .dk-steps > li:last-child::after { display: none; }
+  .dk-steps > li:is([data-state="done"], :has(~ [aria-current="step"])) { --dk-color: var(--dk-ink); color: var(--dk-ink); }
+  .dk-steps > li:is([data-state="done"], :has(~ [aria-current="step"]))::before { background: var(--dk-ink); box-shadow: none; }
+  .dk-steps > li[aria-current="step"] { color: var(--dk-ink); font-weight: 500; }
+  .dk-steps > li[aria-current="step"]::before {
+    background: var(--dk-ink);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--dk-ink) 14%, transparent);
+  }
+  .dk-steps small { display: block; font-weight: 400; color: var(--dk-subtle); }
+
+  .dk-steps--vertical { flex-direction: column; }
+  .dk-steps--vertical > li { padding: 0 0 22px calc(var(--_m) + 14px); }
+  .dk-steps--vertical > li::after {
+    top: calc(var(--_m) + 6px); bottom: 6px; left: calc((var(--_m) - var(--dk-gap)) / 2); right: auto;
+    width: var(--dk-gap); height: auto;
+    background-repeat: no-repeat space;
+  }
 }
 
 @media (forced-colors: active) {
+  .dk-steps > li { forced-color-adjust: none; --dk-mute: GrayText; --dk-ink: CanvasText; --dk-paper: Canvas; --dk-subtle: GrayText; }
+  .dk-steps > li[aria-current="step"]::before { background: Highlight; }
   :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader)::before { forced-color-adjust: none; --dk-color: GrayText; }
 }

@@ -2,6 +2,7 @@ import {
   Divider,
   DotLeaders,
   Leader,
+  Steps,
 } from "dotkit/react";
 import { Example } from "../../ui";
 import { Since } from "./shared";
@@ -62,6 +63,52 @@ export function Navigation() {
             <Leader label="Total" value="¥1,480" />
           </DotLeaders>
         </div>
+      </Example>
+
+      <h3 id="steps">Stepper <Since v="0.3" /></h3>
+      <p>
+        手順の進み具合を、ドットの印とドットの線で表します。<code>&lt;ol class="dk-steps"&gt;</code> の現在の項目に
+        <code>aria-current="step"</code> を付けると、それより前の項目は自動で「完了」になります（<code>data-state="done"</code> で明示もできます）。
+        <code>.dk-steps--vertical</code> で縦並びになります。
+      </p>
+      <Example
+        align="left"
+        previewStyle={{ display: "grid", gap: 36 }}
+        html={`<ol class="dk-steps">
+  <li>Account</li>
+  <li>Plan</li>
+  <li aria-current="step">Payment</li>
+  <li>Done</li>
+</ol>
+
+<ol class="dk-steps dk-steps--vertical">
+  <li>Build <small>1m 12s</small></li>
+  <li aria-current="step">Deploy <small>running…</small></li>
+  <li>Smoke test</li>
+</ol>`}
+        react={`<Steps items={["Account", "Plan", "Payment", "Done"]} current={2} aria-label="Checkout" />
+
+<Steps
+  vertical
+  current={1}
+  items={[
+    { label: "Build", description: "1m 12s" },
+    { label: "Deploy", description: "running…" },
+    { label: "Smoke test" },
+  ]}
+/>`}
+      >
+        <Steps items={["Account", "Plan", "Payment", "Done"]} current={2} aria-label="Checkout" />
+        <Steps
+          vertical
+          current={1}
+          aria-label="Pipeline"
+          items={[
+            { label: "Build", description: "1m 12s" },
+            { label: "Deploy", description: "running…" },
+            { label: "Smoke test" },
+          ]}
+        />
       </Example>
     </>
   );

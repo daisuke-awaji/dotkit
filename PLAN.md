@@ -21,7 +21,7 @@
 | コア | `dotkit.css`。`@layer dotkit.base, dotkit.utilities, dotkit.components` で詳細度を管理し、利用者の通常 CSS が常に勝つ |
 | 命名 | 接頭辞 `dk-`（例: `dk-dots`, `dk-border`, `dk-btn--solid`） |
 | アニメーション | `@property` で `--dk-size` / `--dk-gap` を登録し、hover 等でドットの膨張を補間 |
-| アイコン | 7×7 のビットマップを `icons/icons.json` に定義し、CSS と TS 型をビルド時に生成（単一ソース） |
+| アイコン | 7×7 のビットマップを `icons/icons.json`、5×7 の数字・記号を `icons/glyphs.json` に定義し、CSS と TS 型をビルド時に生成（単一ソース） |
 | テーマ | ink / paper のトークン。`.dk-theme-dark` でダーク化。`currentColor` 基調 |
 | a11y | `forced-colors` 時は実線・実色にフォールバック、`prefers-reduced-motion` で動きを停止、`:focus-visible` はドット状のアウトライン |
 | パッケージ形態 | 単一パッケージ `dotkit` + subpath exports（`dotkit/css`, `dotkit/react`）。React は optional peer |
@@ -61,7 +61,7 @@ v0.2〜v0.4 は Design Catalog の拡充（候補と優先度は [IDEAS.md](IDEA
 |---|---|
 | **v0.1** | `dotkit.css`、アイコン生成、`dotkit/react`、ドキュメントサイト、Pages / Release ワークフロー |
 | **v0.2** | Checkbox / Radio / Switch、Image halftone、Heatmap、Uptime bar、Typing indicator、Dot leaders。ステータス色トークン、値の渡し方の規約（`--dk-value` / `data-state`）、CSS のモジュール分割 |
-| v0.3 | Dot-matrix digits（グリフ生成の一般化）、Sparkline、Pictogram、Stepper、Skeleton、Status dot、Marching border、Identicon、テーマプリセット |
+| **v0.3** | Dot-matrix digits（グリフ生成の一般化）、Sparkline、Pictogram、Stepper、Skeleton、Status dot、Marching border、Identicon、テーマプリセット |
 | v0.4 | Ring meter、Range、Tabs、Pagination dots、Dialog、Alert、Halftone headline、Duotone、Pattern library、テンプレート（Status page / AI chat UI） |
 | v0.5 | Tailwind v4 用ユーティリティ（`dotkit/tailwind`）、アイコン追加、Dot map・Dot-matrix font などの大物（IDEAS.md） |
 | v0.6 | shadcn 形式 registry を Pages で配信、操作系コンポーネント（Ark UI ベース） |

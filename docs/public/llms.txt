@@ -5,9 +5,9 @@
 > Distributed via GitHub only (not on npm). Docs: https://daisuke-awaji.github.io/dotkit/
 
 ## Install
-- Tarball: `npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.2.0/dotkit-0.2.0.tgz`
-- Git semver: `npm i "github:daisuke-awaji/dotkit#semver:^0.2"`
-- CDN: `https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.2.0/dist/dotkit.css` or `https://daisuke-awaji.github.io/dotkit/dotkit.css`
+- Tarball: `npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.3.0/dotkit-0.3.0.tgz`
+- Git semver: `npm i "github:daisuke-awaji/dotkit#semver:^0.3"`
+- CDN: `https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.3.0/dist/dotkit.css` or `https://daisuke-awaji.github.io/dotkit/dotkit.css`
 - Imports: `import "dotkit/css"` once; components from `dotkit/react`.
 
 ## Core variables
@@ -34,6 +34,13 @@
 - `.dk-uptime` > `<i data-state="ok|warn|down|none">` one dot column per period (height: ok 5 / warn 3 / down 1 dots)
 - `.dk-leaders` dot leaders: each child row = first child … last child (e.g. `<li><span>Item</span><span>¥480</span></li>`); for links use `<li><a class="dk-leader">…</a></li>`
 - `.dk-typing` (+ `--bubble`) with 3 `<i>` children, role="status"
+- v0.3: `.dk-digits` > `.dk-glyph.dk-glyph--{0-9|colon|dot|comma|minus|plus|percent|slash|space}` 5x7 digits (+ `--square`, `--grid` LED look; size `--dk-icon-step`)
+- `.dk-spark` > `<i style="--dk-value:..">` dot sparkline (+ `--area`, `.dk-square`); `.dk-pictogram` > `.dk-icon` each with `--dk-value` 0..1 fill
+- `ol.dk-steps` > li; current gets `aria-current="step"` (earlier = done; or `data-state="done"`), `<small>` for descriptions, `.dk-steps--vertical`
+- `.dk-skeleton` (+ `--text`, `--circle`; aria-hidden, put aria-busy on the region); `.dk-status[data-state=ok|warn|down|info|idle]` text inside (+ `--pulse`)
+- `.dk-march` on any dotted outline (.dk-border/.dk-card/.dk-field/.dk-btn--outline): dots travel clockwise
+- `.dk-identicon` > 25 `<i>` (`data-on` = filled); generate with `identicon(seed)` from dotkit/react
+- Theme presets: `.dk-theme-gameboy|amber|newsprint|riso|blueprint` (scopeable, like `.dk-theme-dark`)
 
 ## React (dotkit/react)
 - `<Dots density shape size gap color fade as>`; `<DotBorder …>`; `<DotText …>`; `<Halftone direction gap tone invert>`
@@ -45,8 +52,11 @@
 - v0.2: `<Checkbox|Radio|Switch controlSize labelClassName …inputProps>{label}</…>` (ref -> input); `<HalftoneImage src alt gap toneFilter invert imgProps>` (or children);
   `<Heatmap data={number[] | {value,label}[]} max rows cell color encode="both|tone|size" shape label>`; `<UptimeBar data={("ok"|"warn"|"down"|"none" | {state,label})[]} rows size gap shape label>`;
   `<DotLeaders as color size gap><Leader label value href as /></DotLeaders>`; `<Typing bubble size label>`
+- v0.3: `<DotDigits value step square grid label>`; `<Sparkline data min max height size color area shape label>`; `<Pictogram icon value total step color label>`;
+  `<Steps items={(node | {label,description})[]} current vertical>`; `<StatusDot state pulse>text</StatusDot>`; `<Skeleton lines circle width height>`;
+  `<Identicon value cell color label>` + pure `identicon(seed) -> {cells: boolean[25], hue}`; `march` prop on `<DotBorder>` / `<Card>`; `glyphChars`
 - Helpers: `cx`, `dotVars({size,gap,color,value,step,tone}, style)`, `withVars({"--dk-x": v}, style)`, `px(n)`, `buttonClassName`, `iconNames`
 - Number values for size/gap/step are px.
 
-## Icons
+## Icons (dotkit/icons.json, 7x7; digits in dotkit/glyphs.json, 5x7)
 arrow-right, arrow-left, arrow-up, arrow-down, chevron-right, chevron-down, check, close, plus, minus, search, menu, home, user, mail, heart, star, info, alert, play, pause, sun, moon, copy, github, external

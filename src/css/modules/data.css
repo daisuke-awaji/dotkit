@@ -1,5 +1,5 @@
 /* ==========================================================
-   data — heatmap / uptime
+   data — heatmap / uptime / sparkline / pictogram
    Convention: continuous values are `--dk-value` (0 – 1),
    discrete states are `data-state="…"`.
    ========================================================== */
@@ -50,9 +50,56 @@
   .dk-uptime > [data-state="warn"] { --dk-color: var(--dk-warn); --_h: .6; }
   .dk-uptime > [data-state="down"] { --dk-color: var(--dk-danger); --_h: .2; }
   .dk-uptime > [data-state="none"] { --dk-color: var(--dk-mute); }
+
+  /* ---------- Sparkline: one dot per value, placed at its height ---------- */
+  .dk-spark {
+    --dk-size: 4px;
+    --dk-color: var(--dk-ink);
+    display: flex; align-items: stretch;
+    height: 40px;
+  }
+  .dk-spark > * {
+    --dk-value: 0;
+    position: relative; flex: 1 1 0; min-width: var(--dk-size);
+  }
+  .dk-spark > *::before {
+    content: ""; position: absolute; left: 50%;
+    bottom: calc(var(--dk-value) * (100% - var(--dk-size)));
+    width: var(--dk-size); height: var(--dk-size); margin-left: calc(var(--dk-size) / -2);
+    border-radius: 50%;
+    background: var(--dk-color);
+  }
+  /* the latest value gets a halo */
+  .dk-spark > :last-child::before { box-shadow: 0 0 0 calc(var(--dk-size) * .75) color-mix(in srgb, var(--dk-color) 20%, transparent); }
+  /* area: a faint column of smaller dots under each point */
+  .dk-spark--area > *::after {
+    --_s: calc(var(--dk-size) * .6);
+    content: ""; position: absolute; left: 50%; bottom: 0;
+    width: var(--dk-size); margin-left: calc(var(--dk-size) / -2);
+    height: calc(var(--dk-value) * (100% - var(--dk-size)));
+    background: radial-gradient(circle at center,
+                  color-mix(in srgb, var(--dk-color) 35%, transparent) calc(var(--_s) / 2),
+                  transparent calc(var(--_s) / 2 + .6px))
+                center bottom / var(--dk-size) calc(var(--dk-size) * 1.5) repeat-y;
+  }
+
+  /* ---------- Pictogram: 1 icon = N units; the fraction is masked by whole dot columns ---------- */
+  .dk-pictogram {
+    --dk-icon-step: 3px;
+    display: flex; flex-wrap: wrap; gap: calc(var(--dk-icon-step) * 2);
+    color: var(--dk-ink);
+  }
+  .dk-pictogram > * {
+    --dk-value: 1;
+    --_p: calc(var(--dk-value) * 100%);
+    --_p: calc(round(var(--dk-value) * 7) / 7 * 100%);
+    -webkit-mask: linear-gradient(90deg, #000 var(--_p), rgb(0 0 0 / .18) 0);
+            mask: linear-gradient(90deg, #000 var(--_p), rgb(0 0 0 / .18) 0);
+  }
 }
 
 @media (forced-colors: active) {
+  .dk-spark, .dk-pictogram { forced-color-adjust: none; --dk-color: CanvasText; color: CanvasText; }
   .dk-heatmap, .dk-uptime { forced-color-adjust: none; --dk-color: CanvasText; --dk-paper: Canvas; --dk-mute: GrayText; }
   .dk-uptime > * { --dk-color: CanvasText; }
   .dk-uptime > [data-state="none"] { --dk-color: GrayText; }

@@ -2,6 +2,26 @@
 
 All notable changes to dotkit. Versions follow [semver](https://semver.org/) (0.x: minor = new features, may include small breaking changes).
 
+## v0.3.0
+
+The second wave of the Design Catalog expansion.
+
+### Added
+- **Dot-matrix digits** — `.dk-digits` with generated `.dk-glyph--{slug}` (0-9 `: . , - + % /` space), `--square`, `--grid`. New source `icons/glyphs.json` (exported as `dotkit/glyphs.json`). React: `<DotDigits>`, `glyphChars`.
+- **Sparkline** — `.dk-spark` (+ `--area`). React: `<Sparkline>`.
+- **Pictogram** — `.dk-pictogram`; fractions fill whole dot columns. React: `<Pictogram>`.
+- **Stepper** — `ol.dk-steps` driven by `aria-current="step"` (+ `--vertical`). React: `<Steps>`.
+- **Skeleton** — `.dk-skeleton` (+ `--text`, `--circle`). React: `<Skeleton>`.
+- **Status dot** — `.dk-status[data-state]` (+ `--pulse`); `down` is square and `idle` is a ring. React: `<StatusDot>`.
+- **Marching border** — `.dk-march` for any dotted outline. React: `march` prop on `<DotBorder>` / `<Card>`.
+- **Identicon** — `.dk-identicon`; React `<Identicon>` and the pure `identicon(seed)` helper.
+- **Theme presets** — `.dk-theme-gameboy`, `-amber`, `-newsprint`, `-riso`, `-blueprint`.
+
+### Changed
+- `scripts/build-icons.mjs` handles any rectangular bitmap set (7×7 icons and 5×7 glyphs) and validates sizes.
+- Halftones invert automatically inside the dark-paper presets (amber, blueprint) as well as `.dk-theme-dark`.
+- Dark theme: `--dk-mute` is a little lighter (`#3a3a3a` → `#474747`) so subtle dotted outlines stay visible.
+
 ## v0.2.0
 
 The first wave of the Design Catalog expansion (see `IDEAS.md`).

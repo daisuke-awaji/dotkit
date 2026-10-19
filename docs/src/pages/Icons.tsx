@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, DotIcon, iconNames } from "dotkit/react";
+import { Card, DotDigits, DotIcon, glyphChars, iconNames } from "dotkit/react";
 import { CodeBlock, useCopy } from "../ui";
 
 export function Icons() {
@@ -48,8 +48,34 @@ export function Icons() {
         ))}
       </div>
 
+      <h2>Digits <span className="dk-badge since">v0.3</span></h2>
+      <p className="muted">
+        {glyphChars.length} 文字の 5×7 グリフ（<code>&lt;DotDigits&gt;</code> / <code>.dk-glyph--{"{slug}"}</code>）。元データは <code>icons/glyphs.json</code> です。
+        記号のクラス名は <code>:</code> → <code>colon</code>、<code>.</code> → <code>dot</code>、<code>,</code> → <code>comma</code>、<code>-</code> → <code>minus</code>、
+        <code>+</code> → <code>plus</code>、<code>%</code> → <code>percent</code>、<code>/</code> → <code>slash</code>、空白 → <code>space</code> です。
+      </p>
+      <div className="icon-grid">
+        {glyphChars.filter((c) => c !== " ").map((c) => (
+          <Card
+            key={c}
+            as="button"
+            className="icon-cell"
+            onClick={() => copy(format === "react" ? `<DotDigits value="${c}"${step !== 3 ? ` step={${step}}` : ""}${square ? " square" : ""} />` : c, `Copied: ${c}`)}
+            aria-label={`Copy ${c}`}
+          >
+            <span style={{ height: 8 * 7, display: "grid", placeItems: "center" }}>
+              <DotDigits value={c} step={step} square={square} />
+            </span>
+            <span className="name">{c}</span>
+          </Card>
+        ))}
+      </div>
+
       <h2>Add your own icon</h2>
-      <p><code>icons/icons.json</code> に 7 行 × 7 文字（<code>#</code> = ドット）を追加し、<code>npm run icons</code> を実行します。</p>
+      <p>
+        <code>icons/icons.json</code> に 7 行 × 7 文字（<code>#</code> = ドット）を追加し、<code>npm run icons</code> を実行します。
+        数字や記号は <code>icons/glyphs.json</code>（5 列 × 7 行）に同じ形式で追加します。生成スクリプトは大きさが合わないビットマップをエラーにします。
+      </p>
       <CodeBlock lang="json">{`"bolt": [
   "....##.",
   "...##..",
