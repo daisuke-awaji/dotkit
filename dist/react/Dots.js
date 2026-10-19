@@ -5,8 +5,8 @@ export function Dots({ as: Tag = "div", density, shape, size, gap, color, fade, 
     return (_jsx(Tag, { className: cx("dk-dots", densityClass(density), shapeClass(shape), fadeClass(fade), className), style: dotVars({ size, gap, color }, style), ...rest }));
 }
 /** Wraps content with an outline drawn as a single row of dots. */
-export function DotBorder({ as: Tag = "div", density, shape, size, gap, color, className, style, ...rest }) {
-    return (_jsx(Tag, { className: cx("dk-border", densityClass(density), shapeClass(shape), className), style: dotVars({ size, gap, color }, style), ...rest }));
+export function DotBorder({ as: Tag = "div", density, shape, size, gap, color, march, className, style, ...rest }) {
+    return (_jsx(Tag, { className: cx("dk-border", densityClass(density), shapeClass(shape), march && "dk-march", className), style: dotVars({ size, gap, color }, style), ...rest }));
 }
 /** Text whose glyphs are filled with dots. Works with any font. */
 export function DotText({ as: Tag = "span", density, shape, size, gap, color, className, style, ...rest }) {

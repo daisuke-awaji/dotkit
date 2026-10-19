@@ -1,6 +1,6 @@
 {
   "name": "dotkit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "UI made of dots — a zero-runtime CSS framework with React bindings.",
   "license": "MIT",
   "type": "module",
@@ -21,6 +21,7 @@
     "./css": "./dist/dotkit.css",
     "./dotkit.css": "./dist/dotkit.css",
     "./icons.json": "./dist/icons.json",
+    "./glyphs.json": "./dist/glyphs.json",
     "./react": {
       "types": "./dist/react/index.d.ts",
       "import": "./dist/react/index.js"

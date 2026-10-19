@@ -43,9 +43,11 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
     /** Dot color of the outline. Default: `--dk-mute`. */
     color?: string;
     shape?: Shape;
+    /** Make the outline's dots travel clockwise (stops under `prefers-reduced-motion`). */
+    march?: boolean;
 }
 /** Container with a dotted outline. */
-export declare function Card({ as: Tag, color, shape, className, style, ...rest }: CardProps): import("react").JSX.Element;
+export declare function Card({ as: Tag, color, shape, march, className, style, ...rest }: CardProps): import("react").JSX.Element;
 export interface LoaderProps extends HTMLAttributes<HTMLSpanElement> {
     /** Number of dots (1 – 8). Default: 5. */
     count?: number;

@@ -18,8 +18,8 @@ export function BarChart({ data, max, height, size, gap, shape, label, className
     return (_jsxs("div", { role: "img", "aria-label": label, className: className, style: style, ...rest, children: [_jsx("div", { className: "dk-chart", style: height !== undefined ? { height } : undefined, children: data.map((d, i) => (_jsx("i", { className: cx("dk-bar", shapeClass(shape)), style: dotVars({ value: Math.min(1, d.value / top), size, gap }) }, i))) }), hasLabels && (_jsx("div", { className: "dk-chart dk-chart__labels", "aria-hidden": "true", style: { height: "auto", marginTop: 8 }, children: data.map((d, i) => (_jsx("span", { className: "dk-chart__label", children: d.label }, i))) }))] }));
 }
 /** Container with a dotted outline. */
-export function Card({ as: Tag = "div", color, shape, className, style, ...rest }) {
-    return _jsx(Tag, { className: cx("dk-card", shapeClass(shape), className), style: dotVars({ color }, style), ...rest });
+export function Card({ as: Tag = "div", color, shape, march, className, style, ...rest }) {
+    return _jsx(Tag, { className: cx("dk-card", shapeClass(shape), march && "dk-march", className), style: dotVars({ color }, style), ...rest });
 }
 /** Dot wave loader. Stops moving under `prefers-reduced-motion`. */
 export function Loader({ count = 5, size, label = "Loading", className, style, ...rest }) {

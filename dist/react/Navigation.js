@@ -12,3 +12,8 @@ export function Leader({ label, value, href, as: Tag = "li", ...rest }) {
     }
     return _jsx(Tag, { ...rest, children: cells });
 }
+const isItem = (x) => typeof x === "object" && x !== null && "label" in x;
+/** Progress through a sequence: dot markers joined by dot lines. */
+export function Steps({ items, current, vertical, className, ...rest }) {
+    return (_jsx("ol", { className: cx("dk-steps", vertical && "dk-steps--vertical", className), ...rest, children: items.map((it, i) => (_jsx("li", { "aria-current": i === current ? "step" : undefined, "data-state": i < current ? "done" : undefined, children: isItem(it) ? (_jsxs(_Fragment, { children: [it.label, it.description !== undefined && _jsx("small", { children: it.description })] })) : (it) }, i))) }));
+}

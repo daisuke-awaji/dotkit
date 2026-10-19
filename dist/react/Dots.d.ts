@@ -10,9 +10,11 @@ export interface DotsProps extends DotStyleProps, HTMLAttributes<HTMLElement> {
 export declare function Dots({ as: Tag, density, shape, size, gap, color, fade, className, style, ...rest }: DotsProps): import("react").JSX.Element;
 export interface DotBorderProps extends DotStyleProps, HTMLAttributes<HTMLElement> {
     as?: ElementType;
+    /** Make the outline's dots travel clockwise (stops under `prefers-reduced-motion`). */
+    march?: boolean;
 }
 /** Wraps content with an outline drawn as a single row of dots. */
-export declare function DotBorder({ as: Tag, density, shape, size, gap, color, className, style, ...rest }: DotBorderProps): import("react").JSX.Element;
+export declare function DotBorder({ as: Tag, density, shape, size, gap, color, march, className, style, ...rest }: DotBorderProps): import("react").JSX.Element;
 export interface DotTextProps extends DotStyleProps, HTMLAttributes<HTMLElement> {
     /** Element to render. Default: `span`. */
     as?: ElementType;

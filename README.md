@@ -12,15 +12,15 @@
 
 ```sh
 # Release tarball (recommended)
-npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.2.0/dotkit-0.2.0.tgz
+npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.3.0/dotkit-0.3.0.tgz
 
 # or follow a semver range via git tags (pre-built `dist` branch)
-npm i "github:daisuke-awaji/dotkit#semver:^0.2"
+npm i "github:daisuke-awaji/dotkit#semver:^0.3"
 ```
 
 ```html
 <!-- or no bundler at all -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.2.0/dist/dotkit.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/daisuke-awaji/dotkit@v0.3.0/dist/dotkit.css">
 ```
 
 ## Usage
@@ -53,7 +53,7 @@ See the [Design Catalog](https://daisuke-awaji.github.io/dotkit/#/catalog) for e
 Release tarballs are built on GitHub Actions and carry a build provenance attestation:
 
 ```sh
-gh attestation verify dotkit-0.2.0.tgz -R daisuke-awaji/dotkit
+gh attestation verify dotkit-0.3.0.tgz -R daisuke-awaji/dotkit
 ```
 
 ## Development
@@ -62,14 +62,15 @@ gh attestation verify dotkit-0.2.0.tgz -R daisuke-awaji/dotkit
 npm ci
 npm run docs:dev     # docs site with live components (http://localhost:5173/dotkit/)
 npm run build        # dist/ (dotkit.css, icons.json, react/)
-npm run icons        # regenerate icon CSS + types from icons/icons.json
+npm run icons        # regenerate icon + glyph CSS and types from icons/*.json
 ```
 
 | Path | |
 |---|---|
 | `src/css/dotkit.css` | core: tokens, the dot generator, primitives, base components, a11y fallbacks |
-| `src/css/modules/*.css` | feature modules (forms, data, navigation, feedback, effects) — concatenated into `dist/dotkit.css` |
+| `src/css/modules/*.css` | feature modules (forms, data, navigation, feedback, display, effects, themes) — concatenated into `dist/dotkit.css` |
 | `icons/icons.json` | 7×7 icon bitmaps — single source for CSS and TS types |
+| `icons/glyphs.json` | 5×7 digit / symbol bitmaps for `.dk-digits` (same generator) |
 | `src/react/` | React bindings |
 | `docs/` | documentation site (built with dotkit itself) |
 | `PLAN.md` | project plan & roadmap (Japanese) |
