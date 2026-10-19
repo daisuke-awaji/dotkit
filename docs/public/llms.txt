@@ -69,4 +69,4 @@
 - Number values for size/gap/step are px.
 
 ## Icons (dotkit/icons.json, 7x7; digits in dotkit/glyphs.json, 5x7)
-arrow-right, arrow-left, arrow-up, arrow-down, chevron-right, chevron-down, check, close, plus, minus, search, menu, home, user, mail, heart, star, info, alert, play, pause, sun, moon, copy, github, external
+arrow-right, arrow-left, arrow-up, arrow-down, chevron-right, chevron-left, chevron-up, chevron-down, check, close, plus, minus, search, menu, more, more-vertical, grid, list, filter, home, user, mail, chat, bell, calendar, clock, heart, star, bookmark, flag, info, help, alert, lock, unlock, eye, settings, edit, trash, copy, link, download, upload, refresh, send, external, folder, file, image, camera, mic, volume, play, pause, stop, sun, moon, cloud, bolt, globe, location, cart, github
