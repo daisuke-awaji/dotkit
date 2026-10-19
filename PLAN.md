@@ -55,13 +55,26 @@
 
 ## 6. ロードマップ
 
+v0.2〜v0.4 は Design Catalog の拡充（候補と優先度は [IDEAS.md](IDEAS.md)）に充て、当初 v0.2〜v0.4 に置いていた項目は v0.5 以降へ移す。
+
 | バージョン | 内容 |
 |---|---|
 | **v0.1** | `dotkit.css`、アイコン生成、`dotkit/react`、ドキュメントサイト、Pages / Release ワークフロー |
-| v0.2 | Tailwind v4 用ユーティリティ（`dotkit/tailwind`）、アイコン追加 |
-| v0.3 | shadcn 形式 registry を Pages で配信、操作系コンポーネント（Ark UI ベース） |
-| v0.4 | Vue / Svelte ラッパー、json-render カタログ（`dotkit/json-render`） |
+| **v0.2** | Checkbox / Radio / Switch、Image halftone、Heatmap、Uptime bar、Typing indicator、Dot leaders。ステータス色トークン、値の渡し方の規約（`--dk-value` / `data-state`）、CSS のモジュール分割 |
+| v0.3 | Dot-matrix digits（グリフ生成の一般化）、Sparkline、Pictogram、Stepper、Skeleton、Status dot、Marching border、Identicon、テーマプリセット |
+| v0.4 | Ring meter、Range、Tabs、Pagination dots、Dialog、Alert、Halftone headline、Duotone、Pattern library、テンプレート（Status page / AI chat UI） |
+| v0.5 | Tailwind v4 用ユーティリティ（`dotkit/tailwind`）、アイコン追加、Dot map・Dot-matrix font などの大物（IDEAS.md） |
+| v0.6 | shadcn 形式 registry を Pages で配信、操作系コンポーネント（Ark UI ベース） |
+| v0.7 | Vue / Svelte ラッパー、json-render カタログ（`dotkit/json-render`） |
 | v1.0 | Playwright による Chromium / WebKit / Firefox のビジュアルリグレッション、a11y 監査 |
+
+### 共通の規約（v0.2〜）
+
+- **値の渡し方**: 連続した値は `style="--dk-value: 0..1"`、決まった状態は `data-state="…"`。
+- **色**: 状態は `--dk-ok` / `--dk-warn` / `--dk-danger` / `--dk-info`。色だけに頼らず、高さ・大きさ・形のどれかでも区別できるようにする。
+- **動き**: 動きを追加したら `prefers-reduced-motion: reduce` 時の挙動を同じファイルに書き、Accessibility ページの表に追記する。
+- **フォーム**: 独自のウィジェットは作らず、ネイティブ要素の見た目だけを変える（`appearance: none`）。
+- **ソース構成**: コアは `src/css/dotkit.css`、機能ごとに `src/css/modules/*.css`。配布物は 1 ファイルに結合する。
 
 ## 7. 既知の課題
 

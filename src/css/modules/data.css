@@ -1,0 +1,59 @@
+/* ==========================================================
+   data — heatmap / uptime
+   Convention: continuous values are `--dk-value` (0 – 1),
+   discrete states are `data-state="…"`.
+   ========================================================== */
+@layer dotkit.components {
+
+  /* ---------- Heatmap: one dot per cell, value -> size + tone ---------- */
+  .dk-heatmap {
+    --dk-cell: 12px;
+    --dk-rows: 7;
+    --dk-color: var(--dk-ink);
+    display: inline-grid; grid-auto-flow: column;
+    grid-template-rows: repeat(var(--dk-rows), var(--dk-cell));
+    grid-auto-columns: var(--dk-cell);
+    max-width: 100%; overflow-x: auto;
+  }
+  .dk-heatmap > * {
+    --dk-value: 0;
+    --_c: color-mix(in srgb, var(--dk-color) calc(22% + 78% * var(--dk-value)), var(--dk-paper));
+    place-self: center;
+    width: calc(var(--dk-cell) * (.3 + .55 * var(--dk-value)));
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--_c);
+  }
+  /* encode by tone only / by size only */
+  .dk-heatmap--tone > * { width: calc(var(--dk-cell) * .72); }
+  .dk-heatmap--size > * { --_c: color-mix(in srgb, var(--dk-color) calc(min(1, var(--dk-value) * 1000) * 100%), var(--dk-mute)); }
+  .dk-heatmap.dk-ring > * { background: none; box-shadow: inset 0 0 0 1.5px var(--_c); }
+
+  /* ---------- Uptime: one dot column per period, state -> color + height ---------- */
+  .dk-uptime {
+    --dk-size: 4px; --dk-gap: 6px;
+    --dk-rows: 5;
+    display: flex; align-items: flex-end; gap: 2px;
+    height: calc(var(--dk-gap) * var(--dk-rows));
+  }
+  .dk-uptime > * {
+    --dk-color: var(--dk-ok);
+    --_h: 1;
+    flex: 1 1 0; min-width: var(--dk-size); max-width: var(--dk-gap);
+    height: calc(var(--_h) * 100%);
+    height: round(up, calc(var(--_h) * 100%), var(--dk-gap));
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    background-repeat: no-repeat space;
+    background-position: center bottom;
+  }
+  .dk-uptime > [data-state="warn"] { --dk-color: var(--dk-warn); --_h: .6; }
+  .dk-uptime > [data-state="down"] { --dk-color: var(--dk-danger); --_h: .2; }
+  .dk-uptime > [data-state="none"] { --dk-color: var(--dk-mute); }
+}
+
+@media (forced-colors: active) {
+  .dk-heatmap, .dk-uptime { forced-color-adjust: none; --dk-color: CanvasText; --dk-paper: Canvas; --dk-mute: GrayText; }
+  .dk-uptime > * { --dk-color: CanvasText; }
+  .dk-uptime > [data-state="none"] { --dk-color: GrayText; }
+}

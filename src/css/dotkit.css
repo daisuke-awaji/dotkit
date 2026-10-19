@@ -26,6 +26,12 @@
     --dk-radius: 8px;
     --dk-ease: cubic-bezier(.2, .8, .2, 1);
     --dk-font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    /* status colors (heatmap, uptime, status dot, alert …) */
+    --dk-ok: #16a34a;
+    --dk-warn: #d97706;
+    --dk-danger: #dc2626;
+    --dk-info: #2563eb;
   }
 
   .dk-theme-dark {
@@ -33,13 +39,22 @@
     --dk-paper: #0a0a0a;
     --dk-mute: #3a3a3a;
     --dk-subtle: #a1a1a1;
+    --dk-ok: #4ade80;
+    --dk-warn: #fbbf24;
+    --dk-danger: #f87171;
+    --dk-info: #60a5fa;
     color-scheme: dark;
   }
+
+  /* A theme class also paints its own subtree, so it can be scoped to any element. */
+  [class*="dk-theme-"] { color: var(--dk-ink); background-color: var(--dk-paper); }
 
   /* Every element that paints dots re-computes the generator locally,
      so changing --dk-size / --dk-gap on it (or an ancestor) just works. */
   .dk-dots, .dk-text, .dk-divider, .dk-btn, .dk-meter, .dk-meter::after, .dk-bar,
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card)::before {
+  .dk-uptime > *, :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader)::before,
+  .dk-check:checked, .dk-switch:checked,
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before {
     --_dot: radial-gradient(circle at center,
               var(--dk-color) calc(var(--dk-size) / 2),
               transparent calc(var(--dk-size) / 2 + .6px));
@@ -52,8 +67,8 @@
 @layer dotkit.components {
 
   /* ---------- dotted outline (shared) ---------- */
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card) { position: relative; }
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card)::before {
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch) { position: relative; }
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before {
     content: "";
     position: absolute; inset: 0;
     padding: var(--dk-gap);
@@ -227,6 +242,11 @@
   .dk-square, .dk-square::before, .dk-square::after {
     --_dot: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color) 0);
   }
+  /* cell-based components (heatmap, uptime …) paint one element per dot */
+  :is(.dk-heatmap, .dk-identicon).dk-square > * { border-radius: 1px; }
+  .dk-uptime.dk-square > * {
+    --_dot: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color) 0);
+  }
   .dk-ring, .dk-ring::before, .dk-ring::after {
     --_dot: radial-gradient(circle at center,
               transparent calc(var(--dk-size) / 2 - 1px),
@@ -301,7 +321,7 @@
   .dk-meter { --dk-color: GrayText; }
   .dk-meter::after, .dk-bar { --dk-color: CanvasText; }
   .dk-divider { --dk-color: CanvasText; }
-  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card)::before { display: none; }
+  :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before { display: none; }
   :is(.dk-border, .dk-field, .dk-card) { border: 1px solid CanvasText; }
   .dk-btn { border: 1px solid ButtonText; }
   .dk-text { -webkit-text-fill-color: currentColor; background: none; }

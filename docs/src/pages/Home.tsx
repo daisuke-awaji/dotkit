@@ -12,6 +12,7 @@ import {
   type Shape,
 } from "dotkit/react";
 import { CodeBlock } from "../ui";
+import pkg from "../../../package.json";
 
 const week = [
   { label: "M", value: 32 },
@@ -73,7 +74,7 @@ export function Home() {
       <Playground />
 
       <h2>Install in 10 seconds</h2>
-      <CodeBlock lang="sh">{`npm i https://github.com/daisuke-awaji/dotkit/releases/download/v0.1.0/dotkit-0.1.0.tgz`}</CodeBlock>
+      <CodeBlock lang="sh">{`npm i https://github.com/daisuke-awaji/dotkit/releases/download/v${pkg.version}/dotkit-${pkg.version}.tgz`}</CodeBlock>
       <CodeBlock lang="tsx">{`import "dotkit/css";
 import { Button, Card, Meter } from "dotkit/react";
 

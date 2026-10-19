@@ -1,0 +1,109 @@
+/* ==========================================================
+   forms — checkbox / radio / switch (native inputs, appearance: none)
+   Keyboard, form submission and screen readers keep working natively.
+   ========================================================== */
+@layer dotkit.components {
+  .dk-check, .dk-radio, .dk-switch {
+    --_s: var(--dk-control, 18px);
+    --dk-size: 2px; --dk-gap: 4px;
+    --dk-color: var(--dk-subtle);
+    -webkit-appearance: none; appearance: none;
+    flex: none; margin: 0; vertical-align: middle;
+    display: inline-block;
+    width: var(--_s); height: var(--_s);
+    color: var(--dk-ink);
+    background-color: var(--dk-paper);
+    background-size: var(--dk-gap) var(--dk-gap);
+    cursor: pointer;
+    transition: --dk-size .25s var(--dk-ease), background-color .2s;
+  }
+  .dk-check { border-radius: calc(var(--_s) * .28); }
+  .dk-radio { border-radius: 50%; }
+  .dk-switch { width: calc(var(--_s) * 1.9); border-radius: 999px; }
+
+  :is(.dk-check, .dk-radio, .dk-switch):hover { --dk-size: 2.6px; }
+  :is(.dk-check, .dk-radio, .dk-switch):focus-visible { outline: 2px dotted var(--dk-ink); outline-offset: 3px; }
+  :is(.dk-check, .dk-radio, .dk-switch):disabled { opacity: .4; cursor: not-allowed; }
+
+  /* the glyph / knob */
+  :is(.dk-check, .dk-radio, .dk-switch)::after {
+    content: ""; position: absolute;
+    border-radius: 50%;
+    transition: transform .25s var(--dk-ease), opacity .2s, background-color .2s;
+  }
+
+  /* checkbox: a 5x4 dot check mark drawn with box-shadow (like the icons) */
+  .dk-check { --_st: calc(var(--_s) / 6); }
+  .dk-check::after {
+    left: calc(var(--_st) * .6); top: calc(var(--_st) * 1.1);
+    width: calc(var(--_st) * .8); height: calc(var(--_st) * .8);
+    color: var(--dk-paper);
+    box-shadow:
+      0 calc(var(--_st) * 2) 0 0 currentColor,
+      calc(var(--_st) * 1) calc(var(--_st) * 3) 0 0 currentColor,
+      calc(var(--_st) * 2) calc(var(--_st) * 2) 0 0 currentColor,
+      calc(var(--_st) * 3) calc(var(--_st) * 1) 0 0 currentColor,
+      calc(var(--_st) * 4) 0 0 0 currentColor;
+    transform-origin: calc(var(--_st) * 2.4) calc(var(--_st) * 1.9);
+    transform: scale(.4); opacity: 0;
+  }
+  .dk-check:is(:checked, :indeterminate) {
+    --dk-color: color-mix(in srgb, var(--dk-paper) 22%, transparent);
+    background-color: var(--dk-ink);
+    background-image: var(--_dot);
+  }
+  .dk-check:is(:checked, :indeterminate)::after { transform: none; opacity: 1; }
+  .dk-check:indeterminate::after {
+    box-shadow:
+      calc(var(--_st) * 1) calc(var(--_st) * 1.5) 0 0 currentColor,
+      calc(var(--_st) * 2) calc(var(--_st) * 1.5) 0 0 currentColor,
+      calc(var(--_st) * 3) calc(var(--_st) * 1.5) 0 0 currentColor;
+  }
+
+  /* radio: one dot that swells */
+  .dk-radio::after {
+    inset: 0; margin: auto;
+    width: calc(var(--_s) * .5); height: calc(var(--_s) * .5);
+    background: currentColor;
+    transform: scale(0);
+  }
+  .dk-radio:checked { --dk-color: var(--dk-ink); }
+  .dk-radio:checked::after { transform: none; }
+
+  /* switch: the knob is a dot that travels */
+  .dk-switch::after {
+    --_k: calc(var(--_s) * .6);
+    top: calc((var(--_s) - var(--_k)) / 2); left: calc((var(--_s) - var(--_k)) / 2);
+    width: var(--_k); height: var(--_k);
+    background: var(--dk-subtle);
+  }
+  .dk-switch:checked {
+    --dk-color: color-mix(in srgb, var(--dk-paper) 22%, transparent);
+    background-color: var(--dk-ink);
+    background-image: var(--_dot);
+  }
+  .dk-switch:checked::after { background: var(--dk-paper); transform: translateX(calc(var(--_s) * .9)); }
+
+  /* label wrapper */
+  .dk-choice {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 14px; line-height: 1.4; cursor: pointer;
+  }
+  .dk-choice:has(:disabled) { cursor: not-allowed; color: var(--dk-subtle); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dk-check, .dk-radio, .dk-switch,
+  :is(.dk-check, .dk-radio, .dk-switch)::after { transition: none; }
+}
+
+@media (forced-colors: active) {
+  .dk-check, .dk-radio, .dk-switch { forced-color-adjust: none; border: 1px solid ButtonText; background: Canvas; }
+  :is(.dk-check, .dk-radio, .dk-switch):is(:checked, :indeterminate) { background: Highlight; border-color: Highlight; }
+  .dk-check::after { color: HighlightText; }
+  .dk-radio::after { background: Highlight; }
+  .dk-radio:checked { background: Canvas; }
+  .dk-switch::after { background: ButtonText; }
+  .dk-switch:checked::after { background: HighlightText; }
+  :is(.dk-check, .dk-radio, .dk-switch):disabled { opacity: 1; border-color: GrayText; }
+}

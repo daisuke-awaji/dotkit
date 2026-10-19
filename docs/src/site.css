@@ -139,3 +139,22 @@ td code { white-space: nowrap; }
 }
 .footer { margin-top: 96px; font-size: 13px; color: var(--dk-subtle); }
 .kbd-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+/* ---------- catalog ---------- */
+.catalog-toc { display: grid; gap: 12px; margin: 24px 0 8px; }
+.catalog-toc-group { display: grid; grid-template-columns: 120px 1fr; gap: 12px; align-items: baseline; }
+.catalog-toc-group > .eyebrow { text-decoration: none; padding-top: 6px; }
+.catalog-toc .toc { margin: 0; }
+.catalog-toc .toc a { text-decoration: none; }
+@media (max-width: 860px) { .catalog-toc-group { grid-template-columns: 1fr; gap: 6px; } }
+.since { height: 18px; padding: 0 6px; font-size: 10px; vertical-align: 3px; margin-left: 6px; letter-spacing: .02em; text-transform: none; }
+.tile-photo { width: 300px; aspect-ratio: 16 / 10; height: auto; border-radius: 8px; object-fit: cover; display: block; }
+.stack { display: grid; gap: 12px; align-content: start; }
+.uptime-demo { max-width: 640px; }
+.uptime-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; font-size: 14px; }
+.uptime-foot { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; color: var(--dk-subtle); }
+.chat-row { display: flex; align-items: center; gap: 10px; }
+.avatar {
+  display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
+  color: var(--dk-paper); background: var(--dk-ink);
+}

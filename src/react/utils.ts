@@ -6,7 +6,15 @@ export function cx(...parts: Array<string | false | null | undefined>): string {
 }
 
 type Px = number | string | undefined;
-const px = (v: Px) => (typeof v === "number" ? `${v}px` : v);
+/** Number -> `${n}px`; strings pass through. */
+export const px = (v: Px) => (typeof v === "number" ? `${v}px` : v);
+
+/** Merges arbitrary CSS custom properties into a style object, skipping undefined values. */
+export function withVars(vars: Record<`--${string}`, string | number | undefined>, style?: CSSProperties): CSSProperties {
+  const out: Record<string, string | number> = {};
+  for (const [k, v] of Object.entries(vars)) if (v !== undefined) out[k] = v;
+  return { ...out, ...style } as CSSProperties;
+}
 
 /** Builds the dotkit CSS variables, skipping undefined values. */
 export function dotVars(
