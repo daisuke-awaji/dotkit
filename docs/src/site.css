@@ -29,6 +29,9 @@ p { margin: 8px 0 16px; }
   padding: 28px 20px; display: flex; flex-direction: column; gap: 24px;
 }
 .side-rule { position: absolute; top: 0; right: 0; bottom: 0; width: 6px; }
+.side-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.lang-switch { display: flex; gap: 2px; }
+.lang-switch .dk-btn { min-width: 0; padding-inline: 8px; font: 500 11px/1 var(--dk-font-mono); letter-spacing: .08em; }
 .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
 .logo b { font: 800 30px/1 Doto, var(--dk-font-mono); letter-spacing: -.01em; }
 .nav { display: flex; flex-direction: column; gap: 2px; }

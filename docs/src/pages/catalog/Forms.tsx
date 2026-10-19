@@ -11,6 +11,7 @@ import {
 import { Example } from "../../ui";
 import { Since } from "./shared";
 import { useState } from "react";
+import { useT } from "../../i18n";
 
 function RangeDemo() {
   const [v, setV] = useState(40);
@@ -36,16 +37,26 @@ function RangeDemo() {
 }
 
 export function Forms() {
+  const t = useT();
   return (
     <>
       <h2 id="forms">Forms</h2>
-      <p className="muted">操作できる部品。どれもネイティブ要素の見た目だけを変えています。</p>
+      <p className="muted">{t(<>操作できる部品。どれもネイティブ要素の見た目だけを変えています。</>, <>Interactive parts. Each one only restyles a native element.</>)}</p>
 
       <h3 id="button">Button</h3>
       <p>
-        <code>solid</code> / <code>outline</code> / <code>ghost</code> × <code>sm</code> / <code>md</code> / <code>lg</code>。
-        hover でドットが膨らみ面が「詰まる」のは <code>@property</code> による <code>--dk-size</code> の遷移です。
-        リンク等には <code>buttonClassName()</code> を使います。
+        {t(
+          <>
+            <code>solid</code> / <code>outline</code> / <code>ghost</code> × <code>sm</code> / <code>md</code> / <code>lg</code>。
+            hover でドットが膨らみ面が「詰まる」のは <code>@property</code> による <code>--dk-size</code> の遷移です。
+            リンク等には <code>buttonClassName()</code> を使います。
+          </>,
+          <>
+            <code>solid</code> / <code>outline</code> / <code>ghost</code> × <code>sm</code> / <code>md</code> / <code>lg</code>.
+            The way the dots swell on hover until the surface “fills in” is a transition of <code>--dk-size</code>, made possible by <code>@property</code>.
+            For links and other elements, use <code>buttonClassName()</code>.
+          </>,
+        )}
       </p>
       <Example
         html={`<button class="dk-btn dk-btn--solid">Deploy</button>
@@ -68,7 +79,7 @@ export function Forms() {
       </Example>
 
       <h3 id="input">Input</h3>
-      <p>ドット枠の入力欄。フォーカスで枠のドットが濃く・大きくなります。</p>
+      <p>{t(<>ドット枠の入力欄。フォーカスで枠のドットが濃く・大きくなります。</>, <>An input with a dotted frame. On focus, the frame dots grow darker and larger.</>)}</p>
       <Example
         html={`<label class="dk-field">
   <span class="dk-icon dk-icon--search" style="--dk-icon-step: 2px" aria-hidden="true"></span>
@@ -83,10 +94,20 @@ export function Forms() {
 
       <h3 id="choice">Checkbox / Radio / Switch <Since v="0.2" /></h3>
       <p>
-        ネイティブの <code>&lt;input&gt;</code> に <code>appearance: none</code> を当て、見た目だけをドットで描き直しています。
-        キーボード操作・フォーム送信・読み上げはブラウザ標準のままです。
-        チェックボックスはチェックすると面がドットで埋まり、ラジオボタンは 1 点が膨らみ、スイッチはドットのつまみが移動します。
-        大きさは <code>--dk-control</code>（既定値 18px）で変えられます。
+        {t(
+          <>
+            ネイティブの <code>&lt;input&gt;</code> に <code>appearance: none</code> を当て、見た目だけをドットで描き直しています。
+            キーボード操作・フォーム送信・読み上げはブラウザ標準のままです。
+            チェックボックスはチェックすると面がドットで埋まり、ラジオボタンは 1 点が膨らみ、スイッチはドットのつまみが移動します。
+            大きさは <code>--dk-control</code>（既定値 18px）で変えられます。
+          </>,
+          <>
+            Native <code>&lt;input&gt;</code> elements with <code>appearance: none</code>, redrawn with dots and nothing else.
+            Keyboard handling, form submission and screen reader output stay the browser's own.
+            A checkbox fills with dots when checked, a radio swells a single dot, and a switch slides a dotted thumb.
+            Change the size with <code>--dk-control</code> (default 18px).
+          </>,
+        )}
       </p>
       <Example
         align="left"
@@ -136,9 +157,18 @@ export function Forms() {
 
       <h3 id="range">Range <Since v="0.4" /></h3>
       <p>
-        ネイティブの <code>&lt;input type="range"&gt;</code> をドットの目盛りの上に載せた部品です。つまみは 1 つの大きなドットで、選んだ値までのドットが濃くなります。
-        CSS からは input の値を読めないので、塗りの位置は外側の <code>.dk-range</code> に <code>--dk-value</code>（0〜1）で渡します。
-        React 版は <code>value</code>（または <code>defaultValue</code>）から自動で計算するので、制御コンポーネントとして使ってください。
+        {t(
+          <>
+            ネイティブの <code>&lt;input type="range"&gt;</code> をドットの目盛りの上に載せた部品です。つまみは 1 つの大きなドットで、選んだ値までのドットが濃くなります。
+            CSS からは input の値を読めないので、塗りの位置は外側の <code>.dk-range</code> に <code>--dk-value</code>（0〜1）で渡します。
+            React 版は <code>value</code>（または <code>defaultValue</code>）から自動で計算するので、制御コンポーネントとして使ってください。
+          </>,
+          <>
+            A native <code>&lt;input type="range"&gt;</code> laid over a dotted scale. The thumb is one big dot, and the dots up to the chosen value darken.
+            CSS cannot read an input's value, so pass the fill position to the outer <code>.dk-range</code> as <code>--dk-value</code> (0–1).
+            The React version computes it from <code>value</code> (or <code>defaultValue</code>), so use it as a controlled component.
+          </>,
+        )}
       </p>
       <Example
         align="left"

@@ -12,6 +12,7 @@ import {
   type Shape,
 } from "dotkit/react";
 import { CodeBlock } from "../ui";
+import { useT } from "../i18n";
 import pkg from "../../../package.json";
 
 const week = [
@@ -25,6 +26,7 @@ const week = [
 ];
 
 export function Home() {
+  const t = useT();
   return (
     <>
       <section className="hero">
@@ -33,9 +35,18 @@ export function Home() {
           <DotText gap={5} size={4}>dotkit</DotText>
         </h1>
         <p className="hero-lead">
-          UI のすべてを<b>ドットの集まり</b>で表現する CSS フレームワーク。
-          見た目は <code>--dk-size</code> と <code>--dk-gap</code> の<b>2 つのつまみ</b>だけで決まり、
-          JavaScript なしで動きます。
+          {t(
+            <>
+              UI のすべてを<b>ドットの集まり</b>で表現する CSS フレームワーク。
+              見た目は <code>--dk-size</code> と <code>--dk-gap</code> の<b>2 つのつまみ</b>だけで決まり、
+              JavaScript なしで動きます。
+            </>,
+            <>
+              A CSS framework that draws every piece of UI as <b>a field of dots</b>.
+              The whole look comes down to <b>two knobs</b>, <code>--dk-size</code> and <code>--dk-gap</code>,
+              and it runs without any JavaScript.
+            </>,
+          )}
         </p>
         <div className="hero-actions">
           <a className={buttonClassName({ variant: "solid", size: "lg" })} href="#/getting-started">
@@ -58,22 +69,42 @@ export function Home() {
         <Card className="feature">
           <DotIcon name="star" step={3} />
           <h3>Zero runtime</h3>
-          <p>本体は 1 枚の CSS。React コンポーネントは props をクラスと CSS 変数に変換するだけなので、Server Components にもそのまま置けます。</p>
+          <p>
+            {t(
+              "本体は 1 枚の CSS。React コンポーネントは props をクラスと CSS 変数に変換するだけなので、Server Components にもそのまま置けます。",
+              "The core is a single CSS file. React components only turn props into classes and CSS variables, so they drop straight into Server Components.",
+            )}
+          </p>
         </Card>
         <Card className="feature">
           <DotIcon name="plus" step={3} />
           <h3>Two knobs</h3>
-          <p><code>--dk-size</code>（ドット径）と <code>--dk-gap</code>（間隔）。<code>@property</code> 登録済みなので hover でドットが膨らむ遷移も CSS だけで書けます。</p>
+          <p>
+            {t(
+              <><code>--dk-size</code>（ドット径）と <code>--dk-gap</code>（間隔）。<code>@property</code> 登録済みなので hover でドットが膨らむ遷移も CSS だけで書けます。</>,
+              <><code>--dk-size</code> (dot diameter) and <code>--dk-gap</code> (spacing). Both are registered with <code>@property</code>, so even a hover transition that swells the dots is pure CSS.</>,
+            )}
+          </p>
         </Card>
         <Card className="feature">
           <DotIcon name="github" step={3} />
           <h3>GitHub only</h3>
-          <p>npm には公開しません。GitHub Releases の tarball、git タグ（semver）、jsDelivr / Pages の CDN から導入できます。</p>
+          <p>
+            {t(
+              "npm には公開しません。GitHub Releases の tarball、git タグ（semver）、jsDelivr / Pages の CDN から導入できます。",
+              "Not published to npm. Install from a GitHub Releases tarball, a git tag (semver), or the jsDelivr / Pages CDN.",
+            )}
+          </p>
         </Card>
       </div>
 
       <h2>Two knobs, live</h2>
-      <p className="muted">スライダーで、ドット面・枠線・グラフ・メーターの size / gap を同時に変えられます（ボタンと入力欄は shape だけ連動）。</p>
+      <p className="muted">
+        {t(
+          "スライダーで、ドット面・枠線・グラフ・メーターの size / gap を同時に変えられます（ボタンと入力欄は shape だけ連動）。",
+          "The sliders change size / gap for the dot field, border, chart and meter at once (buttons and the input follow shape only).",
+        )}
+      </p>
       <Playground />
 
       <h2>Install in 10 seconds</h2>
@@ -90,7 +121,7 @@ export default function Page() {
   );
 }`}</CodeBlock>
       <p>
-        詳しくは <a href="#/getting-started">Getting Started</a> へ。
+        {t(<>詳しくは <a href="#/getting-started">Getting Started</a> へ。</>, <>Read more in <a href="#/getting-started">Getting Started</a>.</>)}
       </p>
     </>
   );

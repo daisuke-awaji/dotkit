@@ -1,0 +1,38 @@
+/* Open Graph card only (docs/og.html). */
+@layer site-reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--dk-paper); color: var(--dk-ink); }
+  body { font: 400 16px/1.5 Geist, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+}
+.og { position: relative; width: 1200px; height: 630px; overflow: hidden; background: var(--dk-paper); }
+.og-field { position: absolute; inset: 0; color: color-mix(in srgb, var(--dk-ink) 22%, transparent); }
+.og-sphere { position: absolute; width: 450px; height: 450px; right: 34px; top: 14px; }
+
+.og-copy { position: absolute; left: 76px; top: 70px; width: 640px; }
+.og-eyebrow {
+  display: inline-flex; align-items: center; gap: 12px;
+  font: 500 16px/1 "Geist Mono", ui-monospace, monospace; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--dk-subtle);
+}
+.og-eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--dk-ok); box-shadow: 0 0 12px var(--dk-ok); }
+.og-title { margin: 28px 0 0; font: 800 204px/.86 Geist, sans-serif; letter-spacing: -.055em; }
+.og-tag { margin: 34px 0 0; font: 600 60px/1.05 Geist, sans-serif; letter-spacing: -.035em; }
+.og-sub { margin: 18px 0 0; font: 400 28px/1.35 Geist, sans-serif; color: var(--dk-subtle); letter-spacing: -.01em; }
+.og-sub span { color: var(--dk-ink); }
+.og-period { display: inline-block; width: .2em; height: .2em; margin-left: .06em; border-radius: 50%; background: var(--dk-ok); box-shadow: 0 0 18px color-mix(in srgb, var(--dk-ok) 60%, transparent); }
+
+.og-card {
+  position: absolute; right: 44px; bottom: 44px; width: 430px;
+  display: grid; gap: 20px; padding: 24px 26px;
+  background: color-mix(in srgb, var(--dk-paper) 88%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--dk-ink) 10%, transparent), 0 24px 80px -20px #000;
+}
+.og-card-head { display: flex; justify-content: space-between; align-items: center; font-size: 19px; font-weight: 500; }
+.og-card-row { display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; }
+.og-card-row b { font: 800 28px/1 Doto, monospace; }
+
+.og-foot {
+  position: absolute; left: 76px; bottom: 72px;
+  display: flex; align-items: center; gap: 12px;
+  font: 500 19px/1 "Geist Mono", ui-monospace, monospace; color: color-mix(in srgb, var(--dk-ink) 72%, transparent);
+}

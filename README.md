@@ -1,8 +1,10 @@
 # dotkit
 
+![dotkit — UI made of dots](docs/public/og.png)
+
 **UI made of dots.** A zero-runtime CSS framework where every element — surfaces, outlines, text, icons, charts — is drawn as a collection of dots. Ships with thin, stateless React bindings.
 
-**Docs & design catalog → https://daisuke-awaji.github.io/dotkit/**
+**Docs & design catalog → https://daisuke-awaji.github.io/dotkit/** (English / 日本語)
 
 - **Zero runtime** — one CSS file is the single source of truth. `dotkit/react` only maps props to classes and CSS variables, so it works in React Server Components without `"use client"`.
 - **Two knobs** — the whole look is driven by `--dk-size` (dot diameter) and `--dk-gap` (dot spacing). Both are registered with `@property`, so dots can swell on hover with plain CSS transitions.

@@ -4,9 +4,12 @@ import "./layers.css";
 import "dotkit/css";
 import "./site.css";
 import { App } from "./App";
+import { LangProvider } from "./i18n";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <LangProvider>
+      <App />
+    </LangProvider>
   </StrictMode>,
 );

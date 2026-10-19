@@ -5,18 +5,29 @@ import {
 } from "dotkit/react";
 import { Example } from "../../ui";
 import { Tile, Since } from "./shared";
+import { useT } from "../../i18n";
 
 export function Primitives() {
+  const t = useT();
   return (
     <>
       <h2 id="primitives">Primitives</h2>
-      <p className="muted">すべての土台。ドット面・形・濃度の 3 要素です。</p>
+      <p className="muted">{t(<>すべての土台。ドット面・形・濃度の 3 要素です。</>, <>The foundation of everything: dot fields, shapes and density.</>)}</p>
 
-      <h3 id="dots">Dots — ドット面と密度</h3>
+      <h3 id="dots">{t(<>Dots — ドット面と密度</>, <>Dots — fields and density</>)}</h3>
       <p>
-        <code>.dk-dots</code> は要素をドットのグリッドで塗ります。密度は <code>.dk-sparse</code> /{" "}
-        <code>.dk-normal</code> / <code>.dk-dense</code> のプリセットか、<code>--dk-size</code> と <code>--dk-gap</code> で直接指定します。
-        <code>background-repeat: space</code> なので端でドットが欠けません。
+        {t(
+          <>
+            <code>.dk-dots</code> は要素をドットのグリッドで塗ります。密度は <code>.dk-sparse</code> /{" "}
+            <code>.dk-normal</code> / <code>.dk-dense</code> のプリセットか、<code>--dk-size</code> と <code>--dk-gap</code> で直接指定します。
+            <code>background-repeat: space</code> なので端でドットが欠けません。
+          </>,
+          <>
+            <code>.dk-dots</code> fills an element with a grid of dots. Set the density with the <code>.dk-sparse</code> /{" "}
+            <code>.dk-normal</code> / <code>.dk-dense</code> presets, or directly with <code>--dk-size</code> and <code>--dk-gap</code>.
+            It uses <code>background-repeat: space</code>, so no dot is ever cut off at the edges.
+          </>,
+        )}
       </p>
       <Example
         html={`<div class="dk-dots dk-sparse"></div>
@@ -34,8 +45,8 @@ export function Primitives() {
         <Tile label="size 5 / gap 12"><Dots size={5} gap={12} className="tile-stage" /></Tile>
       </Example>
 
-      <h3 id="shape">Shape — 形</h3>
-      <p><code>.dk-square</code> と <code>.dk-ring</code> は、その要素とドット枠（<code>::before</code>）のドット形状を切り替えます。</p>
+      <h3 id="shape">{t(<>Shape — 形</>, <>Shape</>)}</h3>
+      <p>{t(<><code>.dk-square</code> と <code>.dk-ring</code> は、その要素とドット枠（<code>::before</code>）のドット形状を切り替えます。</>, <><code>.dk-square</code> and <code>.dk-ring</code> switch the dot shape of the element and of its dotted frame (<code>::before</code>).</>)}</p>
       <Example
         html={`<div class="dk-dots" style="--dk-size: 4px; --dk-gap: 9px"></div>
 <div class="dk-dots dk-square" style="--dk-size: 4px; --dk-gap: 9px"></div>
@@ -49,10 +60,18 @@ export function Primitives() {
         <Tile label=".dk-ring"><Dots shape="ring" size={7} gap={11} className="tile-stage" /></Tile>
       </Example>
 
-      <h3 id="fade">Fade — 濃度のグラデーション</h3>
+      <h3 id="fade">{t(<>Fade — 濃度のグラデーション</>, <>Fade — density gradients</>)}</h3>
       <p>
-        マスクでドット面を消していきます。<code>.dk-fade-r</code> / <code>-l</code> / <code>-t</code> / <code>-b</code> /{" "}
-        <code>-radial</code>。背景の「気配」づくりに。
+        {t(
+          <>
+            マスクでドット面を消していきます。<code>.dk-fade-r</code> / <code>-l</code> / <code>-t</code> / <code>-b</code> /{" "}
+            <code>-radial</code>。背景の「気配」づくりに。
+          </>,
+          <>
+            Fades a dot field out with a mask: <code>.dk-fade-r</code> / <code>-l</code> / <code>-t</code> / <code>-b</code> /{" "}
+            <code>-radial</code>. Great for a subtle hint of texture in backgrounds.
+          </>,
+        )}
       </p>
       <Example
         html={`<div class="dk-dots dk-dense dk-fade-r"></div>
@@ -67,10 +86,18 @@ export function Primitives() {
         <Tile label=".dk-fade-radial"><Dots density="dense" fade="radial" className="tile-stage" /></Tile>
       </Example>
 
-      <h3 id="duotone">Duotone — 2 色のドット <Since v="0.4" /></h3>
+      <h3 id="duotone">{t(<>Duotone — 2 色のドット</>, <>Duotone — two-color dots</>)} <Since v="0.4" /></h3>
       <p>
-        <code>.dk-duotone</code> は <code>--dk-color</code> と <code>--dk-color-2</code> の 2 色のドットを、半ピッチずらして交互に並べます。
-        <code>.dk-duotone--ramp</code> は 1 枚のグラデーション（<code>--dk-angle</code> の向き）をドットの穴から覗かせる表現で、色が場所によって移り変わります。
+        {t(
+          <>
+            <code>.dk-duotone</code> は <code>--dk-color</code> と <code>--dk-color-2</code> の 2 色のドットを、半ピッチずらして交互に並べます。
+            <code>.dk-duotone--ramp</code> は 1 枚のグラデーション（<code>--dk-angle</code> の向き）をドットの穴から覗かせる表現で、色が場所によって移り変わります。
+          </>,
+          <>
+            <code>.dk-duotone</code> alternates dots in two colors, <code>--dk-color</code> and <code>--dk-color-2</code>, offset by half a pitch.
+            <code>.dk-duotone--ramp</code> lets a single gradient (in the <code>--dk-angle</code> direction) show through the dots, so the color shifts across the surface.
+          </>,
+        )}
       </p>
       <Example
         html={`<div class="dk-duotone" style="--dk-color: #2649d0; --dk-color-2: #ff48b0; --dk-size: 4px; --dk-gap: 10px"></div>
@@ -84,10 +111,18 @@ export function Primitives() {
         <Tile label="--ramp ok → info"><Duotone ramp color="var(--dk-ok)" color2="var(--dk-info)" density="dense" className="tile-stage" /></Tile>
       </Example>
 
-      <h3 id="pattern">Pattern — ドットの並べ方 <Since v="0.4" /></h3>
+      <h3 id="pattern">{t(<>Pattern — ドットの並べ方</>, <>Pattern — dot arrangements</>)} <Since v="0.4" /></h3>
       <p>
-        同じドットの並べ方を変えた柄です。<code>.dk-pattern</code> に <code>--checker</code>（市松）/ <code>--stripes</code>（横縞）/ <code>--grid</code>（方眼）/
-        <code>--diagonal</code>（斜線）/ <code>--cross</code>（十字）/ <code>--stipple</code>（不規則な点描）を組み合わせます。大きさと色はいつもの 3 つの変数です。
+        {t(
+          <>
+            同じドットの並べ方を変えた柄です。<code>.dk-pattern</code> に <code>--checker</code>（市松）/ <code>--stripes</code>（横縞）/ <code>--grid</code>（方眼）/
+            <code>--diagonal</code>（斜線）/ <code>--cross</code>（十字）/ <code>--stipple</code>（不規則な点描）を組み合わせます。大きさと色はいつもの 3 つの変数です。
+          </>,
+          <>
+            Patterns made by arranging the same dots differently. Combine <code>.dk-pattern</code> with <code>--checker</code> / <code>--stripes</code> / <code>--grid</code> /{" "}
+            <code>--diagonal</code> / <code>--cross</code> / <code>--stipple</code> (irregular stippling). Size and color use the usual three variables.
+          </>,
+        )}
       </p>
       <Example
         html={`<div class="dk-pattern dk-pattern--checker"></div>

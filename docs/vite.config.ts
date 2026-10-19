@@ -26,5 +26,10 @@ export default defineConfig({
       "dotkit/css": r("../dist/dotkit.css"),
     },
   },
-  build: { outDir: r("dist"), emptyOutDir: true },
+  build: {
+    outDir: r("dist"),
+    emptyOutDir: true,
+    // og.html renders the Open Graph card (captured into public/og.png); it is not linked from the site.
+    rollupOptions: { input: { main: r("index.html"), og: r("og.html") } },
+  },
 });

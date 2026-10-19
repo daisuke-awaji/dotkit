@@ -11,6 +11,7 @@ import {
 import { Example } from "../../ui";
 import { Since } from "./shared";
 import { useState } from "react";
+import { useT } from "../../i18n";
 
 function TabsDemo() {
   const [tab, setTab] = useState(0);
@@ -51,16 +52,26 @@ function PagerDemo() {
 }
 
 export function Navigation() {
+  const t = useT();
   return (
     <>
       <h2 id="navigation">Navigation</h2>
-      <p className="muted">項目どうしをつなぎ、現在地を示す部品。</p>
+      <p className="muted">{t(<>項目どうしをつなぎ、現在地を示す部品。</>, <>Parts that connect items and show where you are.</>)}</p>
 
       <h3 id="tabs">Tabs <Since v="0.4" /></h3>
       <p>
-        選んでいるタブの下にだけ、濃いドットの線が付きます。<code>.dk-tabs</code>（<code>role="tablist"</code>）の中の
-        <code>[aria-selected="true"]</code>（リンクの場合は <code>[aria-current="page"]</code>）が選択中の見た目になります。
-        dotkit は見た目だけを担当し、選択状態とパネルの切り替えは利用側で行います（React 版の <code>&lt;Tab&gt;</code> はロービング tabIndex だけ付けます）。
+        {t(
+          <>
+            選んでいるタブの下にだけ、濃いドットの線が付きます。<code>.dk-tabs</code>（<code>role="tablist"</code>）の中の
+            <code>[aria-selected="true"]</code>（リンクの場合は <code>[aria-current="page"]</code>）が選択中の見た目になります。
+            dotkit は見た目だけを担当し、選択状態とパネルの切り替えは利用側で行います（React 版の <code>&lt;Tab&gt;</code> はロービング tabIndex だけ付けます）。
+          </>,
+          <>
+            Only the selected tab gets a line of dark dots beneath it. Inside <code>.dk-tabs</code> (<code>role="tablist"</code>),
+            <code>[aria-selected="true"]</code> (or <code>[aria-current="page"]</code> for links) gets the selected look.
+            dotkit handles only the look; you manage selection and panel switching (the React <code>&lt;Tab&gt;</code> just adds a roving tabIndex).
+          </>,
+        )}
       </p>
       <Example
         align="left"
@@ -86,8 +97,16 @@ export function Navigation() {
 
       <h3 id="pager">Pagination dots <Since v="0.4" /></h3>
       <p>
-        カルーセルなどの現在位置を示すドットです。今いる位置のドットだけが横に伸びて 3 つのドットになります。
-        <code>.dk-pager</code> の中のボタン（またはリンク）に <code>aria-current="true"</code> を付けます。各ボタンには「3 枚目」のような名前を付けてください。
+        {t(
+          <>
+            カルーセルなどの現在位置を示すドットです。今いる位置のドットだけが横に伸びて 3 つのドットになります。
+            <code>.dk-pager</code> の中のボタン（またはリンク）に <code>aria-current="true"</code> を付けます。各ボタンには「3 枚目」のような名前を付けてください。
+          </>,
+          <>
+            Dots that show the current position in a carousel or similar. Only the current dot stretches sideways into three dots.
+            Put <code>aria-current="true"</code> on a button (or link) inside <code>.dk-pager</code>, and give each button a name such as “Slide 3”.
+          </>,
+        )}
       </p>
       <Example
         previewStyle={{ flexDirection: "column", gap: 16 }}
@@ -104,9 +123,18 @@ export function Navigation() {
 
       <h3 id="steps">Stepper <Since v="0.3" /></h3>
       <p>
-        手順の進み具合を、ドットの印とドットの線で表します。<code>&lt;ol class="dk-steps"&gt;</code> の現在の項目に
-        <code>aria-current="step"</code> を付けると、それより前の項目は自動で「完了」になります（<code>data-state="done"</code> で明示もできます）。
-        <code>.dk-steps--vertical</code> で縦並びになります。
+        {t(
+          <>
+            手順の進み具合を、ドットの印とドットの線で表します。<code>&lt;ol class="dk-steps"&gt;</code> の現在の項目に
+            <code>aria-current="step"</code> を付けると、それより前の項目は自動で「完了」になります（<code>data-state="done"</code> で明示もできます）。
+            <code>.dk-steps--vertical</code> で縦並びになります。
+          </>,
+          <>
+            Shows progress through steps with dot markers and dotted lines. Put <code>aria-current="step"</code> on the current item of
+            <code>&lt;ol class="dk-steps"&gt;</code> and the earlier items automatically become “done” (you can also set <code>data-state="done"</code> explicitly).
+            <code>.dk-steps--vertical</code> stacks them vertically.
+          </>,
+        )}
       </p>
       <Example
         align="left"
@@ -150,9 +178,18 @@ export function Navigation() {
 
       <h3 id="leaders">Dot leaders <Since v="0.2" /></h3>
       <p>
-        目次やレシート、料金表で「項目 ……… 値」をつなぐ点線です。<code>.dk-leaders</code> の子要素が 1 行になり、
-        行の最初の要素と最後の要素のあいだをドットで埋めます。リンクにするときは
-        <code>&lt;li&gt;&lt;a class="dk-leader"&gt;</code> のように、行にあたる要素へ <code>.dk-leader</code> を付けます。
+        {t(
+          <>
+            目次やレシート、料金表で「項目 ……… 値」をつなぐ点線です。<code>.dk-leaders</code> の子要素が 1 行になり、
+            行の最初の要素と最後の要素のあいだをドットで埋めます。リンクにするときは
+            <code>&lt;li&gt;&lt;a class="dk-leader"&gt;</code> のように、行にあたる要素へ <code>.dk-leader</code> を付けます。
+          </>,
+          <>
+            The dotted line that joins “item ……… value” in tables of contents, receipts and price lists. Each child of <code>.dk-leaders</code> becomes a row,
+            and dots fill the space between the row's first and last elements. For links, add <code>.dk-leader</code> to the element that forms the row,
+            as in <code>&lt;li&gt;&lt;a class="dk-leader"&gt;</code>.
+          </>,
+        )}
       </p>
       <Example
         previewStyle={{ alignItems: "flex-start", gap: 48 }}

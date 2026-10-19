@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Card, DotDigits, DotIcon, glyphChars, iconNames } from "dotkit/react";
 import { CodeBlock, useCopy } from "../ui";
+import { useT } from "../i18n";
 
 export function Icons() {
   const [step, setStep] = useState(4);
   const [square, setSquare] = useState(false);
   const [format, setFormat] = useState<"react" | "html">("react");
   const copy = useCopy();
+  const t = useT();
 
   const snippet = (name: string) =>
     format === "react"
@@ -18,8 +20,16 @@ export function Icons() {
       <span className="eyebrow">Reference</span>
       <h1 style={{ fontSize: 44, margin: "8px 0 12px" }}>Icons</h1>
       <p className="muted">
-        {iconNames.length} 個の 7×7 ドットマトリクスアイコン。クリックでコードをコピーします。
-        元データは <code>icons/icons.json</code> の 1 ファイルで、CSS と TypeScript の型はビルド時に生成されます。
+        {t(
+          <>
+            {iconNames.length} 個の 7×7 ドットマトリクスアイコン。クリックでコードをコピーします。
+            元データは <code>icons/icons.json</code> の 1 ファイルで、CSS と TypeScript の型はビルド時に生成されます。
+          </>,
+          <>
+            {iconNames.length} dot-matrix icons on a 7×7 grid. Click one to copy its code.
+            The source is a single file, <code>icons/icons.json</code>; the CSS and TypeScript types are generated at build time.
+          </>,
+        )}
       </p>
 
       <Card style={{ display: "flex", flexWrap: "wrap", gap: 24, alignItems: "center", margin: "20px 0" }}>
@@ -50,9 +60,18 @@ export function Icons() {
 
       <h2>Digits <span className="dk-badge since">v0.3</span></h2>
       <p className="muted">
-        {glyphChars.length} 文字の 5×7 グリフ（<code>&lt;DotDigits&gt;</code> / <code>.dk-glyph--{"{slug}"}</code>）。元データは <code>icons/glyphs.json</code> です。
-        記号のクラス名は <code>:</code> → <code>colon</code>、<code>.</code> → <code>dot</code>、<code>,</code> → <code>comma</code>、<code>-</code> → <code>minus</code>、
-        <code>+</code> → <code>plus</code>、<code>%</code> → <code>percent</code>、<code>/</code> → <code>slash</code>、空白 → <code>space</code> です。
+        {t(
+          <>
+            {glyphChars.length} 文字の 5×7 グリフ（<code>&lt;DotDigits&gt;</code> / <code>.dk-glyph--{"{slug}"}</code>）。元データは <code>icons/glyphs.json</code> です。
+            記号のクラス名は <code>:</code> → <code>colon</code>、<code>.</code> → <code>dot</code>、<code>,</code> → <code>comma</code>、<code>-</code> → <code>minus</code>、
+            <code>+</code> → <code>plus</code>、<code>%</code> → <code>percent</code>、<code>/</code> → <code>slash</code>、空白 → <code>space</code> です。
+          </>,
+          <>
+            {glyphChars.length} glyphs on a 5×7 grid (<code>&lt;DotDigits&gt;</code> / <code>.dk-glyph--{"{slug}"}</code>), sourced from <code>icons/glyphs.json</code>.
+            Symbol class names: <code>:</code> → <code>colon</code>, <code>.</code> → <code>dot</code>, <code>,</code> → <code>comma</code>, <code>-</code> → <code>minus</code>,{" "}
+            <code>+</code> → <code>plus</code>, <code>%</code> → <code>percent</code>, <code>/</code> → <code>slash</code>, space → <code>space</code>.
+          </>,
+        )}
       </p>
       <div className="icon-grid">
         {glyphChars.filter((c) => c !== " ").map((c) => (
@@ -73,8 +92,16 @@ export function Icons() {
 
       <h2>Add your own icon</h2>
       <p>
-        <code>icons/icons.json</code> に 7 行 × 7 文字（<code>#</code> = ドット）を追加し、<code>npm run icons</code> を実行します。
-        数字や記号は <code>icons/glyphs.json</code>（5 列 × 7 行）に同じ形式で追加します。生成スクリプトは大きさが合わないビットマップをエラーにします。
+        {t(
+          <>
+            <code>icons/icons.json</code> に 7 行 × 7 文字（<code>#</code> = ドット）を追加し、<code>npm run icons</code> を実行します。
+            数字や記号は <code>icons/glyphs.json</code>（5 列 × 7 行）に同じ形式で追加します。生成スクリプトは大きさが合わないビットマップをエラーにします。
+          </>,
+          <>
+            Add 7 rows of 7 characters (<code>#</code> = dot) to <code>icons/icons.json</code> and run <code>npm run icons</code>.
+            Digits and symbols go into <code>icons/glyphs.json</code> (5 columns × 7 rows) in the same format. The generator rejects bitmaps of the wrong size.
+          </>,
+        )}
       </p>
       <CodeBlock lang="json">{`"key": [
   ".......",
