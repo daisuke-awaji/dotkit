@@ -5,19 +5,27 @@ import { DataDisplay } from "./catalog/DataDisplay";
 import { Navigation } from "./catalog/Navigation";
 import { Feedback } from "./catalog/Feedback";
 import { Display } from "./catalog/Display";
+import { Themes } from "./catalog/Themes";
 
 type Item = [id: string, label: string, since?: string];
 const groups: { id: string; label: string; items: Item[] }[] = [
   { id: "primitives", label: "Primitives", items: [["dots", "Dots"], ["shape", "Shape"], ["fade", "Fade"]] },
   {
     id: "techniques", label: "Techniques",
-    items: [["border", "Border"], ["halftone", "Halftone"], ["halftoneimg", "Image halftone", "0.2"], ["text", "Dot text"], ["icon", "Icon"], ["loader", "Loader"]],
+    items: [
+      ["border", "Border"], ["march", "Marching border", "0.3"], ["halftone", "Halftone"], ["halftoneimg", "Image halftone", "0.2"],
+      ["text", "Dot text"], ["icon", "Icon"], ["digits", "Dot-matrix digits", "0.3"], ["loader", "Loader"],
+    ],
   },
   { id: "forms", label: "Forms", items: [["button", "Button"], ["input", "Input"], ["choice", "Checkbox / Radio / Switch", "0.2"]] },
-  { id: "data", label: "Data display", items: [["meter", "Meter"], ["chart", "Bar chart"], ["heatmap", "Heatmap", "0.2"], ["uptime", "Uptime bar", "0.2"]] },
-  { id: "navigation", label: "Navigation", items: [["leaders", "Dot leaders", "0.2"]] },
-  { id: "feedback", label: "Feedback", items: [["typing", "Typing indicator", "0.2"]] },
-  { id: "display", label: "Display", items: [["badge", "Badge"], ["divider", "Divider"], ["card", "Card"], ["compose", "Composition"]] },
+  {
+    id: "data", label: "Data display",
+    items: [["meter", "Meter"], ["chart", "Bar chart"], ["sparkline", "Sparkline", "0.3"], ["heatmap", "Heatmap", "0.2"], ["uptime", "Uptime bar", "0.2"], ["pictogram", "Pictogram", "0.3"]],
+  },
+  { id: "navigation", label: "Navigation", items: [["leaders", "Dot leaders", "0.2"], ["steps", "Stepper", "0.3"]] },
+  { id: "feedback", label: "Feedback", items: [["typing", "Typing indicator", "0.2"], ["status", "Status dot", "0.3"], ["skeleton", "Skeleton", "0.3"]] },
+  { id: "display", label: "Display", items: [["badge", "Badge"], ["divider", "Divider"], ["card", "Card"], ["identicon", "Identicon", "0.3"], ["compose", "Composition"]] },
+  { id: "theming", label: "Themes", items: [["themes", "Theme presets", "0.3"]] },
 ];
 const count = groups.reduce((n, g) => n + g.items.length, 0);
 
@@ -57,6 +65,7 @@ export function Catalog() {
       <Navigation />
       <Feedback />
       <Display />
+      <Themes />
     </>
   );
 }

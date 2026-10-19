@@ -23,7 +23,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Generated icon files are up to date
+      - name: Generated icon / glyph files are up to date
         run: npm run icons && git diff --exit-code -- src/css/icons.css src/react/icon-names.ts
       - run: npm run typecheck
       - run: npm run docs:build

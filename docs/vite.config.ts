@@ -9,7 +9,7 @@ const publishDist = (): Plugin => ({
   name: "dotkit:publish-dist",
   apply: "build",
   generateBundle() {
-    for (const file of ["dotkit.css", "icons.json"]) {
+    for (const file of ["dotkit.css", "icons.json", "glyphs.json"]) {
       this.emitFile({ type: "asset", fileName: file, source: readFileSync(r(`../dist/${file}`)) });
     }
   },

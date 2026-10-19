@@ -149,6 +149,81 @@ const sections: { id: string; name: string; desc: string; rows: PropRow[]; exten
     ],
   },
   {
+    id: "digits", name: "<DotDigits>", extends: "HTMLAttributes<span>", since: "0.3",
+    desc: "5×7 ドットの数字。role=\"img\" で、読み上げは value（または label）です。",
+    rows: [
+      ["value", "string | number", "-", "必須。0-9 と : . , - + % / と空白。ほかの文字は空白になります"],
+      ["step", "number | string", "3px", "ドット間隔。1 文字 = step × 5 × step × 7"],
+      ["square", "boolean", "false", "四角いドット"],
+      ["grid", "boolean", "false", "消えているドットも薄く表示（電光掲示板風）"],
+      ["label", "string", "value", "読み上げる文字列"],
+    ],
+  },
+  {
+    id: "sparkline", name: "<Sparkline>", extends: "HTMLAttributes<div>", since: "0.3",
+    desc: "値ごとに 1 ドットの小さな折れ線。role=\"img\"。最新の値に輪が付きます。",
+    rows: [
+      ["data", "number[]", "-", "必須。古い順"],
+      ["min / max", "number", "min / max(data)", "下端 / 上端に対応する値"],
+      ["height", "number | string", "40px", "高さ"],
+      ["size / color / shape", "…", "4px / var(--dk-ink) / round", "ドットの見た目"],
+      ["area", "boolean", "false", "各点の下を薄いドットで埋める"],
+      ["label", "string", "-", "要約（スクリーンリーダー向け）"],
+    ],
+  },
+  {
+    id: "pictogram", name: "<Pictogram>", extends: "HTMLAttributes<div>", since: "0.3",
+    desc: "アイコン 1 つ = 1 単位のグラフ。端数はドットの列単位で塗ります。role=\"img\"。",
+    rows: [
+      ["icon", "IconName", "-", "必須。並べるアイコン"],
+      ["value", "number", "-", "必須。塗るアイコンの数（7.4 など小数可）"],
+      ["total", "number", "10", "アイコンの総数"],
+      ["step / color", "…", "3px / var(--dk-ink)", "アイコンの大きさと色"],
+      ["label", "string", "-", "要約（例: 74% of users）"],
+    ],
+  },
+  {
+    id: "steps", name: "<Steps>", extends: "HTMLAttributes<ol>", since: "0.3",
+    desc: "手順の進み具合。現在の項目に aria-current=\"step\" を付け、それより前を完了として表示します。",
+    rows: [
+      ["items", "Array<ReactNode | { label; description? }>", "-", "必須。各手順"],
+      ["current", "number", "-", "必須。現在の手順（0 始まり）"],
+      ["vertical", "boolean", "false", "縦に並べる"],
+    ],
+  },
+  {
+    id: "status", name: "<StatusDot>", extends: "HTMLAttributes<span>", since: "0.3",
+    desc: "状態のドットと説明文。説明文は children に書きます。",
+    rows: [
+      ["state", `"ok" | "warn" | "down" | "info" | "idle"`, `"ok"`, "down は四角、idle は輪の形"],
+      ["pulse", "boolean", "false", "波紋のアニメーション"],
+    ],
+  },
+  {
+    id: "skeleton", name: "<Skeleton>", extends: "HTMLAttributes<div>", since: "0.3",
+    desc: "読み込み中の仮表示。aria-hidden が付きます。読み込み中の領域に aria-busy を付けてください。",
+    rows: [
+      ["lines", "number", "-", "N 行分のテキストの仮表示（最後の行は短め）"],
+      ["circle", "boolean", "false", "円（アバター用）"],
+      ["width / height", "number | string", "-", "大きさ"],
+    ],
+  },
+  {
+    id: "identicon", name: "<Identicon> / identicon()", extends: "HTMLAttributes<span>", since: "0.3",
+    desc: "文字列から決まる左右対称の 5×5 ドット模様。identicon(seed) は { cells: boolean[25], hue } を返す純粋な関数です。",
+    rows: [
+      ["value", "string", "-", "必須。同じ値なら同じ模様と色"],
+      ["cell", "number | string", "8px", "セルの大きさ（全体 ≈ cell × 6.2）"],
+      ["color", "string", "oklch(.6 .16 hue)", "色の上書き"],
+      ["label", "string", "-", "名前。なければ装飾として aria-hidden"],
+    ],
+  },
+  {
+    id: "march", name: "march（DotBorder / Card）", extends: "—", since: "0.3",
+    desc: "DotBorder と Card の march prop で、枠のドットが時計回りに流れます（.dk-march）。",
+    rows: [["march", "boolean", "false", "枠のドットを流す。動きを減らす設定では止まる"]],
+  },
+  {
     id: "misc", name: "<Badge> / <Divider> / <Loader>", extends: "HTMLAttributes",
     desc: "小物。",
     rows: [
@@ -183,12 +258,13 @@ export function ReactApi() {
       ))}
 
       <h2 id="helpers" style={{ fontFamily: "var(--dk-font-mono)", fontSize: 22 }}>Helpers</h2>
-      <CodeBlock lang="ts">{`import { buttonClassName, cx, dotVars, withVars, px, iconNames } from "dotkit/react";
+      <CodeBlock lang="ts">{`import { buttonClassName, cx, dotVars, withVars, px, iconNames, glyphChars } from "dotkit/react";
 
 buttonClassName({ variant: "outline", size: "sm" });   // "dk-btn dk-btn--outline dk-btn--sm"
 dotVars({ size: 3, gap: 8 }, { padding: 12 });        // { "--dk-size": "3px", "--dk-gap": "8px", padding: 12 }
 withVars({ "--dk-cell": px(10), "--dk-rows": 5 });     // { "--dk-cell": "10px", "--dk-rows": 5 }  (undefined values are skipped)
-iconNames;                                            // readonly ["arrow-right", …]  (type IconName)`}</CodeBlock>
+iconNames;                                            // readonly ["arrow-right", …]  (type IconName)
+glyphChars;                                           // readonly ["0", …, ":", " "]   (type GlyphChar)`}</CodeBlock>
     </>
   );
 }

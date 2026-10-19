@@ -1,0 +1,36 @@
+/* ==========================================================
+   themes — presets. Add the class to <html> or to any element;
+   a theme class paints its own color / background (see core).
+   ========================================================== */
+@layer dotkit.base {
+  /* Game Boy: four greens */
+  .dk-theme-gameboy {
+    --dk-ink: #0f380f; --dk-paper: #9bbc0f; --dk-mute: #6f9a0e; --dk-subtle: #306230;
+    --dk-ok: #0f380f; --dk-warn: #306230; --dk-danger: #0f380f; --dk-info: #306230;
+    color-scheme: light;
+  }
+  /* Amber CRT */
+  .dk-theme-amber {
+    --dk-ink: #ffb000; --dk-paper: #130c00; --dk-mute: #5c3f00; --dk-subtle: #c78a00;
+    --dk-ok: #ffcc4d; --dk-warn: #ff8a00; --dk-danger: #ff5a36; --dk-info: #ffd27a;
+    color-scheme: dark;
+  }
+  /* Newsprint: warm paper, soft black */
+  .dk-theme-newsprint {
+    --dk-ink: #1d1b18; --dk-paper: #f1ece2; --dk-mute: #cdc4b4; --dk-subtle: #6c665c;
+    --dk-ok: #3f6b3a; --dk-warn: #9a6a12; --dk-danger: #9e2b25; --dk-info: #2f4f7f;
+    color-scheme: light;
+  }
+  /* Risograph: blue ink, fluorescent pink dots */
+  .dk-theme-riso {
+    --dk-ink: #2649d0; --dk-paper: #fbf6ec; --dk-mute: #ff8cc6; --dk-subtle: #5f6db3;
+    --dk-ok: #00a95c; --dk-warn: #ff7a00; --dk-danger: #ff48b0; --dk-info: #2649d0;
+    color-scheme: light;
+  }
+  /* Blueprint: white lines on cyan-blue */
+  .dk-theme-blueprint {
+    --dk-ink: #eaf2ff; --dk-paper: #0d3b8c; --dk-mute: #4570c0; --dk-subtle: #a9c3f0;
+    --dk-ok: #7ee2a8; --dk-warn: #ffd166; --dk-danger: #ff8fa3; --dk-info: #9fd3ff;
+    color-scheme: dark;
+  }
+}

@@ -1,0 +1,56 @@
+/* ==========================================================
+   display — dot-matrix digits / identicon
+   ========================================================== */
+@layer dotkit.utilities {
+
+  /* ---------- Dot-matrix digits: 5x7 glyphs (generated: .dk-glyph--{slug}) ---------- */
+  .dk-digits {
+    --dk-icon-step: 3px;
+    display: inline-flex; gap: var(--dk-icon-step);
+    vertical-align: middle;
+  }
+  .dk-glyph {
+    display: inline-block; position: relative; flex: none;
+    width: calc(var(--dk-icon-step) * 5); height: calc(var(--dk-icon-step) * 7);
+  }
+  .dk-glyph::before {
+    content: ""; position: absolute; left: 0; top: 0;
+    width: calc(var(--dk-icon-step) * .72); height: calc(var(--dk-icon-step) * .72);
+    margin: calc(var(--dk-icon-step) * .14);
+    border-radius: 50%;
+  }
+  .dk-digits--square .dk-glyph::before {
+    border-radius: 0;
+    width: calc(var(--dk-icon-step) * .86); height: calc(var(--dk-icon-step) * .86);
+    margin: calc(var(--dk-icon-step) * .07);
+  }
+  /* LED look: unlit dots shown faintly behind every glyph */
+  .dk-digits--grid .dk-glyph {
+    background: radial-gradient(circle at center,
+                  color-mix(in srgb, currentColor 14%, transparent) calc(var(--dk-icon-step) * .36),
+                  transparent calc(var(--dk-icon-step) * .36 + .6px))
+                0 0 / var(--dk-icon-step) var(--dk-icon-step);
+  }
+}
+
+@layer dotkit.components {
+  /* ---------- Identicon: 5x5 mirrored pattern (cells from the React helper or your own) ---------- */
+  .dk-identicon {
+    --dk-cell: 8px;
+    --dk-color: var(--dk-ink);
+    display: inline-grid; flex: none;
+    grid-template-columns: repeat(5, var(--dk-cell));
+    grid-auto-rows: var(--dk-cell);
+    padding: calc(var(--dk-cell) * .6);
+    border-radius: calc(var(--dk-cell) * 1.4);
+    background: color-mix(in srgb, var(--dk-color) 12%, var(--dk-paper));
+    vertical-align: middle;
+  }
+  .dk-identicon > * { margin: 12%; border-radius: 50%; }
+  .dk-identicon > [data-on] { background: var(--dk-color); }
+}
+
+@media (forced-colors: active) {
+  .dk-digits, .dk-glyph { forced-color-adjust: none; color: CanvasText; }
+  .dk-identicon { forced-color-adjust: none; --dk-color: CanvasText; background: Canvas; outline: 1px solid CanvasText; }
+}

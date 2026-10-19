@@ -17,12 +17,13 @@ execSync("node scripts/build-icons.mjs", { cwd: root, stdio: "inherit" });
 const banner = `/*! dotkit v${pkg.version} | MIT | https://github.com/daisuke-awaji/dotkit */\n`;
 const core = readFileSync(resolve(root, "src/css/dotkit.css"), "utf8").replace(/^\/\*![\s\S]*?\*\/\n/, "");
 // Feature modules, in cascade order (all of them are layered, so order only matters inside a layer).
-const modules = ["forms", "data", "navigation", "feedback", "effects"].map((m) =>
+const modules = ["forms", "data", "navigation", "feedback", "display", "effects", "themes"].map((m) =>
   readFileSync(resolve(root, `src/css/modules/${m}.css`), "utf8"),
 );
 const icons = readFileSync(resolve(root, "src/css/icons.css"), "utf8");
 writeFileSync(resolve(dist, "dotkit.css"), banner + [core, ...modules, icons].join("\n"));
 copyFileSync(resolve(root, "icons/icons.json"), resolve(dist, "icons.json"));
+copyFileSync(resolve(root, "icons/glyphs.json"), resolve(dist, "glyphs.json"));
 
 // React bindings: ESM + .d.ts
 execSync("npx tsc -p tsconfig.build.json", { cwd: root, stdio: "inherit" });

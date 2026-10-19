@@ -6,10 +6,11 @@ import {
   DotIcon,
   DotText,
   Halftone,
+  Identicon,
   Meter,
 } from "dotkit/react";
 import { Example } from "../../ui";
-import { week } from "./shared";
+import { Tile, Since, week } from "./shared";
 
 export function Display() {
   return (
@@ -67,6 +68,30 @@ export function Display() {
           <h3 style={{ margin: "12px 0 4px" }}>Ink outline</h3>
           <p className="muted" style={{ margin: 0, fontSize: 14 }}>color + shape props.</p>
         </Card>
+      </Example>
+
+      <h3 id="identicon">Identicon <Since v="0.3" /></h3>
+      <p>
+        文字列（ユーザー ID やメールアドレス）から決まる、左右対称の 5×5 ドット模様です。同じ文字列からは必ず同じ模様と色ができます。
+        アバター画像がないときの代わりに使えます。模様の計算は純粋な関数 <code>identicon(seed)</code> として公開しているので、React 以外でも使えます。
+      </p>
+      <Example
+        html={`<!-- cells come from identicon(seed).cells (25 booleans, row by row) -->
+<span class="dk-identicon" style="--dk-color: oklch(.6 .16 210)" role="img" aria-label="alice">
+  <i></i><i data-on></i><i></i><i data-on></i><i></i>
+  <!-- … 25 cells -->
+</span>`}
+        react={`<Identicon value="alice@example.com" label="alice" />
+<Identicon value="bob@example.com" cell={12} />
+<Identicon value="carol" className="dk-square" />
+
+// any framework:
+import { identicon } from "dotkit/react";
+const { cells, hue } = identicon("alice@example.com");`}
+      >
+        {["alice@example.com", "bob@example.com", "carol", "dave", "eve", "mallory"].map((v, i) => (
+          <Tile key={v} label={v}><Identicon value={v} cell={i === 0 ? 12 : 8} label={v} className={i === 5 ? "dk-square" : undefined} /></Tile>
+        ))}
       </Example>
 
       <h3 id="compose">Composition — 組み合わせ例</h3>

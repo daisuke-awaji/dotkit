@@ -37,7 +37,7 @@
   .dk-theme-dark {
     --dk-ink: #ededed;
     --dk-paper: #0a0a0a;
-    --dk-mute: #3a3a3a;
+    --dk-mute: #474747;
     --dk-subtle: #a1a1a1;
     --dk-ok: #4ade80;
     --dk-warn: #fbbf24;
@@ -53,6 +53,7 @@
      so changing --dk-size / --dk-gap on it (or an ancestor) just works. */
   .dk-dots, .dk-text, .dk-divider, .dk-btn, .dk-meter, .dk-meter::after, .dk-bar,
   .dk-uptime > *, :is(.dk-leaders > :not(:has(> .dk-leader)), .dk-leader)::before,
+  .dk-steps > li::after, .dk-skeleton,
   .dk-check:checked, .dk-switch:checked,
   :is(.dk-border, .dk-btn--outline, .dk-field, .dk-card, .dk-check, .dk-radio, .dk-switch)::before {
     --_dot: radial-gradient(circle at center,
@@ -243,7 +244,7 @@
     --_dot: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color) 0);
   }
   /* cell-based components (heatmap, uptime …) paint one element per dot */
-  :is(.dk-heatmap, .dk-identicon).dk-square > * { border-radius: 1px; }
+  :is(.dk-heatmap, .dk-identicon).dk-square > *, .dk-spark.dk-square > *::before { border-radius: 1px; }
   .dk-uptime.dk-square > * {
     --_dot: conic-gradient(at var(--dk-size) var(--dk-size), transparent 75%, var(--dk-color) 0);
   }
@@ -281,7 +282,7 @@
   .dk-halftone--to-bottom { --dk-tone: linear-gradient(180deg, #000, #8a8a8a); }
   .dk-halftone--to-left   { --dk-tone: linear-gradient(270deg, #000, #8a8a8a); }
   .dk-halftone--radial    { --dk-tone: radial-gradient(closest-side, #000, #8a8a8a); }
-  .dk-halftone--invert, .dk-theme-dark .dk-halftone { filter: contrast(24) invert(1); }
+  .dk-halftone--invert, :is(.dk-theme-dark, .dk-theme-amber, .dk-theme-blueprint) .dk-halftone { filter: contrast(24) invert(1); }
 
   /* ---------- Dot text ---------- */
   .dk-text {

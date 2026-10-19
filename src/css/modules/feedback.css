@@ -1,5 +1,5 @@
 /* ==========================================================
-   feedback — typing indicator
+   feedback — typing indicator / skeleton / status dot
    ========================================================== */
 @layer dotkit.components {
 
@@ -26,12 +26,59 @@
     0%, 60%, 100% { transform: none; opacity: .35; }
     30%           { transform: translateY(-55%); opacity: 1; }
   }
+
+  /* ---------- Skeleton: a dot field with a slow shimmer ---------- */
+  .dk-skeleton {
+    --dk-size: 2.5px; --dk-gap: 5px;
+    --dk-color: var(--dk-mute);
+    display: block; min-height: 1em;
+    border-radius: 6px;
+    background-image: var(--_dot);
+    background-size: var(--dk-gap) var(--dk-gap);
+    -webkit-mask: linear-gradient(90deg, #000 35%, rgb(0 0 0 / .3) 50%, #000 65%) 100% 0 / 300% 100%;
+            mask: linear-gradient(90deg, #000 35%, rgb(0 0 0 / .3) 50%, #000 65%) 100% 0 / 300% 100%;
+    animation: dk-shimmer 1.8s linear infinite;
+  }
+  .dk-skeleton--text { height: .9em; margin: .4em 0; }
+  .dk-skeleton--text:last-child:not(:first-child) { width: 62%; }
+  .dk-skeleton--circle { width: 40px; aspect-ratio: 1; border-radius: 50%; }
+  @keyframes dk-shimmer {
+    to { -webkit-mask-position: 0 0; mask-position: 0 0; }
+  }
+
+  /* ---------- Status dot: state is color + shape (+ the text you put inside) ---------- */
+  .dk-status {
+    --dk-color: var(--dk-ok);
+    --_d: 8px;
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; line-height: 1.4;
+  }
+  .dk-status::before {
+    content: ""; flex: none;
+    width: var(--_d); height: var(--_d); border-radius: 50%;
+    background: var(--dk-color);
+  }
+  .dk-status[data-state="warn"] { --dk-color: var(--dk-warn); }
+  .dk-status[data-state="down"] { --dk-color: var(--dk-danger); }
+  .dk-status[data-state="down"]::before { border-radius: 1px; }  /* square: not color alone */
+  .dk-status[data-state="info"] { --dk-color: var(--dk-info); }
+  .dk-status[data-state="idle"] { --dk-color: var(--dk-subtle); }
+  .dk-status[data-state="idle"]::before { background: none; box-shadow: inset 0 0 0 1.5px var(--dk-color); }  /* ring */
+  .dk-status--pulse::before { animation: dk-pulse 2s var(--dk-ease) infinite; }
+  @keyframes dk-pulse {
+    0%   { box-shadow: 0 0 0 0 color-mix(in srgb, var(--dk-color) 55%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 calc(var(--_d) * .9) transparent; }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .dk-typing > i { animation: none; opacity: .6; }
+  .dk-skeleton, .dk-status--pulse::before { animation: none; }
 }
 @media (forced-colors: active) {
   .dk-typing { forced-color-adjust: none; color: CanvasText; }
   .dk-typing--bubble { background: Canvas; outline: 1px solid CanvasText; }
+  .dk-skeleton { forced-color-adjust: none; --dk-color: GrayText; }
+  .dk-status::before { forced-color-adjust: none; background: CanvasText; }
+  .dk-status[data-state="idle"]::before { background: none; box-shadow: inset 0 0 0 1.5px CanvasText; }
 }

@@ -6,6 +6,9 @@ const motion: [what: string, how: string, reduced: string][] = [
   ["Button / Input / Checkbox / Radio / Switch", "hover・フォーカス・チェック時にドットが膨らむ、つまみが移動する（0.25〜0.35 秒）", "遷移なしで切り替わる"],
   ["Loader", "ドットの波（繰り返し）", "止まり、半透明のドットを表示"],
   ["Typing indicator", "3 つのドットが順に跳ねる（繰り返し）", "止まり、半透明のドットを表示"],
+  ["Marching border", "枠のドットが時計回りに流れる（繰り返し）", "止まる（枠は表示したまま）"],
+  ["Skeleton", "明るさの帯が横に流れる（繰り返し）", "止まる"],
+  ["Status dot（pulse）", "ドットから波紋が広がる（繰り返し）", "止まる"],
 ];
 
 /** Behaviour under `forced-colors: active`. */
@@ -17,6 +20,11 @@ const forced: [what: string, how: string][] = [
   ["Halftone", "非表示（装飾のため）"],
   ["Image halftone", "網点をやめ、元の画像を表示"],
   ["Typing indicator", "ドットを CanvasText に、吹き出しは 1px の枠線"],
+  ["Sparkline / Pictogram / Dot-matrix digits", "ドットを CanvasText にする"],
+  ["Stepper", "完了と現在の印を CanvasText、現在の印は Highlight、未完了は GrayText"],
+  ["Status dot", "ドットを CanvasText にする（down の四角、idle の輪で状態を区別）"],
+  ["Skeleton", "ドットを GrayText にする"],
+  ["Identicon", "模様を CanvasText、背景を Canvas にし、1px の枠線を付ける"],
 ];
 
 export function Accessibility() {
@@ -33,8 +41,8 @@ export function Accessibility() {
           <tr><td><code>forced-colors: active</code><br /><span className="muted">Windows ハイコントラスト等</span></td><td>ドットを実線・実色・システムカラーに置き換えます（下の表）。</td></tr>
           <tr><td><code>prefers-reduced-motion: reduce</code></td><td>繰り返すアニメーションと、ドットの遷移を止めます（下の表）。</td></tr>
           <tr><td>キーボード操作</td><td><code>:focus-visible</code> でドット状（dotted）のアウトラインを表示。Checkbox / Radio / Switch はネイティブの input なので、Tab・Space・矢印キーの操作はブラウザ標準のままです。</td></tr>
-          <tr><td>スクリーンリーダー</td><td>React 版は Meter に <code>role="meter"</code> + <code>aria-value*</code>、BarChart / Heatmap / UptimeBar に <code>role="img"</code> + <code>label</code>、Loader / Typing に <code>role="status"</code>、Switch に <code>role="switch"</code>、Halftone と label なしの DotIcon に <code>aria-hidden</code> を付けます。</td></tr>
-          <tr><td>色だけに頼らない</td><td>Uptime bar は状態を色に加えて列の高さ（5 / 3 / 1 ドット）でも表します。Heatmap は値を大きさと濃さの 2 つで表します。</td></tr>
+          <tr><td>スクリーンリーダー</td><td>React 版は Meter に <code>role="meter"</code> + <code>aria-value*</code>、BarChart / Heatmap / UptimeBar に <code>role="img"</code> + <code>label</code>（Sparkline / Pictogram / DotDigits も同様）、Loader / Typing に <code>role="status"</code>、Switch に <code>role="switch"</code>、Halftone と label なしの DotIcon に <code>aria-hidden</code> を付けます。</td></tr>
+          <tr><td>色だけに頼らない</td><td>Uptime bar は状態を色に加えて列の高さ（5 / 3 / 1 ドット）でも表します。Heatmap は値を大きさと濃さの 2 つで表します。Status dot は down を四角、idle を輪の形にし、説明文を必ず添えます。</td></tr>
         </tbody>
       </table>
 

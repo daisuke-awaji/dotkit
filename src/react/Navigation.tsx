@@ -41,3 +41,35 @@ export function Leader({ label, value, href, as: Tag = "li", ...rest }: LeaderPr
   }
   return <Tag {...rest}>{cells}</Tag>;
 }
+
+export interface StepsProps extends HTMLAttributes<HTMLOListElement> {
+  /** Step labels. Objects add a smaller description line. */
+  items: Array<ReactNode | { label: ReactNode; description?: ReactNode }>;
+  /** Index of the current step (0-based). Earlier steps are shown as done. */
+  current: number;
+  /** Stack the steps vertically. */
+  vertical?: boolean;
+}
+
+const isItem = (x: unknown): x is { label: ReactNode; description?: ReactNode } =>
+  typeof x === "object" && x !== null && "label" in (x as object);
+
+/** Progress through a sequence: dot markers joined by dot lines. */
+export function Steps({ items, current, vertical, className, ...rest }: StepsProps) {
+  return (
+    <ol className={cx("dk-steps", vertical && "dk-steps--vertical", className)} {...rest}>
+      {items.map((it, i) => (
+        <li key={i} aria-current={i === current ? "step" : undefined} data-state={i < current ? "done" : undefined}>
+          {isItem(it) ? (
+            <>
+              {it.label}
+              {it.description !== undefined && <small>{it.description}</small>}
+            </>
+          ) : (
+            it
+          )}
+        </li>
+      ))}
+    </ol>
+  );
+}
